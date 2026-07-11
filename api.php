@@ -1,24 +1,10 @@
 <?php
 
-/**
- * @OA\Tag(
- *   name="store",
- *   description="Toko / Store E-commerce API",
- * )
- */
-
 $this->on('restApi.config', function($restApi) {
 
     $restApi->addEndPoint('/store/products', [
-        /**
-         * @OA\Get(
-         *     path="/store/products",
-         *     tags={"store"},
-         *     summary="Get products list",
-         *     description="Returns all products in the store inventory with categories, brands, and variant details.",
-         *     @OA\Response(response="200", description="Products retrieved successfully", @OA\JsonContent())
-         * )
-         */
+        
+
         'GET' => function($params, $app) {
             $role = $app->helper('auth')->getUser('role');
             if (!$app->helper('acl')->isAllowed('store/api/products', $role) && !$app->helper('acl')->isAllowed('store/manage', $role)) {
@@ -50,15 +36,8 @@ $this->on('restApi.config', function($restApi) {
     ]);
 
     $restApi->addEndPoint('/store/content', [
-        /**
-         * @OA\Get(
-         *     path="/store/content",
-         *     tags={"store"},
-         *     summary="Get storefront CMS content",
-         *     description="Returns slide banners, FAQ, About US, and shipping policy for the client homepage.",
-         *     @OA\Response(response="200", description="CMS Content retrieved successfully", @OA\JsonContent())
-         * )
-         */
+        
+
         'GET' => function($params, $app) {
             $role = $app->helper('auth')->getUser('role');
             if (!$app->helper('acl')->isAllowed('store/api/content', $role) && !$app->helper('acl')->isAllowed('store/manage', $role)) {
@@ -74,7 +53,7 @@ $this->on('restApi.config', function($restApi) {
                 'about_us' => ''
             ];
             
-            // Format banner images directly inside the banners array
+            
             if (isset($content['banners']) && is_array($content['banners'])) {
                 $resolvedBanners = [];
                 foreach ($content['banners'] as $banner) {
@@ -98,36 +77,8 @@ $this->on('restApi.config', function($restApi) {
     ]);
 
     $restApi->addEndPoint('/store/order', [
-        /**
-         * @OA\Post(
-         *     path="/store/order",
-         *     tags={"store"},
-         *     summary="Create client order / checkout",
-         *     description="Creates a new sales order, validates stock, applies promo vouchers and taxes, contacts Midtrans Snap for secure payment redirect URL, and deducts inventory.",
-         *     @OA\RequestBody(
-         *         required=true,
-         *         @OA\JsonContent(
-         *             type="object",
-         *             @OA\Property(property="customer_name", type="string", example="Jane Doe"),
-         *             @OA\Property(property="customer_email", type="string", example="janedoe@example.com"),
-         *             @OA\Property(property="voucher_code", type="string", example="DISKON20"),
-         *             @OA\Property(property="courier", type="string", example="JNE"),
-         *             @OA\Property(property="shipping_cost", type="integer", example=15000),
-         *             @OA\Property(
-         *                 property="items",
-         *                 type="array",
-         *                 @OA\Items(
-         *                     type="object",
-         *                     @OA\Property(property="product_id", type="string", example="prod_123"),
-         *                     @OA\Property(property="quantity", type="integer", example=2)
-         *                 )
-         *             )
-         *         )
-         *     ),
-         *     @OA\Response(response="200", description="Order created successfully", @OA\JsonContent()),
-         *     @OA\Response(response="400", description="Invalid input or out of stock")
-         * )
-         */
+        
+
         'POST' => function($params, $app) {
             $role = $app->helper('auth')->getUser('role');
             if (!$app->helper('acl')->isAllowed('store/api/order', $role) && !$app->helper('acl')->isAllowed('store/manage', $role)) {
@@ -183,7 +134,7 @@ $this->on('restApi.config', function($restApi) {
                 return ['error' => 'No valid items provided'];
             }
 
-            // Calculate discount
+            
             $discountAmount = 0;
             if ($voucherCode) {
                 $voucher = $app->dataStorage->findOne('store/vouchers', ['code' => $voucherCode]);
@@ -199,22 +150,22 @@ $this->on('restApi.config', function($restApi) {
                 }
             }
 
-            // Get PPN/tax from store/settings
+            
             $storeSettings = $app->dataStorage->findOne('store/settings', ['_id' => 'config']) ?? [];
             $taxPercent = floatval($storeSettings['tax_percent'] ?? 0);
             $taxAmount = ($totalAmount - $discountAmount) * ($taxPercent / 100);
 
-            // Grand total
+            
             $grandTotal = ($totalAmount - $discountAmount) + $taxAmount + $shippingCost;
 
-            // Deduct stock
+            
             foreach ($items as $item) {
                 $product = $app->dataStorage->findOne('store/products', ['_id' => $item['product_id']]);
                 $product['stock'] -= $item['quantity'];
                 $app->dataStorage->save('store/products', $product);
             }
 
-            // Create Order
+            
             $orderId = 'ORD-' . strtoupper(bin2hex(random_bytes(4)));
             $transactionId = 'TX-' . strtoupper(dechex(time())) . strtoupper(dechex(rand(1000, 9999)));
             $order = [
@@ -238,7 +189,7 @@ $this->on('restApi.config', function($restApi) {
                 'updated' => time()
             ];
 
-            // Contact Midtrans Snap API (reusing credentials from Midtrans)
+            
             $midtransSettings = $app->dataStorage->findOne('midtrans/settings', ['_id' => 'config']) ?? [];
             $mode = $midtransSettings['mode'] ?? 'sandbox';
             $serverKey = $mode === 'production'
@@ -321,14 +272,14 @@ $this->on('restApi.config', function($restApi) {
 
             $app->dataStorage->save('store/orders', $order);
 
-            // Log activity to Central Logs
+            
             $app->trigger('midtrans.log', [
                 'event' => 'order_created',
                 'message' => "Order {$orderId} created for {$customerName} (Total: IDR {$grandTotal})",
                 'data' => $order
             ]);
 
-            // Try sending emails
+            
             try {
                 $emailBody = "<h1>Order {$orderId} Received!</h1>
                               <p>Thank you for shopping. Total amount: IDR {$grandTotal}.</p>";
@@ -336,7 +287,7 @@ $this->on('restApi.config', function($restApi) {
                     $emailBody .= "<p><a href='{$order['redirect_url']}' style='padding: 10px 20px; background: #3a86ff; color: #fff; text-decoration: none; border-radius: 5px;'>Pay with Midtrans</a></p>";
                 }
                 
-                // Save mock HTML preview to temp storage
+                
                 $emailDir = APP_DIR . '/storage/tmp/midtrans-emails';
                 if (!\file_exists($emailDir)) {
                     \mkdir($emailDir, 0777, true);
@@ -347,10 +298,10 @@ $this->on('restApi.config', function($restApi) {
                     $app->mailer->mail($customerEmail, "Your Order Checkout Receipt ({$orderId})", $emailBody);
                 }
             } catch (\Throwable $e) {
-                // Fail silently for mailer to not break the API request
+                
             }
 
-            // Trigger real-time updates event stream
+            
             if (isset($app->helpers['eventStream'])) {
                 $app->helper('eventStream')->trigger('midtrans.transactions.updated', []);
             }
@@ -360,15 +311,8 @@ $this->on('restApi.config', function($restApi) {
     ]);
 
     $restApi->addEndPoint('/store/customers', [
-        /**
-         * @OA\Get(
-         *     path="/store/customers",
-         *     tags={"store"},
-         *     summary="Get customer database",
-         *     description="Returns all registered store customers along with purchase statistics.",
-         *     @OA\Response(response="200", description="Customers retrieved successfully", @OA\JsonContent())
-         * )
-         */
+        
+
         'GET' => function($params, $app) {
             if (!$app->helper('acl')->isAllowed('store/manage')) {
                 $app->response->status = 401;
@@ -450,15 +394,8 @@ $this->on('restApi.config', function($restApi) {
     ]);
 
     $restApi->addEndPoint('/store/vouchers', [
-        /**
-         * @OA\Get(
-         *     path="/store/vouchers",
-         *     tags={"store"},
-         *     summary="Get promotions & discount vouchers",
-         *     description="Returns all vouchers registered in the shop.",
-         *     @OA\Response(response="200", description="Vouchers list retrieved", @OA\JsonContent())
-         * )
-         */
+        
+
         'GET' => function($params, $app) {
             if (!$app->helper('acl')->isAllowed('store/manage')) {
                 $app->response->status = 401;
@@ -469,15 +406,8 @@ $this->on('restApi.config', function($restApi) {
     ]);
 
     $restApi->addEndPoint('/store/suppliers', [
-        /**
-         * @OA\Get(
-         *     path="/store/suppliers",
-         *     tags={"store"},
-         *     summary="Get suppliers directory",
-         *     description="Returns all registered inventory suppliers.",
-         *     @OA\Response(response="200", description="Suppliers retrieved successfully", @OA\JsonContent())
-         * )
-         */
+        
+
         'GET' => function($params, $app) {
             if (!$app->helper('acl')->isAllowed('store/manage')) {
                 $app->response->status = 401;
@@ -488,15 +418,8 @@ $this->on('restApi.config', function($restApi) {
     ]);
 
     $restApi->addEndPoint('/store/reports', [
-        /**
-         * @OA\Get(
-         *     path="/store/reports",
-         *     tags={"store"},
-         *     summary="Get sales analysis data",
-         *     description="Returns monthly sales performance data and top products logs.",
-         *     @OA\Response(response="200", description="Reports aggregated successfully", @OA\JsonContent())
-         * )
-         */
+        
+
         'GET' => function($params, $app) {
             if (!$app->helper('acl')->isAllowed('store/manage')) {
                 $app->response->status = 401;
@@ -537,15 +460,8 @@ $this->on('restApi.config', function($restApi) {
     ]);
 
     $restApi->addEndPoint('/store/settings', [
-        /**
-         * @OA\Get(
-         *     path="/store/settings",
-         *     tags={"store"},
-         *     summary="Get store global settings",
-         *     description="Returns store name, contact email, tax (PPN %) rates, and currency symbols.",
-         *     @OA\Response(response="200", description="Settings loaded", @OA\JsonContent())
-         * )
-         */
+        
+
         'GET' => function($params, $app) {
             if (!$app->helper('acl')->isAllowed('store/manage')) {
                 $app->response->status = 401;
@@ -564,32 +480,10 @@ $this->on('restApi.config', function($restApi) {
         }
     ]);
 
-    // Customer Auth: Register
+    
     $restApi->addEndPoint('/store/auth/register', [
-        /**
-         * @OA\Post(
-         *     path="/store/auth/register",
-         *     tags={"store"},
-         *     summary="Register a new store customer",
-         *     description="Registers a new customer account in the e-commerce store with email, name, and password.",
-         *     @OA\RequestBody(
-         *         required=true,
-         *         @OA\JsonContent(
-         *             type="object",
-         *             required={"name", "email", "password"},
-         *             @OA\Property(property="name", type="string", example="Jane Doe"),
-         *             @OA\Property(property="email", type="string", example="janedoe@example.com"),
-         *             @OA\Property(property="password", type="string", example="secret123"),
-         *             @OA\Property(property="phone", type="string", example="+628123456789"),
-         *             @OA\Property(property="address", type="string", example="Jl. Jenderal Sudirman No. 10"),
-         *             @OA\Property(property="city", type="string", example="Jakarta Selatan"),
-         *             @OA\Property(property="zip", type="string", example="12190")
-         *         )
-         *     ),
-         *     @OA\Response(response="200", description="Customer registered successfully", @OA\JsonContent()),
-         *     @OA\Response(response="400", description="Invalid input or email already registered")
-         * )
-         */
+        
+
         'POST' => function($params, $app) {
             $role = $app->helper('auth')->getUser('role');
             if (!$app->helper('acl')->isAllowed('store/api/auth', $role) && !$app->helper('acl')->isAllowed('store/manage', $role)) {
@@ -647,27 +541,10 @@ $this->on('restApi.config', function($restApi) {
         }
     ]);
 
-    // Customer Auth: Login
+    
     $restApi->addEndPoint('/store/auth/login', [
-        /**
-         * @OA\Post(
-         *     path="/store/auth/login",
-         *     tags={"store"},
-         *     summary="Login store customer",
-         *     description="Authenticates customer credentials and returns a secure JWT token for client-side API requests.",
-         *     @OA\RequestBody(
-         *         required=true,
-         *         @OA\JsonContent(
-         *             type="object",
-         *             required={"email", "password"},
-         *             @OA\Property(property="email", type="string", example="janedoe@example.com"),
-         *             @OA\Property(property="password", type="string", example="secret123")
-         *         )
-         *     ),
-         *     @OA\Response(response="200", description="Authenticated successfully", @OA\JsonContent()),
-         *     @OA\Response(response="401", description="Invalid credentials")
-         * )
-         */
+        
+
         'POST' => function($params, $app) {
             $role = $app->helper('auth')->getUser('role');
             if (!$app->helper('acl')->isAllowed('store/api/auth', $role) && !$app->helper('acl')->isAllowed('store/manage', $role)) {
@@ -689,12 +566,12 @@ $this->on('restApi.config', function($restApi) {
                 return ['error' => 'Invalid credentials.'];
             }
 
-            // Create JWT token
+            
             $payload = [
                 'id' => $customer['_id'],
                 'email' => $customer['email'],
                 'role' => 'customer',
-                'exp' => time() + (86400 * 30) // 30 days
+                'exp' => time() + (86400 * 30) 
             ];
 
             $token = $app->helper('jwt')->create($payload);
@@ -710,27 +587,10 @@ $this->on('restApi.config', function($restApi) {
         }
     ]);
 
-    // Customer Auth: Forgot Password
+    
     $restApi->addEndPoint('/store/auth/forgot-password', [
-        /**
-         * @OA\Post(
-         *     path="/store/auth/forgot-password",
-         *     tags={"store"},
-         *     summary="Forgot password request",
-         *     description="Generates a password reset token and sends a reset link to the customer's email.",
-         *     @OA\RequestBody(
-         *         required=true,
-         *         @OA\JsonContent(
-         *             type="object",
-         *             required={"email"},
-         *             @OA\Property(property="email", type="string", example="janedoe@example.com"),
-         *             @OA\Property(property="redirect_url", type="string", example="https://my-store.com/reset-password")
-         *         )
-         *     ),
-         *     @OA\Response(response="200", description="Password reset email sent", @OA\JsonContent()),
-         *     @OA\Response(response="400", description="Invalid email or user not found")
-         * )
-         */
+        
+
         'POST' => function($params, $app) {
             $role = $app->helper('auth')->getUser('role');
             if (!$app->helper('acl')->isAllowed('store/api/auth', $role) && !$app->helper('acl')->isAllowed('store/manage', $role)) {
@@ -754,11 +614,11 @@ $this->on('restApi.config', function($restApi) {
 
             $resetToken = bin2hex(random_bytes(32));
             $customer['reset_token'] = $resetToken;
-            $customer['reset_token_expires'] = time() + 3600; // 1 hour
+            $customer['reset_token_expires'] = time() + 3600; 
 
             $app->dataStorage->save('store/customers', $customer);
 
-            // Send reset email
+            
             $resetLink = $redirectUrl ? "{$redirectUrl}?token={$resetToken}" : $app->routeUrl("/store/reset-password?token={$resetToken}", true);
             $emailBody = "<h1>Password Reset Request</h1>";
             $emailBody .= "<p>Hello {$customer['name']},</p>";
@@ -766,7 +626,7 @@ $this->on('restApi.config', function($restApi) {
             $emailBody .= "<p><a href='{$resetLink}'>Reset Password</a></p>";
             $emailBody .= "<p>This link will expire in 1 hour.</p>";
 
-            // Save local email preview
+            
             try {
                 $previewDir = APP_DIR . '/storage/tmp/store-emails';
                 if (!file_exists($previewDir)) {
@@ -774,10 +634,10 @@ $this->on('restApi.config', function($restApi) {
                 }
                 file_put_contents("{$previewDir}/reset-{$customer['email']}.html", $emailBody);
             } catch (\Exception $e) {
-                // Ignore preview logging errors
+                
             }
 
-            // Attempt to send email
+            
             try {
                 $mailer = $app->helper('mailer');
                 $mailer->send([
@@ -786,7 +646,7 @@ $this->on('restApi.config', function($restApi) {
                     'body' => $emailBody
                 ]);
             } catch (\Exception $e) {
-                // Fail silently for mailer to not break the API request
+                
             }
 
             return [
@@ -796,27 +656,10 @@ $this->on('restApi.config', function($restApi) {
         }
     ]);
 
-    // Customer Auth: Reset Password
+    
     $restApi->addEndPoint('/store/auth/reset-password', [
-        /**
-         * @OA\Post(
-         *     path="/store/auth/reset-password",
-         *     tags={"store"},
-         *     summary="Reset password",
-         *     description="Resets the customer password using the verification token received in the email.",
-         *     @OA\RequestBody(
-         *         required=true,
-         *         @OA\JsonContent(
-         *             type="object",
-         *             required={"token", "password"},
-         *             @OA\Property(property="token", type="string", example="abc123token"),
-         *             @OA\Property(property="password", type="string", example="newsecret123")
-         *         )
-         *     ),
-         *     @OA\Response(response="200", description="Password reset successfully", @OA\JsonContent()),
-         *     @OA\Response(response="400", description="Invalid or expired token")
-         * )
-         */
+        
+
         'POST' => function($params, $app) {
             $role = $app->helper('auth')->getUser('role');
             if (!$app->helper('acl')->isAllowed('store/api/auth', $role) && !$app->helper('acl')->isAllowed('store/manage', $role)) {

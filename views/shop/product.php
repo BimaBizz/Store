@@ -7,18 +7,18 @@
 
 <div class="container" style="padding-top: 2.5rem; padding-bottom: 3rem;">
 <div v-if="selectedProduct" class="product-detail-container">
-    <!-- Back button -->
+    
     <a href="<?=$shopUrl?>" class="btn btn-outline btn-ghost" style="margin-bottom: 2rem; display: inline-flex; align-items: center; gap: 0.5rem; text-decoration: none;">
         &larr; Back to Shop
     </a>
 
     <div class="product-detail-grid">
-        <!-- Left: Image -->
+        
         <div class="product-detail-media" style="display: flex; flex-direction: column; gap: 1rem;">
             <div class="product-img-wrapper-detail" style="border-radius: 16px; overflow: hidden; background: var(--card-bg); border: 1px solid var(--border-color); box-shadow: var(--shadow-sm); aspect-ratio: 1; display: flex; align-items: center; justify-content: center;">
                 <img :src="currentDetailImage || selectedProduct.image_url || 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=800'" :alt="selectedProduct.name" style="width: 100%; height: 100%; object-fit: cover;">
             </div>
-            <!-- Thumbnails -->
+            
             <div v-if="selectedProduct.image_urls && selectedProduct.image_urls.length > 1" style="display: flex; gap: 0.5rem; overflow-x: auto; padding-bottom: 0.5rem;">
                 <div v-for="(img, idx) in selectedProduct.image_urls" :key="idx" 
                      @click="currentDetailImage = img"
@@ -29,7 +29,7 @@
             </div>
         </div>
 
-        <!-- Right: Info -->
+        
         <div class="product-detail-info" style="display: flex; flex-direction: column; gap: 1.5rem;">
             <div>
                 <span class="product-category-badge" v-if="selectedProduct.category" style="margin-bottom: 0.75rem; display: inline-block;">{{ selectedProduct.category }}</span>
@@ -51,7 +51,7 @@
                 <p style="color: var(--text-secondary); line-height: 1.7; font-size: 1rem; white-space: pre-line;">{{ selectedProduct.description }}</p>
             </div>
 
-            <!-- Purchase Controls -->
+            
             <div style="display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap;">
                 <div v-if="selectedProduct.stock > 0" style="display: flex; align-items: center; border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; background: var(--bg-surface);">
                     <button class="qty-btn" @click="detailQty = Math.max(1, detailQty - 1)" style="padding: 0.75rem 1.25rem; background: transparent; border: none; color: var(--text-primary); cursor: pointer; transition: background 0.2s;">-</button>
@@ -72,9 +72,8 @@
 <div v-else style="text-align: center; padding: 4rem 0;">
     <h2>Product details loading...</h2>
 </div>
-</div><!-- /container -->
+</div>
 
-<!-- Pass the PHP variable to the Vue client scope -->
 <script>
     window.INITIAL_PRODUCT = <?= \json_encode($product) ?>;
 </script>

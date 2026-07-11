@@ -1,5 +1,5 @@
         </main>
-        <!-- Footer Section -->
+        
         <?php
             $app = \Cockpit::instance();
             $storeSettings = $app->dataStorage->findOne('store/settings', ['_id' => 'config']);
@@ -24,7 +24,7 @@
         ?>
         <footer class="shop-footer">
             <div class="container footer-grid">
-                <!-- Col 1: Branding -->
+                
                 <div class="footer-col branding">
                     <div class="logo-container" style="margin-bottom: 1rem;">
                         <?php if ($faviconUrl): ?>
@@ -41,7 +41,7 @@
                     </p>
                 </div>
 
-                <!-- Col 2: Navigation Links -->
+                
                 <?php
                     $storeFront = $this->retrieve('storeFront') ?? [];
                     $enableFrontend = !empty($storeFront['enableFrontend']);
@@ -57,7 +57,7 @@
                         <li v-if="homepageContent.shipping_policy"><a href="<?=$securityUrl?>">Security & Policy</a></li>
                     </ul>
                 </div>
-                <!-- Col 3: Contact Details -->
+                
                 <div class="footer-col">
                     <h4 class="footer-title">Contact Us</h4>
                     <ul class="footer-links contacts">
@@ -75,7 +75,7 @@
                         </li>
                     </ul>
                 </div>
-                <!-- Col 4: Payment Badges -->
+                
                 <div class="footer-col">
                     <h4 class="footer-title">Payment Secure</h4>
                     <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.75rem;">Powered securely by Midtrans Gateway</p>
@@ -98,8 +98,7 @@
             </div>
         </footer>
 
-
-        <!-- Product Detail Modal -->
+        
         <div class="modal-overlay" :class="{ active: isDetailOpen }" @click.self="isDetailOpen = false">
             <div class="modal" v-if="selectedProduct">
                 <div class="modal-header">
@@ -110,7 +109,7 @@
                     <div class="detail-layout">
                         <div style="display: flex; flex-direction: column; gap: 1rem;">
                             <img :src="currentDetailImage || selectedProduct.image_url || 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=500'" :alt="selectedProduct.name" class="detail-img">
-                            <!-- Thumbnails inside modal -->
+                            
                             <div v-if="selectedProduct.image_urls && selectedProduct.image_urls.length > 1" style="display: flex; gap: 0.5rem; overflow-x: auto; padding-bottom: 0.5rem;">
                                 <div v-for="(img, idx) in selectedProduct.image_urls" :key="idx" 
                                      @click="currentDetailImage = img"
@@ -160,7 +159,7 @@
             </div>
         </div>
 
-        <!-- Sliding Cart Drawer -->
+        
         <div class="drawer-overlay" :class="{ active: isCartOpen }" @click.self="isCartOpen = false"></div>
         <div class="drawer" :class="{ active: isCartOpen }">
             <div class="drawer-header">
@@ -169,14 +168,14 @@
             </div>
             
             <div class="drawer-body">
-                <!-- Empty Cart -->
+                
                 <div v-if="cart.length === 0" style="text-align: center; padding: 4rem 1rem; color: var(--text-secondary);">
                     <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin-bottom: 1rem; color: var(--text-muted);"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
                     <h4>Your Cart is Empty</h4>
                     <p style="font-size: 0.85rem; margin-top: 0.25rem;">Browse products and add items to your cart.</p>
                 </div>
 
-                <!-- Cart Items List -->
+                
                 <div v-else>
                     <div class="cart-item" v-for="item in cart" :key="item.product_id">
                         <img :src="item.image_url || 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=200'" :alt="item.name" class="cart-item-img">
@@ -199,9 +198,9 @@
                 </div>
             </div>
 
-            <!-- Drawer Footer containing details and checkout link -->
+            
             <div class="drawer-footer" v-if="cart.length > 0">
-                <!-- Promo Code -->
+                
                 <div class="voucher-section">
                     <label class="form-label" style="margin-bottom: 0.25rem;">Have a Promo Code?</label>
                     <div class="voucher-input-group">
@@ -214,7 +213,7 @@
                     </div>
                 </div>
 
-                <!-- Courier Service selection -->
+                
                 <div class="courier-section">
                     <label class="form-label">Shipping Courier Service</label>
                     <select class="courier-select" v-model="selectedCourier" @change="calculateShipping">
@@ -225,7 +224,7 @@
                     </select>
                 </div>
 
-                <!-- Totals -->
+                
                 <div class="summary-row">
                     <span>Subtotal:</span>
                     <span>{{ formatIDR(cartSubtotal) }}</span>
@@ -254,7 +253,7 @@
             </div>
         </div>
 
-        <!-- Checkout Form Modal -->
+        
         <div class="modal-overlay" :class="{ active: isCheckoutOpen }" @click.self="isCheckoutOpen = false">
             <div class="modal">
                 <div class="modal-header">
@@ -308,7 +307,7 @@
             </div>
         </div>
 
-        <!-- Simulated Payment Gateway Modal -->
+        
         <div class="modal-overlay" :class="{ active: isPaymentOpen }" @click.self="cancelPayment">
             <div class="modal" style="max-width: 440px;">
                 <div class="modal-header">
@@ -346,9 +345,7 @@
             </div>
         </div>
 
-
-
-        <!-- Custom Toast container -->
+        
         <div class="toast-container">
             <div class="toast" v-for="t in toasts" :key="t.id" :class="t.type">
                 <span>{{ t.message }}</span>
@@ -356,7 +353,7 @@
         </div>
     </div>
 
-    <!-- Client application scripts -->
+    
     <script>
         <?php include(__DIR__.'/shop.js'); ?>
     </script>

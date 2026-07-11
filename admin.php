@@ -1,7 +1,5 @@
 <?php
 
-
-// Register routes
 $this->bindClass('Store\\Controller\\Store', '/store');
 $this->bindClass('Store\\Controller\\Shop', '/shop');
 

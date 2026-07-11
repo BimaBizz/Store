@@ -1,5 +1,5 @@
 <?php
-// Renders the Store/Toko Sales Reports & Analytics UI
+
 ?>
 
 <vue-view>
@@ -19,7 +19,7 @@
 
             <div v-else>
                 <kiss-grid cols="1 2@m" gap="medium">
-                    <!-- Daily Sales Breakdown -->
+                    
                     <kiss-card theme="bordered contrast" class="kiss-padding-large">
                         <div class="kiss-text-bold kiss-size-medium kiss-margin-bottom">Daily Revenues Summary</div>
                         
@@ -39,7 +39,7 @@
                         </div>
                     </kiss-card>
 
-                    <!-- Top Selling Products -->
+                    
                     <kiss-card theme="bordered contrast" class="kiss-padding-large">
                         <div class="kiss-text-bold kiss-size-medium kiss-margin-bottom">Top-Selling Products (by Revenue)</div>
                         

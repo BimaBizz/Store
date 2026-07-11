@@ -6,7 +6,7 @@
     $dashboardUrl = $enableFrontend ? '/dashboard' : '/shop/dashboard';
     $activeTab = \str_contains($_SERVER['REQUEST_URI'], '/tracker') ? 'tracker' : (\str_contains($_SERVER['REQUEST_URI'], '/dashboard') ? 'dashboard' : 'shop');
 
-    // Ambil settings dari database menggunakan Cockpit instance
+    
     $app = \Cockpit::instance();
     $storeSettings = $app->dataStorage->findOne('store/settings', ['_id' => 'config']);
     $shopName   = $storeSettings['shop_name'] ?? 'Online Store';
@@ -17,7 +17,7 @@
         default     => $shopName
     };
 
-    // Resolve favicon URL (assets://ID atau URL langsung) agar bisa diakses publik (tanpa login)
+    
     $faviconRaw = $storeSettings['favicon'] ?? '';
     $faviconUrl = '';
     if ($faviconRaw) {
@@ -34,7 +34,7 @@
         }
     }
 
-    // Ambil voucher promo yang aktif untuk topbar
+    
     $topbarVoucher = null;
     $vouchers = $app->dataStorage->find('store/vouchers')->toArray();
     if ($vouchers) {
@@ -81,7 +81,7 @@
 </head>
 <body>
     <div id="shop-app">
-        <!-- Top Promo Bar -->
+        
         <?php if ($topbarVoucher): ?>
         <div class="promo-topbar">
             <span><?= htmlspecialchars(($topbarVoucher['topbar_description'] ?? '') ?: "🔥 Gunakan kode promo: " . $topbarVoucher['code']) ?></span>
@@ -89,10 +89,10 @@
         </div>
         <?php endif; ?>
 
-        <!-- Header -->
+        
         <header>
             <div class="container header-content">
-                <!-- Logo -->
+                
                 <a href="<?=$shopUrl?>" class="logo-container" style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 0.75rem;">
                     <?php if ($faviconUrl): ?>
                     <div style="color: #fff; font-size: 1.1rem; border-radius: 8px; width: 2.25rem; height: 2.25rem; display: flex; align-items: center; justify-content: center; font-weight: 800; overflow: hidden; padding: 0;">
@@ -108,7 +108,7 @@
     $aboutUrl = $enableFrontend ? '/about' : '/shop/about';
     $faqUrl = $enableFrontend ? '/faq' : '/shop/faq';
 ?>
-                <!-- Navigation Links -->
+                
                 <nav class="header-nav">
                     <a href="<?=$shopUrl?>" class="header-nav-link <?= $activeTab === 'shop' ? 'active' : '' ?>">Home</a>
                     <a href="<?=$aboutUrl?>" class="header-nav-link" v-if="homepageContent.about_us">About Us</a>
@@ -116,7 +116,7 @@
                     <a href="<?=$trackerUrl?>" class="header-nav-link <?= $activeTab === 'tracker' ? 'active' : '' ?>">Track Order</a>
                 </nav>
 
-                <!-- Right Side Controls -->
+                
                 <div class="nav-buttons" style="display: flex; align-items: center; gap: 0.75rem;">
                     <button class="btn btn-ghost theme-toggle-btn" @click="toggleTheme" title="Toggle Theme" style="padding: 0.5rem; border: 1px solid var(--border-color); border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; width: 2.25rem; height: 2.25rem; color: var(--text-primary);">
                         <svg v-if="theme === 'light'" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -148,5 +148,5 @@
             </div>
         </header>
 
-        <!-- Main Body (NO container wrapper — hero is full width) -->
+        
         <main>

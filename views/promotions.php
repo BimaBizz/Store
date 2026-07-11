@@ -1,5 +1,5 @@
 <?php
-// Renders the Store/Toko Promotions & Vouchers UI
+
 ?>
 
 <style>
@@ -36,7 +36,7 @@
                     </div>
 
                     <div v-if="vouchers.length">
-                        <!-- TABLE VIEW -->
+                        
                         <div class="kiss-overflow-auto" v-if="view === 'table'">
                             <table class="kiss-table">
                                 <thead>
@@ -72,7 +72,7 @@
                             </table>
                         </div>
 
-                        <!-- CARDS/GRID VIEW -->
+                        
                         <kiss-grid cols="1 3@m" gap="medium" class="kiss-margin-bottom" v-else>
                             <div v-for="v in vouchers" :key="v._id">
                                 <kiss-card theme="bordered contrast" class="kiss-padding clickable-row">
@@ -95,7 +95,7 @@
                             </div>
                         </kiss-grid>
 
-                        <!-- PAGINATION FOOTER -->
+                        
                         <div class="kiss-flex kiss-flex-middle kiss-margin-large-top">
                             <div class="kiss-flex-1">
                                 <app-pagination v-if="count">
@@ -109,7 +109,7 @@
                                     </div>
                                     <a class="kiss-margin-small-start" v-if="(page + 1) <= pages" @click="page++; loadVouchers()">Next</a>
                                     
-                                    <!-- Show Limit Selector -->
+                                    
                                     <div class="kiss-margin-start kiss-overlay-input">
                                         <span class="kiss-color-muted">Show:</span> {{ limit }}
                                         <select v-model="limit" @change="page = 1; loadVouchers()">
@@ -117,7 +117,7 @@
                                         </select>
                                     </div>
                                     
-                                    <!-- Sort Option Selector -->
+                                    
                                     <div class="kiss-margin-start">
                                         <a @click="sortDir = sortDir == -1 ? 1 : -1; loadVouchers()"><icon>{{ sortDir == 1 ? 'arrow_downward':'arrow_upward' }}</icon></a>
                                         <div class="kiss-margin-xsmall-start kiss-overlay-input">
@@ -130,7 +130,7 @@
                                 </app-pagination>
                             </div>
                             
-                            <!-- Layout View Toggle -->
+                            
                             <div class="kiss-flex kiss-flex-middle" gap="small" style="gap: 12px;">
                                 <a class="kiss-link-muted" :class="view=='cards' ? 'kiss-color-primary' : 'kiss-color-muted'" @click="view='cards'"><icon size="large">grid_view</icon></a>
                                 <a class="kiss-link-muted" :class="view=='table' ? 'kiss-color-primary' : 'kiss-color-muted'" @click="view='table'"><icon size="large">dns</icon></a>
@@ -145,7 +145,7 @@
             </div>
         </div>
 
-        <!-- VOUCHER FORM DIALOG -->
+        
         <kiss-dialog ref="voucherModal">
             <kiss-content class="kiss-padding-large" v-if="voucherForm" style="width: 750px; max-width: 100%;">
                 <h3>{{ voucherForm._id ? 'Edit Voucher' : 'Create Voucher' }}</h3>
@@ -285,7 +285,7 @@
                     this.$refs.voucherModal.show();
                 },
                 saveVoucher() {
-                    // Force code upper-case
+                    
                     this.voucherForm.code = this.voucherForm.code.toUpperCase();
                     this.$request('/store/saveVoucher', { voucher: this.voucherForm }).then(res => {
                         this.$refs.voucherModal.close();

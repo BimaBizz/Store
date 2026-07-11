@@ -1,5 +1,5 @@
 <?php
-// Renders the Store/Toko CMS Content UI
+
 ?>
 
 <vue-view>
@@ -19,7 +19,7 @@
 
             <div v-else class="kiss-width-2-3@m" style="margin: 0 auto;">
                 <form @submit.prevent="saveContent">
-                    <!-- Homepage Hero settings -->
+                    
                     <kiss-card theme="bordered contrast" class="kiss-padding-large kiss-margin-bottom">
                         <div class="kiss-size-4 kiss-text-bold kiss-margin-large-bottom">Homepage Hero Banner settings</div>
                         
@@ -95,7 +95,7 @@
                         </kiss-grid>
                     </kiss-card>
 
-                    <!-- PRODUCT PICKER DIALOG -->
+                    
                     <kiss-dialog ref="productPickerModal">
                         <kiss-content class="kiss-padding-large" style="width: 800px; max-width: 100%;">
                             <div class="kiss-flex kiss-flex-middle kiss-margin-bottom">
@@ -103,12 +103,12 @@
                                 <button type="button" class="kiss-button kiss-button-small" @click="$refs.productPickerModal.close()">✕</button>
                             </div>
                             
-                            <!-- Search bar -->
+                            
                             <div class="kiss-margin-bottom">
                                 <input type="text" class="kiss-input" placeholder="Filter by product name, SKU or category..." v-model="productSearchQuery">
                             </div>
                             
-                            <!-- Product selection list table -->
+                            
                             <div style="max-height: 400px; overflow-y: auto; border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; background: rgba(0,0,0,0.15);">
                                 <div v-if="filteredAvailableProducts.length === 0" class="kiss-align-center kiss-padding kiss-color-muted">
                                     No matching products found in catalog.
@@ -152,7 +152,7 @@
                         </kiss-content>
                     </kiss-dialog>
 
-                    <!-- Feature Promo Banners (Sub-hero Slideshow) settings -->
+                    
                     <kiss-card theme="bordered contrast" class="kiss-padding-large kiss-margin-bottom">
                         <div class="kiss-flex kiss-flex-middle kiss-margin-bottom" gap="medium">
                             <div class="kiss-size-4 kiss-text-bold kiss-flex-1">Feature Promo Banners (Sub-hero Slideshow)</div>
@@ -216,7 +216,7 @@
                         </div>
                     </kiss-card>
 
-                    <!-- Static Pages -->
+                    
                     <kiss-card theme="bordered contrast" class="kiss-padding-large kiss-margin-bottom">
                         <div class="kiss-size-4 kiss-text-bold kiss-margin-large-bottom">Static Pages (HTML/Markdown)</div>
                         
@@ -236,7 +236,7 @@
                         </div>
                     </kiss-card>
 
-                    <!-- Flash Sales Settings -->
+                    
                     <kiss-card theme="bordered contrast" class="kiss-padding-large kiss-margin-bottom">
                         <div class="kiss-flex kiss-flex-middle kiss-margin-bottom" gap="medium">
                             <div class="kiss-size-4 kiss-text-bold kiss-flex-1">Flash Sales / Today's Deals</div>
@@ -252,7 +252,7 @@
                             <span class="kiss-size-xsmall kiss-color-muted" style="margin-top: 4px; display: inline-block;">Leave blank to completely HIDE the Flash Sales section from the website.</span>
                         </div>
                         
-                        <!-- List of linked products -->
+                        
                         <div v-if="linkedProducts.length === 0" class="kiss-align-center kiss-padding kiss-color-muted" style="border: 2px dashed rgba(255,255,255,0.08); border-radius: 8px; background: rgba(0,0,0,0.15);">
                             No products linked to Flash Sales yet. Click "Link Products" to add.
                         </div>
@@ -286,8 +286,6 @@
                         </div>
                     </kiss-card>
 
-
-
                     <div class="kiss-margin-large-top kiss-flex kiss-flex-right">
                         <button type="submit" class="kiss-button kiss-button-success" :disabled="saving">
                             <span v-if="saving">Saving Content...</span>
@@ -309,7 +307,7 @@
                         shipping_policy: '',
                         about_us: '',
                         
-                        // Hero settings fields
+                        
                         hero_badge: '',
                         hero_title: '',
                         hero_desc: '',
@@ -322,11 +320,11 @@
                         hero_card2_label: '',
                         hero_card2_val: '',
                         
-                        // Flash sales products list
+                        
                         flash_product_ids: [],
                         flash_sale_end_time: '',
                         
-                        // Feature promo settings fields
+                        
                         promo_badge: '',
                         promo_title: '',
                         promo_btn_text: '',

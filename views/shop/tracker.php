@@ -1,7 +1,7 @@
 <?=$this->render('store:views/shop/header.php')?>
 
 <div class="container" style="padding-top: 2.5rem; padding-bottom: 2.5rem;">
-<!-- Tab 2: Order Tracker -->
+
             
                 <div class="order-search-card" style="width: 600px; margin: 0 auto;" v-if="!activeTrackedOrder">
                     <h2 class="hero-title" style="font-size: 1.8rem; text-align: center; margin-bottom: 0.5rem;">Track Shipment</h2>
@@ -24,7 +24,7 @@
                     </form>
                 </div>
 
-                <!-- Display Tracked Order Receipt -->
+                
                 <div class="order-result-card" v-else>
                     <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem;">
                         <div>
@@ -44,7 +44,7 @@
                         </div>
                     </div>
 
-                    <!-- Visual Timeline -->
+                    
                     <div class="timeline">
                         <div class="timeline-progress" :style="{ transform: 'scaleX(' + getTimelineProgressScale(activeTrackedOrder.status) + ')' }"></div>
                         
@@ -66,7 +66,7 @@
                         </div>
                     </div>
 
-                    <!-- Invoice Grid -->
+                    
                     <div class="invoice-grid">
                         <div>
                             <div class="invoice-details-block" style="margin-bottom: 1.5rem;">
@@ -138,5 +138,5 @@
                     </div>
                 </div>
 
-</div><!-- /container -->
+</div>
 <?=$this->render('store:views/shop/footer.php')?>

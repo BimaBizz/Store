@@ -3,22 +3,22 @@
     $statusCode       = $_GET['status_code']       ?? '';
     $transactionStatus = $_GET['transaction_status'] ?? '';
 
-    // Fetch order & transaction data from storage
+    
     $order       = null;
     $transaction = null;
 
     if ($orderId) {
-        // order_id from snap = midtrans transaction_id (e.g. TX-xxx)
+        
         $transaction = $this->dataStorage->findOne('midtrans/transactions', ['transaction_id' => $orderId]);
         $order       = $this->dataStorage->findOne('store/orders', ['transaction_id' => $orderId]);
     }
 
-    // Map transaction_status to human-friendly state
+    
     $isSuccess = in_array($transactionStatus, ['settlement', 'capture', 'success']);
     $isPending = in_array($transactionStatus, ['pending', 'authorize']);
     $isFailed  = in_array($transactionStatus, ['deny', 'cancel', 'expire', 'failure', 'failed']);
 
-    // Determine display values
+    
     $displayAmount  = $order['total_amount']      ?? ($transaction['amount'] ?? 0);
     $displayEmail   = $order['customer_email']    ?? ($transaction['customer_email'] ?? '');
     $displayOrderId = $order['order_id']          ?? $orderId;
@@ -45,7 +45,7 @@
     <style>
         <?php include(__DIR__.'/shop.css'); ?>
 
-        /* ─── Finished-order page styles ─── */
+        
         .fo-page {
             min-height: 100vh;
             display: flex;
@@ -98,7 +98,7 @@
 
         .fo-card > * { position: relative; z-index: 1; }
 
-        /* Icon */
+        
         .fo-icon-wrap {
             width: 80px;
             height: 80px;
@@ -123,7 +123,7 @@
         .fo-icon-wrap.pending svg { color: #ffbe0b; }
         .fo-icon-wrap.failed  svg { color: #ef4771; }
 
-        /* Status badge */
+        
         .fo-status-badge {
             display: inline-flex;
             align-items: center;
@@ -141,7 +141,7 @@
         .fo-status-badge.pending { background: rgba(255,190,11,0.12); color: #ffbe0b; border: 1px solid rgba(255,190,11,0.3); }
         .fo-status-badge.failed  { background: rgba(239,71,113,0.12); color: #ef4771; border: 1px solid rgba(239,71,113,0.3); }
 
-        /* Title */
+        
         .fo-title {
             font-family: var(--font-title);
             font-size: 1.9rem;
@@ -160,7 +160,7 @@
 
         .fo-subtitle strong { color: var(--text-primary); }
 
-        /* Detail rows */
+        
         .fo-details {
             background: var(--bg-secondary);
             border: 1px solid var(--border-color);
@@ -196,7 +196,7 @@
         .fo-detail-value.rose  { color: var(--accent-rose); }
         .fo-detail-value.mono  { font-family: monospace; font-size: 0.8rem; }
 
-        /* Action buttons */
+        
         .fo-actions {
             display: flex;
             flex-direction: column;
@@ -238,7 +238,7 @@
             border-color: rgba(255,255,255,0.2);
         }
 
-        /* Confetti */
+        
         .fo-confetti {
             position: fixed;
             top: 0; left: 0;
@@ -260,7 +260,7 @@
             100% { opacity: 0; transform: translateY(110vh) rotate(720deg); }
         }
 
-        /* Responsive */
+        
         @media (max-width: 600px) {
             .fo-card { padding: 2.25rem 1.5rem; }
             .fo-title { font-size: 1.55rem; }
@@ -276,7 +276,7 @@
     <?php endif; ?>
 
     <div class="fo-page">
-        <!-- Minimal header -->
+        
         <header>
             <div class="container header-content">
                 <a href="<?= $shopUrl ?>" class="logo-container" style="text-decoration:none;color:inherit;display:flex;align-items:center;gap:.75rem;">
@@ -286,11 +286,11 @@
             </div>
         </header>
 
-        <!-- Main card -->
+        
         <div class="fo-body">
             <div class="fo-card <?= $state ?>">
 
-                <!-- Icon -->
+                
                 <div class="fo-icon-wrap <?= $state ?>">
                     <?php if ($isSuccess): ?>
                         <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
@@ -310,7 +310,7 @@
                     <?php endif; ?>
                 </div>
 
-                <!-- Badge -->
+                
                 <div class="fo-status-badge <?= $state ?>">
                     <span>●</span>
                     <?php
@@ -320,7 +320,7 @@
                     ?>
                 </div>
 
-                <!-- Title & subtitle -->
+                
                 <?php if ($isSuccess): ?>
                     <h1 class="fo-title">Order Placed Successfully!</h1>
                     <p class="fo-subtitle">
@@ -344,7 +344,7 @@
                     </p>
                 <?php endif; ?>
 
-                <!-- Detail block -->
+                
                 <?php if ($displayOrderId || $displayAmount || $transactionStatus): ?>
                 <div class="fo-details">
                     <?php if ($displayOrderId): ?>
@@ -386,7 +386,7 @@
                 </div>
                 <?php endif; ?>
 
-                <!-- CTA buttons -->
+                
                 <div class="fo-actions">
                     <?php if ($isSuccess || $isPending): ?>
                         <a href="<?= $trackerUrl ?>?prefill_order=<?= urlencode($displayOrderId) ?>" class="fo-btn-primary" id="track-order-btn">

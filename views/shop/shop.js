@@ -13,7 +13,7 @@ const { createApp } = Vue;
                     bannerTimer: null,
                     activeInfoTab: 'about',
 
-                    // Customer Auth & Dashboard states
+                    
                     customerSession: { logged_in: false, customer: null, orders: [] },
                     activeAuthForm: 'login',
                     submittingAuth: false,
@@ -61,7 +61,7 @@ const { createApp } = Vue;
                     isSuccessOpen: false,
                     successOrder: null,
 
-                    // Order Tracker states
+                    
                     trackEmail: '',
                     trackOrderId: '',
                     loadingTrack: false,
@@ -70,7 +70,7 @@ const { createApp } = Vue;
                     toasts: [],
                     toastId: 0,
 
-                    // New homepage states
+                    
                     flashCountdown: null,
                     flashCountdownEnd: null,
                     explorePage: 0,
@@ -93,15 +93,15 @@ const { createApp } = Vue;
                     if (ids.length > 0) {
                         return ids.map(id => this.products.find(p => p._id === id)).filter(Boolean);
                     }
-                    // Top 8 products fallback
+                    
                     return this.products.slice(0, 8);
                 },
                 bestSellingProducts() {
-                    // Best 4 products (could be sorted by sales if available)
+                    
                     return this.products.slice(0, 4);
                 },
                 newArrivalProducts() {
-                    // Latest 4 products for new arrival section
+                    
                     const sorted = [...this.products].reverse();
                     return sorted.slice(0, 4);
                 },
@@ -134,7 +134,7 @@ const { createApp } = Vue;
                 this.fetchProducts();
                 this.loadCartFromStorage();
 
-                // Parse URL params for password reset
+                
                 const params = new URLSearchParams(window.location.search);
                 const email = params.get('email');
                 const token = params.get('reset_token');
@@ -144,7 +144,7 @@ const { createApp } = Vue;
                     this.urlParams = { email, token };
                 }
 
-                // Parse URL params for order tracking
+                
                 const orderIdParam = params.get('order_id') || params.get('orderId');
                 const emailParam = params.get('email');
                 if (orderIdParam && emailParam) {
@@ -175,7 +175,7 @@ const { createApp } = Vue;
                         const res = await fetch('/shop/getSettings');
                         this.settings = await res.json();
 
-                        // Load Midtrans Snap JS dynamically if Client Key is configured
+                        
                         if (this.settings.midtrans_client_key) {
                             const scriptSrc = this.settings.midtrans_mode === 'production'
                                 ? 'https://app.midtrans.com/snap/snap.js'
@@ -195,20 +195,20 @@ const { createApp } = Vue;
                         const res = await fetch('/shop/getHomepageContent');
                         this.homepageContent = await res.json();
 
-                        // Set activeInfoTab to first available content
+                        
                         if (this.homepageContent.about_us) this.activeInfoTab = 'about';
                         else if (this.homepageContent.faq) this.activeInfoTab = 'faq';
                         else if (this.homepageContent.shipping_policy) this.activeInfoTab = 'shipping';
 
-                        // Start auto-play slideshow if banners exist
+                        
                         if (this.homepageContent.banners && this.homepageContent.banners.length > 1) {
                             this.startBannerAutoPlay();
                         }
                         
-                        // Start flash sale countdown
+                        
                         this.startFlashCountdown();
 
-                        // Start auto-play for promo slideshow
+                        
                         this.startPromoAutoPlay();
                     } catch (e) {
                         this.showToast('Failed to load homepage content', 'error');
@@ -240,7 +240,7 @@ const { createApp } = Vue;
                         const res = await fetch(url);
                         this.products = await res.json();
                         
-                        // Extract unique categories for filter keys
+                        
                         if (this.categories.length === 0) {
                             const cats = new Set(this.products.map(p => p.category).filter(Boolean));
                             this.categories = Array.from(cats);
@@ -263,7 +263,7 @@ const { createApp } = Vue;
                     this.isDetailOpen = true;
                 },
                 openProductDetail(prod) {
-                    // Alias for new design templates
+                    
                     this.openProductDetails(prod);
                 },
                 goToProduct(prod) {
@@ -344,7 +344,7 @@ const { createApp } = Vue;
                     this.showToast(`${prod.name} added to cart!`);
                     this.isDetailOpen = false;
                     
-                    // Recalculate voucher discount dynamically
+                    
                     if (this.discountAmount > 0) {
                         this.reapplyDiscount();
                     }
@@ -472,7 +472,7 @@ const { createApp } = Vue;
 
                         this.isCheckoutOpen = false;
                         
-                        // Check if redirect url / token exists for Midtrans SNAP
+                        
                         if (data.order.snap_token && typeof snap !== 'undefined') {
                             const orderData = data.order;
                             const self = this;
@@ -507,7 +507,7 @@ const { createApp } = Vue;
                                         '&transaction_status=' + encodeURIComponent(result.transaction_status || 'failed');
                                 },
                                 onClose: function() {
-                                    // User closed popup without completing payment — go to pending page
+                                    
                                     self.cart = [];
                                     self.saveCartToStorage();
                                     self.removeVoucher();
@@ -522,7 +522,7 @@ const { createApp } = Vue;
                             this.removeVoucher();
                             window.location.href = data.order.redirect_url;
                         } else {
-                            // Fallback to simulator
+                            
                             this.activePendingOrder = data.order;
                             this.isPaymentOpen = true;
                             this.paymentStep = 'pending';
@@ -628,7 +628,7 @@ const { createApp } = Vue;
                     this.isPaymentOpen = true;
                     this.paymentStep = 'pending';
                 },
-                /* Formatter helpers */
+                
                 formatIDR(value) {
                     return new Intl.NumberFormat('id-ID', {
                         style: 'currency',
@@ -669,14 +669,14 @@ const { createApp } = Vue;
                     if (currentIdx === stepIdx) return 'active';
                     return '';
                 },
-                // Customer Auth & Dashboard Action Methods
+                
                 async loadCustomerDashboard() {
                     try {
                         const res = await fetch('/shop/getCustomerDashboard');
                         const data = await res.json();
                         if (data.logged_in) {
                             this.customerSession = data;
-                            // Prepopulate update profile form fields
+                            
                             this.profileForm.name = data.customer.name || '';
                             this.profileForm.phone = data.customer.phone || '';
                             this.profileForm.address = data.customer.address || '';
@@ -684,7 +684,7 @@ const { createApp } = Vue;
                             this.profileForm.zip = data.customer.zip || '';
                             this.profileForm.password = '';
                             
-                            // Auto populate checkout form with logged-in user data
+                            
                             if (!this.checkoutForm.email) {
                                 this.checkoutForm.name = data.customer.name || '';
                                 this.checkoutForm.email = data.customer.email || '';

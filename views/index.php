@@ -1,5 +1,5 @@
 <?php
-// Renders the Store/Toko Dashboard Manager UI
+
 ?>
 
 <style>
@@ -58,7 +58,7 @@
 <vue-view>
     <template>
         <div class="kiss-margin-large-top kiss-margin-large-bottom" style="padding-right: 1.5rem; padding-left: 1.5rem;">
-            <!-- Hero Banner -->
+            
             <div class="store-hero kiss-padding-large kiss-margin-large-bottom">
                 <div class="store-hero-glow"></div>
                 <div class="kiss-flex kiss-flex-middle">
@@ -109,7 +109,7 @@
                     </kiss-card>
                 </kiss-grid>
 
-                <!-- Recent Orders & Stock alert -->
+                
                 <kiss-grid cols="1 3@m" gap="large">
                     <div span="2@m">
                         <kiss-card class="kiss-padding-large" theme="bordered contrast">

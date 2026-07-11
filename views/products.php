@@ -1,5 +1,5 @@
 <?php
-// Renders the Store/Toko Products inventory UI
+
 ?>
 
 <style>
@@ -63,7 +63,7 @@
                     </div>
 
                     <div v-if="products.length">
-                        <!-- CARDS VIEW -->
+                        
                         <kiss-grid cols="1 4@m" gap="medium" class="kiss-margin-bottom" v-if="view === 'cards'">
                             <div v-for="prod in products" :key="prod._id">
                                 <kiss-card theme="bordered contrast" class="kiss-padding">
@@ -91,7 +91,7 @@
                             </div>
                         </kiss-grid>
 
-                        <!-- TABLE VIEW -->
+                        
                         <div class="kiss-overflow-auto" v-else>
                             <table class="kiss-table">
                                 <thead>
@@ -130,7 +130,7 @@
                             </table>
                         </div>
 
-                        <!-- PAGINATION FOOTER -->
+                        
                         <div class="kiss-flex kiss-flex-middle kiss-margin-large-top">
                             <div class="kiss-flex-1">
                                 <app-pagination v-if="count">
@@ -144,7 +144,7 @@
                                     </div>
                                     <a class="kiss-margin-small-start" v-if="(page + 1) <= pages" @click="page++; loadProducts()">Next</a>
                                     
-                                    <!-- Show Limit Selector -->
+                                    
                                     <div class="kiss-margin-start kiss-overlay-input">
                                         <span class="kiss-color-muted">Show:</span> {{ limit }}
                                         <select v-model="limit" @change="page = 1; loadProducts()">
@@ -152,7 +152,7 @@
                                         </select>
                                     </div>
                                     
-                                    <!-- Sort Option Selector -->
+                                    
                                     <div class="kiss-margin-start">
                                         <a @click="sortDir = sortDir == -1 ? 1 : -1; loadProducts()"><icon>{{ sortDir == 1 ? 'arrow_downward':'arrow_upward' }}</icon></a>
                                         <div class="kiss-margin-xsmall-start kiss-overlay-input">
@@ -165,7 +165,7 @@
                                 </app-pagination>
                             </div>
                             
-                            <!-- Layout View Toggle -->
+                            
                             <div class="kiss-flex kiss-flex-middle" gap="small" style="gap: 12px;">
                                 <a class="kiss-link-muted" :class="view=='cards' ? 'kiss-color-primary' : 'kiss-color-muted'" @click="view='cards'"><icon size="large">grid_view</icon></a>
                                 <a class="kiss-link-muted" :class="view=='table' ? 'kiss-color-primary' : 'kiss-color-muted'" @click="view='table'"><icon size="large">dns</icon></a>
@@ -180,7 +180,7 @@
             </div>
         </div>
 
-        <!-- ADD/EDIT PRODUCT DIALOG -->
+        
         <kiss-dialog ref="productModal">
             <kiss-content class="kiss-padding-large" style="width: 850px; max-width: 100%;">
                 <h3 class="kiss-margin-bottom">{{ productForm && productForm._id ? 'Edit Product' : 'Add New Product' }}</h3>
@@ -217,7 +217,7 @@
                         </div>
                         <div span="2@m">
                              <label class="kiss-size-xsmall kiss-text-bold">Product Images</label>
-                             <!-- Thumbnails of selected images -->
+                             
                              <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px;" v-if="productFormImages.length">
                                  <div v-for="(img, idx) in productFormImages" :key="idx" style="position: relative; width: 72px; height: 72px; border-radius: 8px; overflow: hidden; border: 1px solid rgba(255,255,255,0.15);">
                                      <img :src="getProductImageUrl(img)" style="width: 100%; height: 100%; object-fit: cover;">

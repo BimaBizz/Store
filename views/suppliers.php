@@ -1,5 +1,5 @@
 <?php
-// Renders the Store/Toko Suppliers & ERP Purchasing UI
+
 ?>
 
 <style>
@@ -42,7 +42,7 @@
             <app-loader class="kiss-margin-large" v-if="loading"></app-loader>
 
             <div v-else>
-                <!-- SUPPLIERS DIRECTORY TAB -->
+                
                 <div v-if="activeTab === 'suppliers'">
                     <kiss-card theme="bordered contrast" class="kiss-padding-large">
                         <div class="kiss-flex kiss-flex-middle kiss-margin-bottom" gap="medium">
@@ -53,7 +53,7 @@
                         </div>
 
                         <div v-if="suppliers.length">
-                            <!-- TABLE VIEW -->
+                            
                             <div class="kiss-overflow-auto" v-if="view === 'table'">
                                 <table class="kiss-table">
                                     <thead>
@@ -87,7 +87,7 @@
                                 </table>
                             </div>
 
-                            <!-- CARDS/GRID VIEW -->
+                            
                             <kiss-grid cols="1 3@m" gap="medium" class="kiss-margin-bottom" v-else>
                                 <div v-for="sup in suppliers" :key="sup._id">
                                     <kiss-card theme="bordered contrast" class="kiss-padding clickable-row">
@@ -110,7 +110,7 @@
                                 </div>
                             </kiss-grid>
 
-                            <!-- PAGINATION FOOTER -->
+                            
                             <div class="kiss-flex kiss-flex-middle kiss-margin-large-top">
                                 <div class="kiss-flex-1">
                                     <app-pagination v-if="count">
@@ -124,7 +124,7 @@
                                         </div>
                                         <a class="kiss-margin-small-start" v-if="(page + 1) <= pages" @click="page++; loadSuppliers()">Next</a>
                                         
-                                        <!-- Show Limit Selector -->
+                                        
                                         <div class="kiss-margin-start kiss-overlay-input">
                                             <span class="kiss-color-muted">Show:</span> {{ limit }}
                                             <select v-model="limit" @change="page = 1; loadSuppliers()">
@@ -132,7 +132,7 @@
                                             </select>
                                         </div>
                                         
-                                        <!-- Sort Option Selector -->
+                                        
                                         <div class="kiss-margin-start">
                                             <a @click="sortDir = sortDir == -1 ? 1 : -1; loadSuppliers()"><icon>{{ sortDir == 1 ? 'arrow_downward':'arrow_upward' }}</icon></a>
                                             <div class="kiss-margin-xsmall-start kiss-overlay-input">
@@ -145,7 +145,7 @@
                                     </app-pagination>
                                 </div>
                                 
-                                <!-- Layout View Toggle -->
+                                
                                 <div class="kiss-flex kiss-flex-middle" gap="small" style="gap: 12px;">
                                     <a class="kiss-link-muted" :class="view=='cards' ? 'kiss-color-primary' : 'kiss-color-muted'" @click="view='cards'"><icon size="large">grid_view</icon></a>
                                     <a class="kiss-link-muted" :class="view=='table' ? 'kiss-color-primary' : 'kiss-color-muted'" @click="view='table'"><icon size="large">dns</icon></a>
@@ -159,7 +159,7 @@
                     </kiss-card>
                 </div>
 
-                <!-- PURCHASING LOG TAB -->
+                
                 <div v-if="activeTab === 'purchasing'">
                     <kiss-card theme="bordered contrast" class="kiss-padding-large">
                         <div class="kiss-overflow-auto" v-if="purchases.length">
@@ -205,7 +205,7 @@
             </div>
         </div>
 
-        <!-- SUPPLIER PROFILE FORM DIALOG -->
+        
         <kiss-dialog ref="supplierModal">
             <kiss-content class="kiss-padding-large" v-if="supplierForm" style="width: 600px; max-width: 100%;">
                 <h3>{{ supplierForm._id ? 'Edit Supplier' : 'Add Supplier' }}</h3>
@@ -236,7 +236,7 @@
             </kiss-content>
         </kiss-dialog>
 
-        <!-- CREATE PURCHASE ORDER DIALOG -->
+        
         <kiss-dialog ref="purchaseModal">
             <kiss-content class="kiss-padding-large" v-if="purchaseForm" style="width: 750px; max-width: 100%;">
                 <h3>Log Purchase Receipt (Stock-In ERP)</h3>

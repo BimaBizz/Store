@@ -1,16 +1,16 @@
 <?=$this->render('store:views/shop/header.php')?>
 
 <div class="container" style="padding-top: 2.5rem; padding-bottom: 2.5rem;">
-<!-- Tab 3: Customer Dashboard / Auth -->
+
             
                 
-                <!-- State A: Not Logged In (Split Auth Layout) -->
+                
                 <div v-if="!customerSession.logged_in" class="auth-split-layout">
-                    <!-- Left panel: Form -->
+                    
                     <div class="auth-form-panel">
                         <div class="auth-form-container">
                             
-                            <!-- Auth Form A: Login -->
+                            
                             <div v-if="activeAuthForm === 'login'">
                                 <h2>Login to your account</h2>
                                 <p class="subtitle">Enter your email below to login to your account</p>
@@ -36,7 +36,7 @@
                                 </p>
                             </div>
 
-                            <!-- Auth Form B: Register -->
+                            
                             <div v-if="activeAuthForm === 'register'">
                                 <h2>Create an account</h2>
                                 <p class="subtitle">Enter your details below to sign up</p>
@@ -80,7 +80,7 @@
                                 </p>
                             </div>
 
-                            <!-- Auth Form C: Forgot Password -->
+                            
                             <div v-if="activeAuthForm === 'forgot'">
                                 <h2>Reset Password</h2>
                                 <p class="subtitle">Enter your email address to receive reset link</p>
@@ -98,7 +98,7 @@
                                 </form>
                             </div>
 
-                            <!-- Auth Form D: Reset Password -->
+                            
                             <div v-if="activeAuthForm === 'reset'">
                                 <h2>Set New Password</h2>
                                 <p class="subtitle">Set a secure password for account <code>{{ urlParams.email }}</code></p>
@@ -116,7 +116,7 @@
                         </div>
                     </div>
                     
-                    <!-- Right panel: Visual -->
+                    
                     <div class="auth-visual-panel">
                         <div class="auth-visual-inner">
                             <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -138,7 +138,7 @@
                     </div>
                 </div>
 
-                <!-- State B: Logged In (Customer Dashboard) -->
+                
                 <div v-else>
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem; flex-wrap: wrap; gap: 1rem;">
                         <div>
@@ -150,7 +150,7 @@
 
                     <div style="display: grid; grid-template-columns: auto auto; gap: 2rem; align-items: start;" class="dashboard-grid">
                         
-                        <!-- Col 1: Profile Manager Form -->
+                        
                         <div class="order-search-card" style="margin: 0;">
                             <h3 style="font-family: var(--font-title); font-size: 1.25rem; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">Account Profile</h3>
                             <form @submit.prevent="submitUpdateProfile">
@@ -190,7 +190,7 @@
                             </form>
                         </div>
 
-                        <!-- Col 2: Customer Purchase History -->
+                        
                         <div class="order-search-card" style="margin: 0;">
                             <h3 style="font-family: var(--font-title); font-size: 1.25rem; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">Order History</h3>
                             <div v-if="customerSession.orders && customerSession.orders.length > 0">
@@ -233,5 +233,5 @@
                     </div>
                 </div>
 
-</div><!-- /container -->
+</div>
 <?=$this->render('store:views/shop/footer.php')?>

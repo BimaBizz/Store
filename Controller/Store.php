@@ -84,7 +84,6 @@ class Store extends App {
 
         $products = $this->app->dataStorage->find('store/products', $options)->toArray();
 
-
         foreach ($products as &$prod) {
             $images = isset($prod['image']) ? array_filter(array_map('trim', explode(',', $prod['image']))) : [];
             $firstImg = !empty($images) ? $images[0] : null;
@@ -113,12 +112,12 @@ class Store extends App {
             return $this->stop(400, 'Missing product details');
         }
 
-        // Generate SKU if missing
+        
         if (empty($product['sku'])) {
             $product['sku'] = 'SKU-' . \strtoupper(\substr(\uniqid(), 7, 6));
         }
 
-        // Set ID from SKU or random string
+        
         if (empty($product['_id'])) {
             $product['_id'] = 'prod-' . \strtolower(\str_replace(' ', '-', $product['sku']));
         }
@@ -188,8 +187,6 @@ class Store extends App {
 
         $orders = $this->app->dataStorage->find('store/orders', $options)->toArray();
 
-
-
         return [
             'orders' => $orders,
             'count' => $total,
@@ -204,7 +201,7 @@ class Store extends App {
 
         $customerName = $this->param('customer_name');
         $customerEmail = $this->param('customer_email');
-        $items = $this->param('items'); // Array of items: product_id, quantity
+        $items = $this->param('items'); 
         $voucherCode = $this->param('voucher_code', '');
         $courier = $this->param('courier', 'Manual');
         $shippingCost = floatval($this->param('shipping_cost', 0));
@@ -213,7 +210,7 @@ class Store extends App {
             return $this->stop(400, 'Missing order parameters');
         }
 
-        // Calculate pricing and check stock
+        
         $totalAmount = 0;
         $orderItems = [];
 
@@ -230,7 +227,7 @@ class Store extends App {
                 return $this->stop(400, "Insufficient stock for {$product['name']}. Available: {$product['stock']}");
             }
 
-            // Deduct stock
+            
             $product['stock'] -= $qty;
             $this->app->dataStorage->save('store/products', $product);
 
@@ -249,7 +246,7 @@ class Store extends App {
             return $this->stop(400, 'Order cannot be empty');
         }
 
-        // Calculate discount
+        
         $discountAmount = 0;
         if ($voucherCode) {
             $voucher = $this->app->dataStorage->findOne('store/vouchers', ['code' => $voucherCode]);
@@ -265,18 +262,18 @@ class Store extends App {
             }
         }
 
-        // Get PPN/tax from store/settings
+        
         $storeSettings = $this->app->dataStorage->findOne('store/settings', ['_id' => 'config']) ?? [];
         $taxPercent = floatval($storeSettings['tax_percent'] ?? 0);
         $taxAmount = ($totalAmount - $discountAmount) * ($taxPercent / 100);
 
-        // Grand total
+        
         $grandTotal = ($totalAmount - $discountAmount) + $taxAmount + $shippingCost;
 
         $orderUniqueId = 'ORD-' . \strtoupper(\substr(\uniqid(), 7, 6));
         $transactionId = 'TX-' . \strtoupper(\dechex(\time())) . \strtoupper(\dechex(\rand(1000, 9999)));
 
-        // 1. Get Midtrans credentials to generate Snap tokens
+        
         $settings = $this->app->dataStorage->findOne('midtrans/settings', ['_id' => 'config']) ?? [];
         $mode = $settings['mode'] ?? 'sandbox';
         $serverKey = '';
@@ -361,7 +358,7 @@ class Store extends App {
             }
         }
 
-        // 2. Save order document
+        
         $order = [
             '_id' => 'ord-' . \strtolower($orderUniqueId),
             'order_id' => $orderUniqueId,
@@ -385,7 +382,7 @@ class Store extends App {
         ];
         $this->app->dataStorage->insert('store/orders', $order);
 
-        // 3. Save matching transaction in midtrans/transactions
+        
         $txRecord = [
             '_id' => $transactionId,
             'transaction_id' => $transactionId,
@@ -400,22 +397,22 @@ class Store extends App {
         ];
         $this->app->dataStorage->insert('midtrans/transactions', $txRecord);
 
-        // Send transactional email if mailer is configured
+        
         try {
             $emailBody = $this->app->render('midtrans:views/emails/payment_charge.php', ['transaction' => $txRecord]);
             $this->app->mailer->mail($customerEmail, "Complete your payment for Order {$orderUniqueId}", $emailBody);
             
-            // Save local email preview
+            
             $previewDir = APP_DIR . '/storage/tmp/midtrans-emails';
             if (!\file_exists($previewDir)) {
                 \mkdir($previewDir, 0777, true);
             }
             \file_put_contents("{$previewDir}/{$transactionId}-pending.html", $emailBody);
         } catch (\Exception $e) {
-            // Silently ignore mailer config issues for testing
+            
         }
 
-        // Notify event stream
+        
         if (isset($this->app->helpers['eventStream'])) {
             $this->app->helper('eventStream')->trigger('midtrans.transactions.updated', []);
         }
@@ -458,7 +455,7 @@ class Store extends App {
 
         $this->app->dataStorage->save('store/orders', $order);
 
-        // Sync with transactional database status
+        
         if (!empty($order['transaction_id'])) {
             $tx = $this->app->dataStorage->findOne('midtrans/transactions', ['_id' => $order['transaction_id']]);
             if ($tx) {
@@ -653,7 +650,7 @@ class Store extends App {
         $this->hasValidCsrfToken(true);
         $voucher = $this->param('voucher', []);
         
-        // Validasi: hanya boleh 1 voucher yang memiliki show_in_topbar = true
+        
         if (!empty($voucher['show_in_topbar'])) {
             $criteria = ['show_in_topbar' => true];
             if (!empty($voucher['_id'])) {

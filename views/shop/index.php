@@ -1,6 +1,5 @@
 <?=$this->render('store:views/shop/header.php')?>
 
-<!-- ===== HERO BANNER ===== -->
 <section class="hero-banner">
     <div class="hero-banner-bg">
         <div class="hero-noise"></div>
@@ -49,13 +48,12 @@
             </div>
         </div>
     </div>
-    <!-- Carousel Dots if banners -->
+    
     <div v-if="homepageContent.banners && homepageContent.banners.length > 1" class="hero-dots">
         <button v-for="(b, i) in homepageContent.banners" :key="i" class="hero-dot" :class="{ active: activeBannerIdx === i }" @click="activeBannerIdx = i"></button>
     </div>
 </section>
 
-<!-- ===== FLASH SALES ===== -->
 <section class="section flash-sales-section" id="products-section" v-if="homepageContent.flash_sale_end_time && flashProducts.length > 0">
     <div class="container">
         <div class="section-header">
@@ -90,10 +88,10 @@
             <button class="section-see-all" @click="selectedCategory = 'All'">See All</button>
         </div>
 
-        <!-- Products Loader -->
+        
         <div v-if="loadingProducts" class="loader-spinner-center"><div class="loader-spinner"></div></div>
 
-        <!-- Flash Products Horizontal Scroll -->
+        
         <div v-else-if="flashProducts.length > 0" class="flash-scroll-wrapper">
             <div class="flash-products-row" id="flash-row">
                 <div class="flash-card" v-for="prod in flashProducts" :key="'flash-'+prod._id" @click="goToProduct(prod)">
@@ -129,7 +127,6 @@
     </div>
 </section>
 
-<!-- ===== BROWSE BY CATEGORY ===== -->
 <section class="section categories-section">
     <div class="container">
         <div class="section-header">
@@ -164,7 +161,6 @@
     </div>
 </section>
 
-<!-- ===== BEST SELLING PRODUCTS ===== -->
 <section class="section bestselling-section" id="bestselling-section">
     <div class="container">
         <div class="section-header">
@@ -200,7 +196,6 @@
     </div>
 </section>
 
-<!-- ===== FEATURE PROMO BANNER ===== -->
 <section class="promo-banner-section" v-if="promoSlides.length > 0">
     <div class="container">
         <div class="promo-banner-card" v-for="(slide, idx) in promoSlides" :key="idx" v-show="activePromoIdx === idx">
@@ -222,7 +217,6 @@
     </div>
 </section>
 
-<!-- ===== EXPLORE OUR PRODUCTS ===== -->
 <section class="section explore-section">
     <div class="container">
         <div class="section-header">
@@ -240,7 +234,7 @@
             </div>
         </div>
 
-        <!-- Search & Category Filters -->
+        
         <div class="explore-toolbar">
             <div class="explore-search">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
@@ -295,7 +289,6 @@
     </div>
 </section>
 
-<!-- ===== NEW ARRIVAL ===== -->
 <section class="section new-arrival-section" v-if="newArrivalProducts.length > 0">
     <div class="container">
         <div class="section-header">
@@ -305,7 +298,7 @@
             </div>
         </div>
         <div class="new-arrival-grid">
-            <!-- Large Feature Card -->
+            
             <div class="na-large-card" v-if="newArrivalProducts[0]" @click="goToProduct(newArrivalProducts[0])">
                 <img :src="newArrivalProducts[0].image_url || 'https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?w=600'" :alt="newArrivalProducts[0].name" class="na-bg-img">
                 <div class="na-card-content">
@@ -313,9 +306,9 @@
                     <div class="na-card-name">{{ newArrivalProducts[0].name }}</div>
                 </div>
             </div>
-            <!-- Right Column -->
+            
             <div class="na-right-col">
-                <!-- Top Right Card -->
+                
                 <div class="na-top-card" v-if="newArrivalProducts[1]" @click="goToProduct(newArrivalProducts[1])">
                     <img :src="newArrivalProducts[1].image_url || 'https://images.unsplash.com/photo-1585386959984-a4155224a1ad?w=600'" :alt="newArrivalProducts[1].name" class="na-bg-img">
                     <div class="na-card-content">
@@ -323,7 +316,7 @@
                         <div class="na-card-name">{{ newArrivalProducts[1].name }}</div>
                     </div>
                 </div>
-                <!-- Bottom Two Cards -->
+                
                 <div class="na-bottom-row">
                     <div class="na-small-card" v-if="newArrivalProducts[2]" @click="goToProduct(newArrivalProducts[2])">
                         <img :src="newArrivalProducts[2].image_url || 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400'" :alt="newArrivalProducts[2].name" class="na-bg-img">
@@ -345,7 +338,6 @@
     </div>
 </section>
 
-<!-- ===== TRUST BADGES / SERVICES ===== -->
 <section class="trust-section">
     <div class="container">
         <div class="trust-grid">
@@ -379,7 +371,5 @@
         </div>
     </div>
 </section>
-
-
 
 <?=$this->render('store:views/shop/footer.php')?>

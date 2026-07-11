@@ -1,5 +1,5 @@
 <?php
-// Renders the Store/Toko Customers List UI
+
 ?>
 
 <style>
@@ -53,7 +53,7 @@
                     </div>
 
                     <div v-if="customers.length">
-                        <!-- TABLE VIEW -->
+                        
                         <div class="kiss-overflow-auto" v-if="view === 'table'">
                             <table class="kiss-table">
                                 <thead>
@@ -87,7 +87,7 @@
                             </table>
                         </div>
 
-                        <!-- CARDS/GRID VIEW -->
+                        
                         <kiss-grid cols="1 3@m" gap="medium" class="kiss-margin-bottom" v-else>
                             <div v-for="cust in customers" :key="cust._id" @click="showCustomerDetails(cust)" style="cursor: pointer;">
                                 <kiss-card theme="bordered contrast" class="kiss-padding clickable-row">
@@ -117,7 +117,7 @@
                             </div>
                         </kiss-grid>
 
-                        <!-- PAGINATION FOOTER -->
+                        
                         <div class="kiss-flex kiss-flex-middle kiss-margin-large-top">
                             <div class="kiss-flex-1">
                                 <app-pagination v-if="count">
@@ -131,7 +131,7 @@
                                     </div>
                                     <a class="kiss-margin-small-start" v-if="(page + 1) <= pages" @click="page++; loadCustomers()">Next</a>
                                     
-                                    <!-- Show Limit Selector -->
+                                    
                                     <div class="kiss-margin-start kiss-overlay-input">
                                         <span class="kiss-color-muted">Show:</span> {{ limit }}
                                         <select v-model="limit" @change="page = 1; loadCustomers()">
@@ -139,7 +139,7 @@
                                         </select>
                                     </div>
                                     
-                                    <!-- Sort Option Selector -->
+                                    
                                     <div class="kiss-margin-start">
                                         <a @click="sortDir = sortDir == -1 ? 1 : -1; loadCustomers()"><icon>{{ sortDir == 1 ? 'arrow_downward':'arrow_upward' }}</icon></a>
                                         <div class="kiss-margin-xsmall-start kiss-overlay-input">
@@ -152,7 +152,7 @@
                                 </app-pagination>
                             </div>
                             
-                            <!-- Layout View Toggle -->
+                            
                             <div class="kiss-flex kiss-flex-middle" gap="small" style="gap: 12px;">
                                 <a class="kiss-link-muted" :class="view=='cards' ? 'kiss-color-primary' : 'kiss-color-muted'" @click="view='cards'"><icon size="large">grid_view</icon></a>
                                 <a class="kiss-link-muted" :class="view=='table' ? 'kiss-color-primary' : 'kiss-color-muted'" @click="view='table'"><icon size="large">dns</icon></a>
@@ -167,7 +167,7 @@
             </div>
         </div>
 
-        <!-- CUSTOMER DETAILS DIALOG -->
+        
         <kiss-dialog ref="customerDetailsModal">
             <kiss-content class="kiss-padding-large" v-if="activeCustomer" style="width: 800px; max-width: 100%;">
                 <div class="kiss-flex kiss-flex-middle kiss-margin-bottom">
@@ -255,7 +255,7 @@
                                 </tbody>
                             </table>
 
-                            <!-- Purchase History Pagination -->
+                            
                             <div class="kiss-margin-small-top kiss-flex kiss-flex-middle kiss-flex-between" v-if="orderPages > 1" style="border-top: 1px solid rgba(255,255,255,0.05); padding-top: 1rem;">
                                 <div class="kiss-size-xsmall kiss-color-muted">
                                     Showing {{ (orderPage - 1) * orderLimit + 1 }}-{{ Math.min(orderPage * orderLimit, activeCustomerOrders.length) }} of {{ activeCustomerOrders.length }} orders

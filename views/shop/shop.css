@@ -26,12 +26,12 @@
     --font-main: 'Inter', sans-serif;
     --font-title: 'Outfit', sans-serif;
 
-    /* E-commerce Red Accent (Figma Design) */
+    
     --accent-site: #d8f604;
     --accent-site-hover: #adc503;
     --accent-site-glow: #829402;
 
-    /* Variables for theme adjustments */
+    
     --text-on-accent: #141718;
     --header-bg: rgba(20, 23, 24, 0.97);
     --logo-text-gradient: linear-gradient(to right, #ffffff, #e2e8f0);
@@ -83,7 +83,6 @@ body {
     -webkit-font-smoothing: antialiased;
 }
 
-/* Scrollbar Styling */
 ::-webkit-scrollbar {
     width: 8px;
     height: 8px;
@@ -102,7 +101,6 @@ body {
     background: var(--bg-surface-hover);
 }
 
-/* Glassmorphism Background Pattern */
 .ambient-glow-1 {
     position: fixed;
     top: -10%;
@@ -125,7 +123,6 @@ body {
     pointer-events: none;
 }
 
-/* Layout & Navigation */
 .container {
     max-width: 1200px;
     margin: 0 auto;
@@ -185,7 +182,6 @@ header {
     gap: 1rem;
 }
 
-/* Buttons styling */
 .btn {
     display: inline-flex;
     align-items: center;
@@ -260,7 +256,6 @@ header {
     box-shadow: 0 0 0 2px var(--bg-primary);
 }
 
-/* Hero Section */
 .hero {
     padding: 3.5rem 0 2.5rem 0;
     text-align: center;
@@ -287,7 +282,6 @@ header {
     font-weight: 400;
 }
 
-/* Carousel Banners Styles */
 .carousel-container {
     position: relative;
     width: 100%;
@@ -381,7 +375,6 @@ header {
     transform: scale(1.25);
 }
 
-/* CMS Info Tabbed Area */
 .cms-info-section {
     background-color: var(--bg-secondary);
     border: 1px solid var(--border-color);
@@ -485,7 +478,6 @@ header {
     text-decoration: none;
 }
 
-/* Dashboard Layout Grid */
 .dashboard-grid {
     display: grid;
     grid-template-columns: 1fr;
@@ -499,7 +491,6 @@ header {
     }
 }
 
-/* Product Detail Layout */
 .product-detail-grid {
     display: grid;
     grid-template-columns: 1fr;
@@ -518,7 +509,6 @@ header {
     background-color: var(--header-bg) !important;
 }
 
-/* Footer Styles */
 .shop-footer {
     background-color: var(--bg-secondary);
     border-top: 1px solid var(--border-color);
@@ -603,7 +593,6 @@ header {
     background-color: var(--bg-surface-hover);
 }
 
-/* Shop Tabs */
 .tabs {
     display: flex;
     justify-content: center;
@@ -645,7 +634,6 @@ header {
     border-radius: 2px;
 }
 
-/* Toolbar Controls */
 .toolbar {
     display: flex;
     flex-direction: column;
@@ -725,7 +713,6 @@ header {
     border-color: var(--accent-blue);
 }
 
-/* Products Grid */
 .products-grid {
     display: grid;
     grid-template-columns: 1fr;
@@ -745,7 +732,6 @@ header {
     }
 }
 
-/* Product Card */
 .product-card {
     background-color: var(--bg-secondary);
     border: 1px solid var(--border-color);
@@ -766,7 +752,7 @@ header {
 .product-img-wrapper {
     position: relative;
     padding-top: 80%;
-    /* 5:4 aspect ratio */
+    
     background-color: rgba(255, 255, 255, 0.02);
     overflow: hidden;
     border-bottom: 1px solid var(--border-color);
@@ -828,7 +814,7 @@ header {
 .product-sku {
     font-size: 0.725rem;
     color: var(--text-muted);
-    /* margin-bottom: 0.75rem; */
+    
     font-weight: 500;
     letter-spacing: 0.025em;
 }
@@ -892,7 +878,6 @@ header {
     padding: 0.5rem;
 }
 
-/* Sidebar / Drawer styling */
 .drawer-overlay {
     position: fixed;
     top: 0;
@@ -959,7 +944,6 @@ header {
     background-color: var(--drawer-footer-bg);
 }
 
-/* Cart Items inside Drawer */
 .cart-item {
     display: flex;
     gap: 1rem;
@@ -1046,7 +1030,6 @@ header {
     text-align: center;
 }
 
-/* Order Summary and Calculations */
 .summary-row {
     display: flex;
     justify-content: space-between;
@@ -1069,7 +1052,6 @@ header {
     color: var(--accent-rose);
 }
 
-/* Voucher input */
 .voucher-section {
     margin-bottom: 1.25rem;
     padding-bottom: 1.25rem;
@@ -1112,7 +1094,6 @@ header {
     color: var(--accent-rose);
 }
 
-/* Shipping & Courier */
 .courier-section {
     margin-bottom: 1.25rem;
     padding-bottom: 1.25rem;
@@ -1131,7 +1112,6 @@ header {
     margin-top: 0.5rem;
 }
 
-/* Checkout Dialog / Overlay Modal */
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -1195,7 +1175,6 @@ header {
     background-color: rgba(10, 15, 29, 0.2);
 }
 
-/* Checkout Form styling */
 .form-group {
     margin-bottom: 1.25rem;
 }
@@ -1237,7 +1216,6 @@ textarea.form-control {
     min-height: 80px;
 }
 
-/* Product Detail Modal specific CSS */
 .detail-layout {
     display: grid;
     grid-template-columns: 1fr;
@@ -1298,7 +1276,6 @@ textarea.form-control {
     margin-bottom: 1.5rem;
 }
 
-/* Interactive Payment Gateway Simulator Modal */
 .payment-sim-card {
     background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
     border: 1px solid rgba(255, 255, 255, 0.05);
@@ -1347,7 +1324,6 @@ textarea.form-control {
     font-size: 0.8rem;
 }
 
-/* Confetti / Success State */
 .success-checkmark {
     width: 80px;
     height: 80px;
@@ -1365,7 +1341,6 @@ textarea.form-control {
     height: 40px;
 }
 
-/* Order Status Tracker & Visual Timeline */
 .order-search-card {
     background-color: var(--bg-secondary);
     border: 1px solid var(--border-color);
@@ -1465,7 +1440,6 @@ textarea.form-control {
     color: var(--text-primary);
 }
 
-/* Order Invoice layout */
 .invoice-grid {
     display: grid;
     grid-template-columns: 1fr;
@@ -1511,7 +1485,6 @@ textarea.form-control {
     border-bottom: none;
 }
 
-/* Empty states & loaders */
 .empty-state {
     text-align: center;
     padding: 3rem 1.5rem;
@@ -1538,7 +1511,6 @@ textarea.form-control {
     }
 }
 
-/* Toast Alert notifications */
 .toast-container {
     position: fixed;
     bottom: 2rem;
@@ -1587,17 +1559,11 @@ textarea.form-control {
     }
 }
 
-/* ============================================================
-   NEW E-COMMERCE HOMEPAGE DESIGN STYLES (Figma Redesign)
-   ============================================================ */
-
-/* ---- HEADER overrides for new design ---- */
 header {
     background: var(--header-bg) !important;
     border-bottom: 1px solid var(--border-color) !important;
 }
 
-/* Override btn-primary to red accent */
 .btn-primary {
     background-color: var(--accent-site) !important;
     color: var(--text-on-accent) !important;
@@ -1609,7 +1575,6 @@ header {
     transform: translateY(-1px) !important;
 }
 
-/* ---- HERO BANNER ---- */
 .hero-banner {
     position: relative;
     background: var(--hero-banner-bg);
@@ -1781,7 +1746,6 @@ header {
     color: var(--text-primary);
 }
 
-/* Hero Right Side */
 .hero-banner-right {
     position: relative;
     display: flex;
@@ -1906,7 +1870,6 @@ header {
     border-radius: 4px;
 }
 
-/* ---- SECTION COMMON ---- */
 .section {
     padding: 4rem 0;
 }
@@ -1979,7 +1942,6 @@ header {
     margin-top: 3rem;
 }
 
-/* ---- FLASH COUNTDOWN ---- */
 .flash-countdown {
     display: flex;
     align-items: center;
@@ -2019,7 +1981,6 @@ header {
     padding-bottom: 0.5rem;
 }
 
-/* ---- FLASH PRODUCTS ROW ---- */
 .flash-scroll-wrapper {
     position: relative;
 }
@@ -2213,7 +2174,6 @@ header {
     right: -1.25rem;
 }
 
-/* ---- CATEGORIES ---- */
 .categories-row {
     display: flex;
     gap: 1rem;
@@ -2295,7 +2255,6 @@ header {
     border-color: var(--accent-site);
 }
 
-/* ---- PRODUCT CARDS V2 ---- */
 .products-grid-4 {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -2517,7 +2476,6 @@ header {
     transform: translateY(-1px);
 }
 
-/* ---- PROMO BANNER ---- */
 .promo-banner-section {
     padding: 2rem 0 3rem;
 }
@@ -2643,7 +2601,6 @@ header {
     animation: float-y 5s ease-in-out infinite;
 }
 
-/* ---- EXPLORE SECTION ---- */
 .explore-toolbar {
     display: flex;
     align-items: center;
@@ -2769,7 +2726,6 @@ header {
     box-shadow: 0 8px 25px var(--accent-site-glow);
 }
 
-/* ---- NEW ARRIVAL ---- */
 .new-arrival-section {
     padding: 4rem 0;
 }
@@ -2909,7 +2865,6 @@ header {
     color: var(--accent-site);
 }
 
-/* ---- TRUST BADGES ---- */
 .trust-section {
     padding: 4rem 0;
 }
@@ -2970,7 +2925,6 @@ header {
     line-height: 1.5;
 }
 
-/* ---- EMPTY STATE INLINE ---- */
 .empty-state-inline {
     text-align: center;
     padding: 3rem 1rem;
@@ -2982,25 +2936,21 @@ header {
     gap: 0.75rem;
 }
 
-/* ---- LOADER SPINNER CENTER ---- */
 .loader-spinner-center {
     display: flex;
     justify-content: center;
     padding: 3rem 0;
 }
 
-/* ---- AMBIENT GLOWS OFF for new design ---- */
 .ambient-glow-1,
 .ambient-glow-2 {
     display: none;
 }
 
-/* ---- TABS OVERRIDE: hide old tabs on shop home ---- */
 .tabs {
     display: none;
 }
 
-/* ---- PROMO TOPBAR ---- */
 .promo-topbar {
     background: var(--accent-site);
     color: var(--text-on-accent);
@@ -3034,7 +2984,6 @@ header {
     opacity: 1;
 }
 
-/* ---- HEADER NAV LINKS ---- */
 .header-nav {
     display: flex;
     align-items: center;
@@ -3067,12 +3016,10 @@ header {
     font-weight: 600;
 }
 
-/* ---- MAIN TAG (no container on index.php) ---- */
 main {
     display: block;
 }
 
-/* CMS Modal Styling */
 .cms-modal-overlay {
     position: fixed;
     top: 0;
@@ -3159,7 +3106,6 @@ main {
     margin-bottom: 0.5rem;
 }
 
-/* Split screen auth design */
 .auth-split-layout {
     display: flex;
     min-height: 80vh;

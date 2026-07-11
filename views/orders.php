@@ -1,5 +1,5 @@
 <?php
-// Renders the Store/Toko Sales Orders UI
+
 ?>
 
 <style>
@@ -54,7 +54,7 @@
                     </div>
 
                     <div v-if="orders.length">
-                        <!-- TABLE VIEW -->
+                        
                         <div class="kiss-overflow-auto" v-if="view === 'table'">
                             <table class="kiss-table">
                                 <thead>
@@ -110,7 +110,7 @@
                             </table>
                         </div>
 
-                        <!-- CARDS/GRID VIEW -->
+                        
                         <kiss-grid cols="1 3@m" gap="medium" class="kiss-margin-bottom" v-else>
                             <div v-for="order in orders" :key="order._id">
                                 <kiss-card theme="bordered contrast" class="kiss-padding clickable-row" @click="showOrderDetails(order)" style="cursor: pointer;">
@@ -146,7 +146,7 @@
                             </div>
                         </kiss-grid>
 
-                        <!-- PAGINATION FOOTER -->
+                        
                         <div class="kiss-flex kiss-flex-middle kiss-margin-large-top">
                             <div class="kiss-flex-1">
                                 <app-pagination v-if="count">
@@ -160,7 +160,7 @@
                                     </div>
                                     <a class="kiss-margin-small-start" v-if="(page + 1) <= pages" @click="page++; loadOrders()">Next</a>
                                     
-                                    <!-- Show Limit Selector -->
+                                    
                                     <div class="kiss-margin-start kiss-overlay-input">
                                         <span class="kiss-color-muted">Show:</span> {{ limit }}
                                         <select v-model="limit" @change="page = 1; loadOrders()">
@@ -168,7 +168,7 @@
                                         </select>
                                     </div>
                                     
-                                    <!-- Sort Option Selector -->
+                                    
                                     <div class="kiss-margin-start">
                                         <a @click="sortDir = sortDir == -1 ? 1 : -1; loadOrders()"><icon>{{ sortDir == 1 ? 'arrow_downward':'arrow_upward' }}</icon></a>
                                         <div class="kiss-margin-xsmall-start kiss-overlay-input">
@@ -181,7 +181,7 @@
                                 </app-pagination>
                             </div>
                             
-                            <!-- Layout View Toggle -->
+                            
                             <div class="kiss-flex kiss-flex-middle" gap="small" style="gap: 12px;">
                                 <a class="kiss-link-muted" :class="view=='cards' ? 'kiss-color-primary' : 'kiss-color-muted'" @click="view='cards'"><icon size="large">grid_view</icon></a>
                                 <a class="kiss-link-muted" :class="view=='table' ? 'kiss-color-primary' : 'kiss-color-muted'" @click="view='table'"><icon size="large">dns</icon></a>
@@ -195,7 +195,7 @@
             </div>
         </div>
 
-        <!-- CREATE SIMULATED PURCHASE DIALOG -->
+        
         <kiss-dialog ref="orderModal">
             <kiss-content class="kiss-padding-large" v-if="orderForm" style="width: 750px; max-width: 100%;">
                 <h3>Checkout Simulation</h3>
@@ -281,7 +281,7 @@
             </kiss-content>
         </kiss-dialog>
 
-        <!-- ORDER DETAILS & SHIPMENT DIALOG -->
+        
         <kiss-dialog ref="orderDetailsModal">
             <kiss-content class="kiss-padding-large" v-if="activeOrder" style="width: 750px; max-width: 100%;">
                 <div class="kiss-flex kiss-flex-middle kiss-margin-bottom">
@@ -354,7 +354,7 @@
                     </div>
                 </div>
 
-                <!-- Shipping Input Panel (if order is processing) -->
+                
                 <div v-if="activeOrder.status === 'processing'" class="kiss-margin-large-top kiss-padding" style="border: 1px solid rgba(58,134,255,0.3); border-radius: 8px; background: rgba(58,134,255,0.02);">
                     <div class="kiss-text-bold kiss-color-primary kiss-margin-small-bottom">Process Shipment Fulfillments</div>
                     <kiss-grid cols="1 2@m" gap="small">
@@ -378,7 +378,7 @@
 
                 <div class="kiss-flex kiss-flex-between kiss-flex-middle">
                     <div>
-                        <!-- Refund Order (if status is completed) -->
+                        
                         <button v-if="activeOrder.status === 'completed'" class="kiss-button kiss-button-danger kiss-button-small" @click="updateOrderStatus(activeOrder, 'refunded')">
                             Process Refund/Return
                         </button>
@@ -389,11 +389,11 @@
                     <div class="kiss-flex" gap="small" style="gap: 8px;">
                         <button class="kiss-button" @click="$refs.orderDetailsModal.close()">Close</button>
                         
-                        <!-- Deliver Order (if shipping) -->
+                        
                         <button v-if="activeOrder.status === 'shipping'" class="kiss-button kiss-button-success" @click="updateOrderStatus(activeOrder, 'completed')">
                             Deliver / Complete Order
                         </button>
-                        <!-- Confirm Paid/Completed (if pending) -->
+                        
                         <button v-if="activeOrder.status === 'pending'" class="kiss-button kiss-button-primary" @click="updateOrderStatus(activeOrder, 'completed')">
                             Mark Paid & Completed
                         </button>
