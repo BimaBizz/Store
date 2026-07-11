@@ -32,7 +32,7 @@
                                 </form>
                                                                 
                                 <p style="margin-top: 1.5rem; text-align: center; font-size: 0.88rem; color: var(--text-muted);">
-                                    Don't have an account? <a href="#" style="color: #fff; text-decoration: underline;" @click.prevent="activeAuthForm = 'register'">Sign up</a>
+                                    Don't have an account? <a href="#" style="color: var(--text-primary); text-decoration: underline;" @click.prevent="activeAuthForm = 'register'">Sign up</a>
                                 </p>
                             </div>
 
@@ -76,7 +76,7 @@
                                     </button>
                                 </form>
                                 <p style="margin-top: 1.5rem; text-align: center; font-size: 0.88rem; color: var(--text-muted);">
-                                    Already have an account? <a href="#" style="color: #fff; text-decoration: underline;" @click.prevent="activeAuthForm = 'login'">Login</a>
+                                    Already have an account? <a href="#" style="color: var(--text-primary); text-decoration: underline;" @click.prevent="activeAuthForm = 'login'">Login</a>
                                 </p>
                             </div>
 
@@ -87,7 +87,7 @@
                                 <form @submit.prevent="submitForgotPassword">
                                     <div class="form-group" style="margin-bottom: 1.25rem;">
                                         <label class="form-label">Email Address</label>
-                                        <input type="email" class="form-control" v-model="authForm.email" placeholder="you@example.com" required style="background: #0f172a; border-color: rgba(255,255,255,0.1);">
+                                        <input type="email" class="form-control" v-model="authForm.email" placeholder="you@example.com" required>
                                     </div>
                                     <button type="submit" class="btn-auth-submit" :disabled="submittingAuth">
                                         {{ submittingAuth ? 'Sending Link...' : 'Send Reset Link' }}
@@ -105,7 +105,7 @@
                                 <form @submit.prevent="submitResetPassword">
                                     <div class="form-group" style="margin-bottom: 1.25rem;">
                                         <label class="form-label">New Password</label>
-                                        <input type="password" class="form-control" v-model="authForm.password" placeholder="At least 6 characters" required style="background: #0f172a; border-color: rgba(255,255,255,0.1);">
+                                        <input type="password" class="form-control" v-model="authForm.password" placeholder="At least 6 characters" required>
                                     </div>
                                     <button type="submit" class="btn-auth-submit" :disabled="submittingAuth">
                                         {{ submittingAuth ? 'Resetting Password...' : 'Save Password' }}
@@ -160,7 +160,7 @@
                                 </div>
                                 <div class="form-group" style="margin-bottom: 1rem;">
                                     <label class="form-label">Email Address (Read-only)</label>
-                                    <input type="email" class="form-control" :value="customerSession.customer.email" readonly style="background: rgba(255,255,255,0.02); color: var(--text-muted);">
+                                    <input type="email" class="form-control" :value="customerSession.customer.email" readonly>
                                 </div>
                                 <div class="form-group" style="margin-bottom: 1rem;">
                                     <label class="form-label">Phone Number</label>
@@ -195,10 +195,10 @@
                             <h3 style="font-family: var(--font-title); font-size: 1.25rem; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">Order History</h3>
                             <div v-if="customerSession.orders && customerSession.orders.length > 0">
                                 <div v-for="order in customerSession.orders" :key="order._id" style="border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1.25rem; margin-bottom: 1rem; background: rgba(255,255,255,0.01);">
-                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 0.5rem; flex-wrap: wrap; gap: 0.5rem;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; flex-wrap: wrap; gap: 0.5rem;">
                                         <div>
                                             <span style="font-size: 0.85rem; color: var(--text-secondary);">Order ID:</span>
-                                            <code style="font-size: 0.9rem; font-weight: 700; color: #fff; margin-left: 0.25rem;">{{ order.order_id }}</code>
+                                            <code style="font-size: 0.9rem; font-weight: 700; color: var(--text-primary); margin-left: 0.25rem;">{{ order.order_id }}</code>
                                         </div>
                                         <span style="font-size: 0.8rem; color: var(--text-muted);">{{ formatDate(order.created) }}</span>
                                     </div>

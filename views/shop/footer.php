@@ -28,11 +28,11 @@
                 <div class="footer-col branding">
                     <div class="logo-container" style="margin-bottom: 1rem;">
                         <?php if ($faviconUrl): ?>
-                        <div class="logo-icon" style="background: var(--accent-red); color: #fff; font-size: 1.1rem; border-radius: 8px; width: 2.25rem; height: 2.25rem; display: flex; align-items: center; justify-content: center; font-weight: 800; overflow: hidden; padding: 0;">
+                        <div style="color: #fff; font-size: 1.1rem; border-radius: 8px; width: 2.25rem; height: 2.25rem; display: flex; align-items: center; justify-content: center; font-weight: 800; overflow: hidden; padding: 0;">
                             <img src="<?= htmlspecialchars($faviconUrl) ?>" alt="Logo" style="width: 100%; height: 100%; object-fit: contain;">
                         </div>
                         <?php else: ?>
-                        <div class="logo-icon" style="background: var(--accent-red); color: #fff; font-size: 1.1rem; border-radius: 8px; width: 2.25rem; height: 2.25rem; display: flex; align-items: center; justify-content: center; font-weight: 800;"><?= htmlspecialchars($logoLetter) ?></div>
+                        <div class="logo-icon" style="background: var(--accent-site); color: var(--text-on-accent); font-size: 1.1rem; border-radius: 8px; width: 2.25rem; height: 2.25rem; display: flex; align-items: center; justify-content: center; font-weight: 800;"><?= htmlspecialchars($logoLetter) ?></div>
                         <?php endif; ?>
                         <div class="logo-text">{{ settings.shop_name || 'Online Store' }}</div>
                     </div>
@@ -78,20 +78,20 @@
                 <!-- Col 4: Payment Badges -->
                 <div class="footer-col">
                     <h4 class="footer-title">Payment Secure</h4>
-                    <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.75rem;">Powered securely by Midtrans Gateway</p>
+                    <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 0.75rem;">Powered securely by Midtrans Gateway</p>
                     <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
-                        <span class="stock-indicator available" style="font-size: 0.7rem; font-weight: 700; border-radius: 4px; padding: 0.25rem 0.5rem; background: rgba(58, 134, 255, 0.1); color: var(--accent-red);">MIDTRANS</span>
-                        <span class="stock-indicator available" style="font-size: 0.7rem; font-weight: 700; border-radius: 4px; padding: 0.25rem 0.5rem; background: rgba(255,255,255,0.05); color: #fff;">VISA</span>
-                        <span class="stock-indicator available" style="font-size: 0.7rem; font-weight: 700; border-radius: 4px; padding: 0.25rem 0.5rem; background: rgba(255,255,255,0.05); color: #fff;">MASTERCARD</span>
-                        <span class="stock-indicator available" style="font-size: 0.7rem; font-weight: 700; border-radius: 4px; padding: 0.25rem 0.5rem; background: rgba(255,255,255,0.05); color: #fff;">VA</span>
+                        <span class="stock-indicator available" style="font-size: 0.7rem; font-weight: 700; border-radius: 4px; padding: 0.25rem 0.5rem; background: var(--bg-surface-hover); border: 1px solid var(--border-color); color: var(--text-primary);">MIDTRANS</span>
+                        <span class="stock-indicator available" style="font-size: 0.7rem; font-weight: 700; border-radius: 4px; padding: 0.25rem 0.5rem; background: var(--bg-surface-hover); border: 1px solid var(--border-color); color: var(--text-primary);">VISA</span>
+                        <span class="stock-indicator available" style="font-size: 0.7rem; font-weight: 700; border-radius: 4px; padding: 0.25rem 0.5rem; background: var(--bg-surface-hover); border: 1px solid var(--border-color); color: var(--text-primary);">MASTERCARD</span>
+                        <span class="stock-indicator available" style="font-size: 0.7rem; font-weight: 700; border-radius: 4px; padding: 0.25rem 0.5rem; background: var(--bg-surface-hover); border: 1px solid var(--border-color); color: var(--text-primary);">VA</span>
                     </div>
                 </div>
             </div>
             <div class="footer-bottom">
-                <div class="container" style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; font-size: 0.8rem; color: var(--text-muted); align-items: center;">
+                <div class="container" style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem; font-size: 0.8rem; color: var(--text-secondary); align-items: center;">
                     <span>&copy; {{ new Date().getFullYear() }} {{ settings.shop_name || 'Online Store' }}. All rights reserved.</span>
                     <span style="display: flex; align-items: center; gap: 0.5rem;">
-                        <span style="width: 6px; height: 6px; border-radius: 50%; background: var(--accent-red);"></span>
+                        <span style="width: 6px; height: 6px; border-radius: 50%; background: var(--accent-site);"></span>
                         Secure Checkout Powered by Midtrans
                     </span>
                 </div>
@@ -108,8 +108,17 @@
                 </div>
                 <div class="modal-body">
                     <div class="detail-layout">
-                        <div>
-                            <img :src="selectedProduct.image_url || 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=500'" :alt="selectedProduct.name" class="detail-img">
+                        <div style="display: flex; flex-direction: column; gap: 1rem;">
+                            <img :src="currentDetailImage || selectedProduct.image_url || 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=500'" :alt="selectedProduct.name" class="detail-img">
+                            <!-- Thumbnails inside modal -->
+                            <div v-if="selectedProduct.image_urls && selectedProduct.image_urls.length > 1" style="display: flex; gap: 0.5rem; overflow-x: auto; padding-bottom: 0.5rem;">
+                                <div v-for="(img, idx) in selectedProduct.image_urls" :key="idx" 
+                                     @click="currentDetailImage = img"
+                                     style="width: 50px; height: 50px; border-radius: 6px; overflow: hidden; border: 2px solid transparent; cursor: pointer; transition: all 0.2s; flex-shrink: 0;"
+                                     :style="{ borderColor: (currentDetailImage === img || (!currentDetailImage && idx === 0)) ? 'var(--accent-site)' : 'var(--border-color)' }">
+                                    <img :src="img" style="width: 100%; height: 100%; object-fit: cover;">
+                                </div>
+                            </div>
                         </div>
                         <div>
                             <h2 class="detail-title">{{ selectedProduct.name }}</h2>

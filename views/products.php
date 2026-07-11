@@ -216,12 +216,19 @@
                             <input type="text" class="kiss-input" placeholder="e.g. Black, White" v-model="productForm.variants">
                         </div>
                         <div span="2@m">
-                            <label class="kiss-size-xsmall kiss-text-bold">Product Image</label>
-                            <div class="kiss-flex" gap="small" style="gap: 8px;">
-                                <input type="text" class="kiss-input kiss-flex-1" placeholder="Image URL or Asset ID" v-model="productForm.image">
-                                <button type="button" class="kiss-button" @click="pickProductImage">Choose Asset</button>
-                            </div>
-                        </div>
+                             <label class="kiss-size-xsmall kiss-text-bold">Product Images</label>
+                             <!-- Thumbnails of selected images -->
+                             <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px;" v-if="productFormImages.length">
+                                 <div v-for="(img, idx) in productFormImages" :key="idx" style="position: relative; width: 72px; height: 72px; border-radius: 8px; overflow: hidden; border: 1px solid rgba(255,255,255,0.15);">
+                                     <img :src="getProductImageUrl(img)" style="width: 100%; height: 100%; object-fit: cover;">
+                                     <button type="button" @click="removeProductImage(idx)" style="position: absolute; top: 2px; right: 2px; width: 18px; height: 18px; background: rgba(0,0,0,0.7); color: #fff; border: none; border-radius: 50%; font-size: 10px; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center;">✕</button>
+                                 </div>
+                             </div>
+                             <div class="kiss-flex" style="gap: 8px;">
+                                 <button type="button" class="kiss-button" @click="pickProductImage">+ Add Image</button>
+                                 <span class="kiss-size-xsmall" style="align-self: center; opacity: 0.6;">{{ productFormImages.length }} image(s) selected</span>
+                             </div>
+                         </div>
                         <div span="2@m">
                             <label class="kiss-size-xsmall kiss-text-bold">Description</label>
                             <textarea class="kiss-input kiss-textarea" rows="4" v-model="productForm.description"></textarea>
@@ -259,6 +266,13 @@
                         price: 'Price',
                         stock: 'Stock'
                     }
+                }
+            },
+
+            computed: {
+                productFormImages() {
+                    if (!this.productForm || !this.productForm.image) return [];
+                    return this.productForm.image.split(',').map(s => s.trim()).filter(Boolean);
                 }
             },
 
@@ -350,16 +364,27 @@
                 },
                 getProductImageUrl(imagePathOrId) {
                     if (!imagePathOrId) return 'https://images.unsplash.com/photo-1545665277-5937489579f2?w=500';
-                    if (imagePathOrId.startsWith('assets://')) {
-                        const id = imagePathOrId.replace('assets://', '');
+                    const first = imagePathOrId.includes(',') ? imagePathOrId.split(',')[0].trim() : imagePathOrId.trim();
+                    if (first.startsWith('assets://')) {
+                        const id = first.replace('assets://', '');
                         return App.route('/assets/link/' + id);
                     }
-                    return imagePathOrId;
+                    return first;
                 },
                 pickProductImage() {
                     App.utils.selectAsset(asset => {
-                        this.productForm.image = 'assets://' + asset._id;
+                        const newImg = 'assets://' + asset._id;
+                        const imgs = (this.productForm.image || '').split(',').map(s => s.trim()).filter(Boolean);
+                        if (!imgs.includes(newImg)) {
+                            imgs.push(newImg);
+                        }
+                        this.productForm.image = imgs.join(', ');
                     }, {type: 'image'});
+                },
+                removeProductImage(idx) {
+                    const imgs = (this.productForm.image || '').split(',').map(s => s.trim()).filter(Boolean);
+                    imgs.splice(idx, 1);
+                    this.productForm.image = imgs.join(', ');
                 }
             }
         }

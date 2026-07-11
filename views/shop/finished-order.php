@@ -146,7 +146,7 @@
             font-family: var(--font-title);
             font-size: 1.9rem;
             font-weight: 800;
-            color: #fff;
+            color: var(--text-primary);
             margin-bottom: 0.65rem;
             letter-spacing: -0.02em;
         }
@@ -162,7 +162,7 @@
 
         /* Detail rows */
         .fo-details {
-            background: rgba(255,255,255,0.025);
+            background: var(--bg-secondary);
             border: 1px solid var(--border-color);
             border-radius: var(--radius-md);
             padding: 1.25rem 1.5rem;

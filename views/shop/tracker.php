@@ -3,7 +3,7 @@
 <div class="container" style="padding-top: 2.5rem; padding-bottom: 2.5rem;">
 <!-- Tab 2: Order Tracker -->
             
-                <div class="order-search-card" style="width: 600px; "v-if="!activeTrackedOrder">
+                <div class="order-search-card" style="width: 600px; margin: 0 auto;" v-if="!activeTrackedOrder">
                     <h2 class="hero-title" style="font-size: 1.8rem; text-align: center; margin-bottom: 0.5rem;">Track Shipment</h2>
                     <p style="text-align: center; color: var(--text-secondary); margin-bottom: 2rem; font-size: 0.9rem;">
                         Enter your registered email and Order ID (e.g. ORD-XXXXXX) to view checkout details and live shipping timeline.
@@ -89,7 +89,7 @@
                                     </div>
                                     <div>
                                         <p style="color: var(--text-muted);">Airway Bill (No Resi):</p>
-                                        <p style="font-weight: 700; color: var(--accent-red);" v-if="activeTrackedOrder.resi">{{ activeTrackedOrder.resi }}</p>
+                                        <p style="font-weight: 700; color: var(--accent-site);" v-if="activeTrackedOrder.resi">{{ activeTrackedOrder.resi }}</p>
                                         <p style="font-style: italic; color: var(--text-muted);" v-else>Not yet available</p>
                                     </div>
                                     <div style="grid-column: span 2;">
@@ -104,7 +104,7 @@
                         </div>
 
                         <div>
-                            <div class="invoice-details-block" style="background-color: rgba(255,255,255,0.025);">
+                            <div class="invoice-details-block" style="background-color: var(--bg-secondary);">
                                 <h3 class="invoice-section-title">Billing Summary</h3>
                                 <div style="display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.875rem;">
                                     <div style="display: flex; justify-content: space-between;">
@@ -122,6 +122,7 @@
                                     <div style="display: flex; justify-content: space-between;">
                                         <span style="color: var(--text-secondary);">Courier cost:</span>
                                         <span>{{ formatIDR(activeTrackedOrder.shipping_cost) }}</span>
+                                    </div>
                                     <div style="display: flex; justify-content: space-between; font-weight: 700; font-size: 1.1rem; border-top: 1px solid var(--border-color); padding-top: 0.75rem; margin-top: 0.25rem;">
                                         <span>Grand Total:</span>
                                         <span style="color: var(--accent-green);">{{ formatIDR(activeTrackedOrder.total_amount) }}</span>

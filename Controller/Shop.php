@@ -117,17 +117,23 @@ class Shop extends Base {
         }
 
         // Resolve images
-        if (isset($product['image']) && \str_starts_with($product['image'], 'assets://')) {
-            $assetId = \str_replace('assets://', '', $product['image']);
-            $asset = $this->app->dataStorage->findOne('assets', ['_id' => $assetId]);
-            if ($asset) {
-                $product['image_url'] = $this->app->fileStorage->getURL('uploads://' . \trim($asset['path'], '/'));
+        $imageUrls = [];
+        $images = isset($product['image']) ? array_filter(array_map('trim', explode(',', $product['image']))) : [];
+        foreach ($images as $img) {
+            if (\str_starts_with($img, 'assets://')) {
+                $assetId = \str_replace('assets://', '', $img);
+                $asset = $this->app->dataStorage->findOne('assets', ['_id' => $assetId]);
+                if ($asset) {
+                    $imageUrls[] = $this->app->fileStorage->getURL('uploads://' . \trim($asset['path'], '/'));
+                } else {
+                    $imageUrls[] = $this->app->routeUrl('/assets/link/' . $assetId);
+                }
             } else {
-                $product['image_url'] = $this->app->routeUrl('/assets/link/' . $assetId);
+                $imageUrls[] = $img;
             }
-        } else {
-            $product['image_url'] = $product['image'] ?? null;
         }
+        $product['image_url'] = !empty($imageUrls) ? $imageUrls[0] : null;
+        $product['image_urls'] = $imageUrls;
 
         return $this->render('store:views/shop/product.php', \compact('product'));
     }
@@ -153,21 +159,24 @@ class Shop extends Base {
         
         // Resolve images
         foreach ($products as &$prod) {
-            if (isset($prod['image']) && \str_starts_with($prod['image'], 'assets://')) {
-                $id = \str_replace('assets://', '', $prod['image']);
-                $asset = $this->app->dataStorage->findOne('assets', ['_id' => $id]);
-                if ($asset) {
-                    $asset['url'] = $this->app->fileStorage->getURL('uploads://' . \trim($asset['path'], '/'));
-                    $prod['image_asset'] = $asset;
-                    $prod['image_url'] = $asset['url'];
+            $imageUrls = [];
+            $images = isset($prod['image']) ? array_filter(array_map('trim', explode(',', $prod['image']))) : [];
+            foreach ($images as $img) {
+                if (\str_starts_with($img, 'assets://')) {
+                    $id = \str_replace('assets://', '', $img);
+                    $asset = $this->app->dataStorage->findOne('assets', ['_id' => $id]);
+                    if ($asset) {
+                        $asset['url'] = $this->app->fileStorage->getURL('uploads://' . \trim($asset['path'], '/'));
+                        $imageUrls[] = $asset['url'];
+                    } else {
+                        $imageUrls[] = $this->app->routeUrl('/assets/link/' . $id);
+                    }
                 } else {
-                    $prod['image_asset'] = null;
-                    $prod['image_url'] = $this->app->routeUrl('/assets/link/' . $id);
+                    $imageUrls[] = $img;
                 }
-            } else {
-                $prod['image_asset'] = null;
-                $prod['image_url'] = $prod['image'] ?? null;
             }
+            $prod['image_url'] = !empty($imageUrls) ? $imageUrls[0] : null;
+            $prod['image_urls'] = $imageUrls;
         }
         
         return $products;

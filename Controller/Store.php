@@ -86,11 +86,13 @@ class Store extends App {
 
 
         foreach ($products as &$prod) {
-            if (isset($prod['image']) && \str_starts_with($prod['image'], 'assets://')) {
-                $id = \str_replace('assets://', '', $prod['image']);
+            $images = isset($prod['image']) ? array_filter(array_map('trim', explode(',', $prod['image']))) : [];
+            $firstImg = !empty($images) ? $images[0] : null;
+            if ($firstImg && \str_starts_with($firstImg, 'assets://')) {
+                $id = \str_replace('assets://', '', $firstImg);
                 $prod['image_url'] = $this->app->routeUrl('/assets/link/' . $id);
             } else {
-                $prod['image_url'] = $prod['image'] ?? null;
+                $prod['image_url'] = $firstImg;
             }
         }
 

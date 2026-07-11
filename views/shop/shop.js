@@ -76,7 +76,9 @@ const { createApp } = Vue;
                     explorePage: 0,
                     explorePerPage: 8,
                     activePromoIdx: 0,
-                    promoTimer: null
+                    promoTimer: null,
+                    theme: localStorage.getItem('theme') || 'dark',
+                    currentDetailImage: null
                 }
             },
             computed: {
@@ -150,8 +152,17 @@ const { createApp } = Vue;
                     this.trackOrderId = orderIdParam;
                     this.trackOrder();
                 }
+                document.documentElement.setAttribute('data-theme', this.theme);
+                if (this.selectedProduct) {
+                    this.currentDetailImage = this.selectedProduct.image_url;
+                }
             },
             methods: {
+                toggleTheme() {
+                    this.theme = this.theme === 'dark' ? 'light' : 'dark';
+                    document.documentElement.setAttribute('data-theme', this.theme);
+                    localStorage.setItem('theme', this.theme);
+                },
                 showToast(message, type = 'success') {
                     const id = this.toastId++;
                     this.toasts.push({ id, message, type });
@@ -247,6 +258,7 @@ const { createApp } = Vue;
                 },
                 openProductDetails(prod) {
                     this.selectedProduct = prod;
+                    this.currentDetailImage = prod.image_url;
                     this.detailQty = 1;
                     this.isDetailOpen = true;
                 },
