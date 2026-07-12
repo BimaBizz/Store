@@ -33,7 +33,7 @@
 
 <vue-view>
     <template>
-        <div class="kiss-margin-large-top kiss-margin-large-bottom animated fadeIn" style="padding-right: 1.5rem; padding-left: 1.5rem;">
+        <div class="kiss-margin-small-top kiss-margin-large-bottom animated fadeIn" style="padding-right: 1.5rem; padding-left: 1.5rem;">
             <div class="kiss-flex kiss-flex-middle kiss-margin-large-bottom">
                 <div class="kiss-flex-1">
                     <ul class="kiss-breadcrumbs kiss-margin-xsmall-bottom">
@@ -125,9 +125,8 @@
                                 </tbody>
                             </table>
                         </div>
-
                         
-                        <div class="kiss-flex kiss-flex-middle kiss-margin-large-top">
+                        <div class="kiss-flex kiss-flex-middle kiss-margin-small-top">
                             <div class="kiss-flex-1">
                                 <app-pagination v-if="count">
                                     <div class="kiss-color-muted">{{ count }} products</div>
@@ -231,7 +230,7 @@
                         </div>
                     </kiss-grid>
 
-                    <div class="kiss-margin-large-top kiss-flex kiss-flex-right" gap="small" style="gap: 8px;">
+                    <div class="kiss-margin-small-top kiss-flex kiss-flex-right" gap="small" style="gap: 8px;">
                         <button type="button" class="kiss-button" @click="$refs.productModal.close()">Cancel</button>
                         <button type="submit" class="kiss-button kiss-button-primary">Save Product</button>
                     </div>

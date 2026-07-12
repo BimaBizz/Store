@@ -22,7 +22,7 @@
 
 <vue-view>
     <template>
-        <div class="kiss-margin-large-top kiss-margin-large-bottom animated fadeIn" style="padding-right: 1.5rem; padding-left: 1.5rem;">
+        <div class="kiss-margin-small-top kiss-margin-large-bottom animated fadeIn" style="padding-right: 1.5rem; padding-left: 1.5rem;">
             <div class="kiss-flex kiss-flex-middle kiss-margin-large-bottom">
                 <div class="kiss-flex-1">
                     <ul class="kiss-breadcrumbs kiss-margin-xsmall-bottom">
@@ -99,7 +99,7 @@
                                 </div>
                             </kiss-grid>
 
-                            <div class="kiss-margin-large-top">
+                            <div class="kiss-margin-small-top">
                                 <button type="submit" class="kiss-button kiss-button-primary" :disabled="saving">
                                     <span v-if="saving">Saving...</span>
                                     <span v-else>Save Settings</span>

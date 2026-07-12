@@ -24,7 +24,7 @@
 
 <vue-view>
     <template>
-        <div class="kiss-margin-large-top kiss-margin-large-bottom animated fadeIn" style="padding-right: 1.5rem; padding-left: 1.5rem;">
+        <div class="kiss-margin-small-top kiss-margin-large-bottom animated fadeIn" style="padding-right: 1.5rem; padding-left: 1.5rem;">
             <div class="kiss-flex kiss-flex-middle kiss-margin-large-bottom">
                 <div class="kiss-flex-1">
                     <ul class="kiss-breadcrumbs kiss-margin-xsmall-bottom">
@@ -123,7 +123,7 @@
                                             {{ item.name }} (x{{ item.quantity }})
                                         </div>
                                     </div>
-                                    <div class="kiss-margin-large-top kiss-flex kiss-flex-middle kiss-flex-between">
+                                    <div class="kiss-margin-small-top kiss-flex kiss-flex-middle kiss-flex-between">
                                         <div>
                                             <span class="kiss-color-muted kiss-size-xsmall">TOTAL</span>
                                             <div class="kiss-text-bold" style="color: #06d6a0;">{{ formatCurrency(order.total_amount) }}</div>
@@ -143,7 +143,7 @@
                         </kiss-grid>
 
                         
-                        <div class="kiss-flex kiss-flex-middle kiss-margin-large-top">
+                        <div class="kiss-flex kiss-flex-middle kiss-margin-small-top">
                             <div class="kiss-flex-1">
                                 <app-pagination v-if="count">
                                     <div class="kiss-color-muted">{{ count }} orders</div>
@@ -228,7 +228,7 @@
                         </div>
                     </kiss-grid>
 
-                    <div class="kiss-margin-large-top">
+                    <div class="kiss-margin-small-top">
                         <label class="kiss-text-bold kiss-size-small">Select Products & Quantities</label>
                         <div class="kiss-overflow-auto kiss-margin-small-top" style="max-height: 200px; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; padding: 10px;">
                             <div v-for="prod in products" :key="prod._id" class="kiss-flex kiss-flex-middle kiss-margin-small-bottom kiss-padding-small" style="background: rgba(0,0,0,0.02); border-radius: 4px; border: 1px solid rgba(255,255,255,0.03);">
@@ -243,7 +243,7 @@
                         </div>
                     </div>
 
-                    <kiss-card theme="contrast" class="kiss-padding kiss-margin-large-top" style="background: rgba(0,0,0,0.15);">
+                    <kiss-card theme="contrast" class="kiss-padding kiss-margin-small-top" style="background: rgba(0,0,0,0.15);">
                         <div class="kiss-flex kiss-flex-between kiss-size-small kiss-margin-xsmall-bottom">
                             <span>Subtotal:</span>
                             <span>{{ formatCurrency(totals.subtotal) }}</span>
@@ -267,7 +267,7 @@
                         </div>
                     </kiss-card>
 
-                    <div class="kiss-margin-large-top kiss-flex kiss-flex-right" gap="small" style="gap: 8px;">
+                    <div class="kiss-margin-small-top kiss-flex kiss-flex-right" gap="small" style="gap: 8px;">
                         <button type="button" class="kiss-button" @click="$refs.orderModal.close()">Cancel</button>
                         <button type="submit" class="kiss-button kiss-button-success" :disabled="creatingOrder">
                             {{ creatingOrder ? 'Processing...' : 'Place simulated order' }}
@@ -320,7 +320,7 @@
                     </kiss-grid>
                 </kiss-card>
 
-                <div class="kiss-margin-large-top">
+                <div class="kiss-margin-small-top">
                     <div class="kiss-text-bold kiss-size-medium kiss-margin-small-bottom">Items Ordered</div>
                     <table class="kiss-table">
                         <thead>
@@ -351,7 +351,7 @@
                 </div>
 
                 
-                <div v-if="activeOrder.status === 'processing'" class="kiss-margin-large-top kiss-padding" style="border: 1px solid rgba(58,134,255,0.3); border-radius: 8px; background: rgba(58,134,255,0.02);">
+                <div v-if="activeOrder.status === 'processing'" class="kiss-margin-small-top kiss-padding" style="border: 1px solid rgba(58,134,255,0.3); border-radius: 8px; background: rgba(58,134,255,0.02);">
                     <div class="kiss-text-bold kiss-color-primary kiss-margin-small-bottom">Process Shipment Fulfillments</div>
                     <kiss-grid cols="1 2@m" gap="small">
                         <div>

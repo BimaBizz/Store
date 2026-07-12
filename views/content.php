@@ -1,6 +1,6 @@
 <vue-view>
     <template>
-        <div class="kiss-margin-large-top kiss-margin-large-bottom animated fadeIn" style="padding-right: 1.5rem; padding-left: 1.5rem;">
+        <div class="kiss-margin-small-top kiss-margin-large-bottom animated fadeIn" style="padding-right: 1.5rem; padding-left: 1.5rem;">
             <div class="kiss-flex kiss-flex-middle kiss-margin-large-bottom">
                 <div class="kiss-flex-1">
                     <ul class="kiss-breadcrumbs kiss-margin-xsmall-bottom">
@@ -24,17 +24,17 @@
                             <input type="text" class="kiss-input kiss-margin-small-top" v-model="content.hero_badge" placeholder="e.g. FLASH PROMO">
                         </div>
 
-                        <div class="kiss-margin-large-top">
+                        <div class="kiss-margin-small-top">
                             <label class="kiss-text-bold kiss-size-small">Hero Title</label>
                             <input type="text" class="kiss-input kiss-margin-small-top" v-model="content.hero_title" placeholder="e.g. Up to 10% off with Voucher" required>
                         </div>
 
-                        <div class="kiss-margin-large-top">
+                        <div class="kiss-margin-small-top">
                             <label class="kiss-text-bold kiss-size-small">Hero Description</label>
                             <textarea class="kiss-input kiss-margin-small-top" rows="3" v-model="content.hero_desc" placeholder="Enter sub-headline description text..." required></textarea>
                         </div>
 
-                        <kiss-grid cols="1 2@m" gap="medium" class="kiss-margin-large-top">
+                        <kiss-grid cols="1 2@m" gap="medium" class="kiss-margin-small-top">
                             <div>
                                 <label class="kiss-text-bold kiss-size-small">Primary CTA Button Text</label>
                                 <input type="text" class="kiss-input kiss-margin-small-top" v-model="content.hero_btn_primary" placeholder="e.g. Shop Now">
@@ -45,12 +45,12 @@
                             </div>
                         </kiss-grid>
 
-                        <div class="kiss-margin-large-top">
+                        <div class="kiss-margin-small-top">
                             <label class="kiss-text-bold kiss-size-small">Promo Code Hint Box</label>
                             <input type="text" class="kiss-input kiss-margin-small-top" v-model="content.hero_code_hint" placeholder="e.g. Use code PROMO10 at checkout to save!">
                         </div>
 
-                        <div class="kiss-margin-large-top">
+                        <div class="kiss-margin-small-top">
                             <label class="kiss-text-bold kiss-size-small">Hero Featured Image</label>
                             <div class="kiss-margin-small-top" style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
                                 <div style="width: 100px; height: 100px; border: 2px dashed rgba(255,255,255,0.15); border-radius: 8px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.03); overflow: hidden; flex-shrink: 0;">
@@ -79,7 +79,7 @@
                             </div>
                         </kiss-grid>
 
-                        <kiss-grid cols="1 2@m" gap="medium" class="kiss-margin-large-top">
+                        <kiss-grid cols="1 2@m" gap="medium" class="kiss-margin-small-top">
                             <div>
                                 <label class="kiss-text-bold kiss-size-small">Card 2: Label</label>
                                 <input type="text" class="kiss-input kiss-margin-small-top" v-model="content.hero_card2_label" placeholder="e.g. Happy Buyers">
@@ -139,7 +139,7 @@
                                 </table>
                             </div>
                             
-                            <div class="kiss-margin-large-top kiss-flex kiss-flex-right" style="gap: 8px;">
+                            <div class="kiss-margin-small-top kiss-flex kiss-flex-right" style="gap: 8px;">
                                 <button type="button" class="kiss-button" @click="$refs.productPickerModal.close()">Cancel</button>
                                 <button type="button" class="kiss-button kiss-button-primary" @click="applyProductSelection">
                                     Apply Selection ({{ tempSelectedProductIds.length }} items)
@@ -179,12 +179,12 @@
                                     </div>
                                 </kiss-grid>
 
-                                <div class="kiss-margin-large-top">
+                                <div class="kiss-margin-small-top">
                                     <label class="kiss-text-bold kiss-size-small">Promo Title</label>
                                     <input type="text" class="kiss-input kiss-margin-small-top" v-model="slide.title" placeholder="e.g. Enhance Your Shopping Experience" required>
                                 </div>
 
-                                <div class="kiss-margin-large-top">
+                                <div class="kiss-margin-small-top">
                                     <label class="kiss-text-bold kiss-size-small">Promo Featured Image</label>
                                     <div class="kiss-margin-small-top" style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
                                         <div style="width: 80px; height: 80px; border: 2px dashed rgba(255,255,255,0.15); border-radius: 6px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.03); overflow: hidden; flex-shrink: 0;">
@@ -199,7 +199,7 @@
                                     <input type="text" class="kiss-input kiss-margin-small-top" v-model="slide.image" placeholder="Or paste public image URL directly">
                                 </div>
 
-                                <div class="kiss-margin-large-top">
+                                <div class="kiss-margin-small-top">
                                     <label class="kiss-text-bold kiss-size-small">Linked Product (Link to Detail Page)</label>
                                     <select class="kiss-input kiss-select kiss-margin-small-top" v-model="slide.product_id">
                                         <option value="">-- No Product Link (Scroll to Catalog) --</option>
@@ -221,12 +221,12 @@
                             <field-wysiwyg v-model="content.about_us" class="kiss-margin-small-top" height="300px"></field-wysiwyg>
                         </div>
 
-                        <div class="kiss-margin-large-top">
+                        <div class="kiss-margin-small-top">
                             <label class="kiss-text-bold kiss-size-small">FAQ (Frequently Asked Questions)</label>
                             <field-wysiwyg v-model="content.faq" class="kiss-margin-small-top" height="300px"></field-wysiwyg>
                         </div>
 
-                        <div class="kiss-margin-large-top">
+                        <div class="kiss-margin-small-top">
                             <label class="kiss-text-bold kiss-size-small">Security and Policies</label>
                             <field-wysiwyg v-model="content.shipping_policy" class="kiss-margin-small-top" height="300px"></field-wysiwyg>
                         </div>
@@ -282,7 +282,7 @@
                         </div>
                     </kiss-card>
 
-                    <div class="kiss-margin-large-top kiss-flex kiss-flex-right">
+                    <div class="kiss-margin-small-top kiss-flex kiss-flex-right">
                         <button type="submit" class="kiss-button kiss-button-success" :disabled="saving">
                             <span v-if="saving">Saving Content...</span>
                             <span v-else>Save CMS Content</span>

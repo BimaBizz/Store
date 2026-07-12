@@ -53,7 +53,7 @@
 
 <vue-view>
     <template>
-        <div class="kiss-margin-large-top kiss-margin-large-bottom" style="padding-right: 1.5rem; padding-left: 1.5rem;">
+        <div class="kiss-margin-small-top kiss-margin-large-bottom" style="padding-right: 1.5rem; padding-left: 1.5rem;">
             
             <div class="store-hero kiss-padding-large kiss-margin-large-bottom">
                 <div class="store-hero-glow"></div>

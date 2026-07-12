@@ -26,7 +26,7 @@
 
 <vue-view>
     <template>
-        <div class="kiss-margin-large-top kiss-margin-large-bottom animated fadeIn" style="padding-right: 1.5rem; padding-left: 1.5rem;">
+        <div class="kiss-margin-small-top kiss-margin-large-bottom animated fadeIn" style="padding-right: 1.5rem; padding-left: 1.5rem;">
             <div class="kiss-flex kiss-flex-middle kiss-margin-large-bottom">
                 <div class="kiss-flex-1">
                     <ul class="kiss-breadcrumbs kiss-margin-xsmall-bottom">
@@ -104,7 +104,7 @@
                                             <div class="kiss-text-bold" style="color: #06d6a0;">{{ formatCurrency(cust.total_spend) }}</div>
                                         </div>
                                     </kiss-grid>
-                                    <div class="kiss-margin-large-top kiss-flex kiss-flex-middle kiss-flex-between">
+                                    <div class="kiss-margin-small-top kiss-flex kiss-flex-middle kiss-flex-between">
                                         <small class="kiss-color-muted">Since: {{ formatDate(cust.created) }}</small>
                                         <span class="kiss-badge badge-active" v-if="cust.active !== false">Active</span>
                                         <span class="kiss-badge badge-inactive" v-else>Inactive</span>
@@ -114,7 +114,7 @@
                         </kiss-grid>
 
                         
-                        <div class="kiss-flex kiss-flex-middle kiss-margin-large-top">
+                        <div class="kiss-flex kiss-flex-middle kiss-margin-small-top">
                             <div class="kiss-flex-1">
                                 <app-pagination v-if="count">
                                     <div class="kiss-color-muted">{{ count }} customers</div>
@@ -212,7 +212,7 @@
                     </kiss-grid>
                 </kiss-card>
 
-                <div class="kiss-margin-large-top">
+                <div class="kiss-margin-small-top">
                     <div class="kiss-text-bold kiss-size-medium kiss-margin-small-bottom">Purchase History</div>
                     
                     <app-loader class="kiss-margin-large" v-if="loadingOrders"></app-loader>
@@ -269,7 +269,7 @@
                     </div>
                 </div>
 
-                <div class="kiss-margin-large-top kiss-flex kiss-flex-right">
+                <div class="kiss-margin-small-top kiss-flex kiss-flex-right">
                     <button class="kiss-button" @click="$refs.customerDetailsModal.close()">Close</button>
                 </div>
             </kiss-content>

@@ -18,7 +18,7 @@
 
 <vue-view>
     <template>
-        <div class="kiss-margin-large-top kiss-margin-large-bottom animated fadeIn" style="padding-right: 1.5rem; padding-left: 1.5rem;">
+        <div class="kiss-margin-small-top kiss-margin-large-bottom animated fadeIn" style="padding-right: 1.5rem; padding-left: 1.5rem;">
             <div class="kiss-flex kiss-flex-middle kiss-margin-large-bottom">
                 <div class="kiss-flex-1">
                     <ul class="kiss-breadcrumbs kiss-margin-xsmall-bottom">
@@ -98,7 +98,7 @@
                                             <div><span class="kiss-color-muted">Phone:</span> <code>{{ sup.phone || '—' }}</code></div>
                                             <div class="kiss-margin-xsmall-top"><span class="kiss-color-muted">Address:</span> {{ sup.address || '—' }}</div>
                                         </div>
-                                        <div class="kiss-margin-large-top kiss-flex kiss-flex-right" gap="xsmall" style="gap: 8px;">
+                                        <div class="kiss-margin-small-top kiss-flex kiss-flex-right" gap="xsmall" style="gap: 8px;">
                                             <button class="kiss-button kiss-button-small" @click="openEditSupplierModal(sup)">Edit</button>
                                             <button class="kiss-button kiss-button-small kiss-button-danger" @click="deleteSupplier(sup)">Delete</button>
                                         </div>
@@ -107,7 +107,7 @@
                             </kiss-grid>
 
                             
-                            <div class="kiss-flex kiss-flex-middle kiss-margin-large-top">
+                            <div class="kiss-flex kiss-flex-middle kiss-margin-small-top">
                                 <div class="kiss-flex-1">
                                     <app-pagination v-if="count">
                                         <div class="kiss-color-muted">{{ count }} suppliers</div>
@@ -224,7 +224,7 @@
                         <label class="kiss-text-bold kiss-size-small">Address</label>
                         <textarea class="kiss-input kiss-margin-small-top" rows="2" v-model="supplierForm.address"></textarea>
                     </div>
-                    <div class="kiss-margin-large-top kiss-flex kiss-flex-right" gap="small" style="gap: 8px;">
+                    <div class="kiss-margin-small-top kiss-flex kiss-flex-right" gap="small" style="gap: 8px;">
                         <button type="button" class="kiss-button" @click="$refs.supplierModal.close()">Cancel</button>
                         <button type="submit" class="kiss-button kiss-button-primary">Save Supplier</button>
                     </div>
@@ -245,7 +245,7 @@
                         </select>
                     </div>
 
-                    <div class="kiss-margin-large-top">
+                    <div class="kiss-margin-small-top">
                         <label class="kiss-text-bold kiss-size-small">Select Product & Qty to Add</label>
                         <div class="kiss-overflow-auto kiss-margin-small-top" style="max-height: 200px; border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; padding: 10px;">
                             <div v-for="prod in products" :key="prod._id" class="kiss-flex kiss-flex-middle kiss-margin-small-bottom kiss-padding-small" style="background: rgba(0,0,0,0.02); border-radius: 4px; border: 1px solid rgba(255,255,255,0.03);">
@@ -260,7 +260,7 @@
                         </div>
                     </div>
 
-                    <div class="kiss-margin-large-top kiss-flex kiss-flex-right" gap="small" style="gap: 8px;">
+                    <div class="kiss-margin-small-top kiss-flex kiss-flex-right" gap="small" style="gap: 8px;">
                         <button type="button" class="kiss-button" @click="$refs.purchaseModal.close()">Cancel</button>
                         <button type="submit" class="kiss-button kiss-button-success">Log Purchase Order</button>
                     </div>
