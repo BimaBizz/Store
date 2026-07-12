@@ -192,7 +192,14 @@
                         </div>
                         <div>
                             <label class="kiss-size-xsmall kiss-text-bold">Price (IDR)</label>
-                            <input type="number" class="kiss-input" required v-model="productForm.price">
+                            <input type="number" class="kiss-input" required v-model="productForm.original_price" @input="calculatePrice">
+                        </div>
+                        <div>
+                            <label class="kiss-size-xsmall kiss-text-bold">Discount Percent (%)</label>
+                            <input type="number" class="kiss-input" min="0" max="100" v-model="productForm.discount_percent" @input="calculatePrice">
+                            <div class="kiss-size-xsmall kiss-margin-xsmall-top" style="color: #06d6a0;" v-if="productForm.discount_percent > 0">
+                                Selling Price: <strong>{{ formatCurrency(productForm.price) }}</strong>
+                            </div>
                         </div>
                         <div>
                             <label class="kiss-size-xsmall kiss-text-bold">Stock Quantity</label>
@@ -315,11 +322,13 @@
                 formatCurrency(value) {
                     return 'Rp ' + parseInt(value).toLocaleString('id-ID');
                 },
-                openAddProductModal() {
+                 openAddProductModal() {
                     this.productForm = {
                         name: '',
                         sku: '',
                         price: 0,
+                        original_price: 0,
+                        discount_percent: 0,
                         stock: 10,
                         image: '',
                         description: '',
@@ -334,9 +343,23 @@
                         category: '',
                         brand: '',
                         variants: '',
+                        original_price: product.original_price || product.price || 0,
+                        discount_percent: product.discount_percent || 0,
                         ...product
                     };
+                    if (!this.productForm.original_price || this.productForm.original_price == 0) {
+                        this.productForm.original_price = this.productForm.price;
+                    }
                     this.$refs.productModal.show();
+                },
+                calculatePrice() {
+                    const originalPrice = parseFloat(this.productForm.original_price) || 0;
+                    const discountPercent = parseInt(this.productForm.discount_percent) || 0;
+                    if (discountPercent > 0) {
+                        this.productForm.price = Math.round(originalPrice * (1 - (discountPercent / 100)));
+                    } else {
+                        this.productForm.price = originalPrice;
+                    }
                 },
                 saveProduct() {
                     this.$request('/store/saveProduct', { product: this.productForm }).then(res => {

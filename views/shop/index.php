@@ -173,7 +173,8 @@
         <div v-else class="products-grid-4">
             <div class="product-card-v2" v-for="prod in bestSellingProducts" :key="'best-'+prod._id" @click="goToProduct(prod)">
                 <div class="product-card-img-wrap">
-                    <span class="new-badge" v-if="prod.is_new">NEW</span>
+                    <span class="sale-badge" v-if="prod.discount_percent">-{{ prod.discount_percent }}%</span>
+                    <span class="new-badge" v-else-if="prod.is_new">NEW</span>
                     <img :src="prod.image_url || 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400'" :alt="prod.name" class="product-card-img">
                     <div class="product-card-actions-overlay">
                         <button class="overlay-action-btn" @click.stop="addToCart(prod)" title="Add to Cart">

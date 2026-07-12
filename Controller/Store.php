@@ -136,6 +136,14 @@ class Store extends App
 
         $product['price'] = (float) $product['price'];
         $product['stock'] = (int) $product['stock'];
+        $product['original_price'] = isset($product['original_price']) ? (float) $product['original_price'] : 0.0;
+        $product['discount_percent'] = isset($product['discount_percent']) ? (int) $product['discount_percent'] : 0;
+
+        if ($product['original_price'] > $product['price']) {
+            $product['discount_percent'] = (int) \round((($product['original_price'] - $product['price']) / $product['original_price']) * 100);
+        } elseif ($product['discount_percent'] > 0 && $product['original_price'] == 0.0) {
+            $product['original_price'] = (float) \round($product['price'] / (1 - ($product['discount_percent'] / 100)));
+        }
 
         $existing = $this->app->dataStorage->findOne('store/products', ['_id' => $product['_id']]);
         if ($existing) {
