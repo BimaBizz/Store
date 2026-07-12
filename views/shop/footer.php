@@ -125,11 +125,56 @@
                         <div>
                             <h2 class="detail-title">{{ selectedProduct.name }}</h2>
                             <p class="detail-sku">{{ selectedProduct.sku }}</p>
+
+                            <!-- Price -->
                             <div style="display: flex; align-items: baseline; gap: 0.75rem; margin-bottom: 1rem; flex-wrap: wrap;">
                                 <span class="detail-price" style="font-size: 1.5rem; font-weight: 700; color: var(--accent-site);">{{ formatIDR(selectedProduct.price) }}</span>
                                 <span class="detail-old-price" v-if="selectedProduct.original_price && selectedProduct.original_price > selectedProduct.price" style="text-decoration: line-through; color: var(--text-muted); font-size: 1.1rem;">{{ formatIDR(selectedProduct.original_price) }}</span>
-                                <span class="detail-disc-badge" v-if="selectedProduct.discount_percent" style="background: var(--accent-rose, #ef4771); color: #fff; font-size: 0.75rem; font-weight: 700; padding: 0.2rem 0.5rem; border-radius: 4px;">-{{ selectedProduct.discount_percent }}% OFF</span>
+                                <span class="detail-disc-badge" v-if="selectedProduct.discount_percent" style="background: #ef4444; color: #fff; font-size: 0.75rem; font-weight: 700; padding: 0.2rem 0.5rem; border-radius: 4px;">-{{ selectedProduct.discount_percent }}% OFF</span>
                             </div>
+
+                            <!-- Variant Picker -->
+                            <div v-if="selectedProduct.variants && selectedProduct.variants.trim()" style="margin-bottom: 1rem;">
+                                <div style="font-size: 0.8rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem;">
+                                    Variant
+                                    <span v-if="selectedVariant" style="font-weight: 400; color: var(--accent-site); text-transform: none; letter-spacing: 0;">— {{ selectedVariant }}</span>
+                                </div>
+                                <div style="display: flex; flex-wrap: wrap; gap: 0.4rem;">
+                                    <button
+                                        v-for="v in selectedProduct.variants.split(',').map(x => x.trim()).filter(Boolean)"
+                                        :key="v"
+                                        @click="selectedVariant = (selectedVariant === v ? null : v)"
+                                        :style="{
+                                            padding: '0.35rem 0.85rem',
+                                            borderRadius: '6px',
+                                            border: selectedVariant === v ? '2px solid var(--accent-site)' : '1px solid var(--border-color)',
+                                            background: selectedVariant === v ? 'var(--accent-site)' : 'var(--bg-surface)',
+                                            color: selectedVariant === v ? 'var(--text-on-accent)' : 'var(--text-primary)',
+                                            fontWeight: 600,
+                                            fontSize: '0.82rem',
+                                            cursor: 'pointer',
+                                            transition: 'all 0.15s ease'
+                                        }"
+                                    >{{ v }}</button>
+                                </div>
+                            </div>
+
+                            <!-- Add to Cart -->
+                            <div v-if="selectedProduct.stock > 0" style="display: flex; gap: 0.75rem; align-items: center; margin-bottom: 1rem;">
+                                <div class="qty-selectors" style="height: 2.5rem;">
+                                    <button class="qty-btn" style="width: 2.5rem; height: 2.5rem;" @click="detailQty = Math.max(1, detailQty - 1)">-</button>
+                                    <span class="qty-value" style="font-size: 1rem; min-width: 2rem;">{{ detailQty }}</span>
+                                    <button class="qty-btn" style="width: 2.5rem; height: 2.5rem;" @click="detailQty = Math.min(selectedProduct.stock, detailQty + 1)">+</button>
+                                </div>
+                                <button class="btn btn-primary" style="flex: 1; height: 2.5rem;" @click="addToCart(selectedProduct, detailQty)">
+                                    Add To Cart
+                                </button>
+                            </div>
+                            <div v-else style="margin-bottom: 1rem; color: var(--accent-rose); font-weight: 700; text-align: center;">
+                                Currently Out of Stock
+                            </div>
+
+                            <!-- Description -->
                             <p class="detail-description">{{ selectedProduct.description }}</p>
                             
                             <div class="detail-info-row">
@@ -145,20 +190,6 @@
                                 <span class="stock-indicator" :class="getStockClass(selectedProduct.stock)">
                                     {{ selectedProduct.stock }} items
                                 </span>
-                            </div>
-
-                            <div v-if="selectedProduct.stock > 0" style="display: flex; gap: 0.75rem; align-items: center; margin-top: 1.5rem;">
-                                <div class="qty-selectors" style="height: 2.5rem;">
-                                    <button class="qty-btn" style="width: 2.5rem; height: 2.5rem;" @click="detailQty = Math.max(1, detailQty - 1)">-</button>
-                                    <span class="qty-value" style="font-size: 1rem; min-width: 2rem;">{{ detailQty }}</span>
-                                    <button class="qty-btn" style="width: 2.5rem; height: 2.5rem;" @click="detailQty = Math.min(selectedProduct.stock, detailQty + 1)">+</button>
-                                </div>
-                                <button class="btn btn-primary" style="flex: 1; height: 2.5rem;" @click="addToCart(selectedProduct, detailQty)">
-                                    Add To Cart
-                                </button>
-                            </div>
-                            <div v-else style="margin-top: 1.5rem; color: var(--accent-rose); font-weight: 700; text-align: center;">
-                                Currently Out of Stock
                             </div>
                         </div>
                     </div>

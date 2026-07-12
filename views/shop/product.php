@@ -30,7 +30,7 @@ $shopUrl = $enableFrontend ? '/' : '/shop';
         </div>
 
         
-        <div class="product-detail-info" style="display: flex; flex-direction: column; gap: 1.5rem;">
+        <div class="product-detail-info" style="display: flex; flex-direction: column; gap: 1.25rem;">
             <div>
                 <span class="product-category-badge" v-if="selectedProduct.category" style="margin-bottom: 0.75rem; display: inline-block;">{{ selectedProduct.category }}</span>
                 <h1 style="font-family: var(--font-title); font-size: 2.5rem; font-weight: 800; line-height: 1.2; margin-top: 0.25rem; color: var(--text-primary);">{{ selectedProduct.name }}</h1>
@@ -42,29 +42,65 @@ $shopUrl = $enableFrontend ? '/' : '/shop';
                 </div>
             </div>
 
-            <div style="display: flex; align-items: baseline; gap: 1rem; margin-top: 0.5rem; flex-wrap: wrap;">
+            <!-- Price -->
+            <div style="display: flex; align-items: baseline; gap: 1rem; flex-wrap: wrap;">
                 <span style="font-size: 2rem; font-weight: 700; color: var(--accent-site);">{{ formatIDR(selectedProduct.price) }}</span>
                 <span v-if="selectedProduct.original_price && selectedProduct.original_price > selectedProduct.price" style="text-decoration: line-through; color: var(--text-muted); font-size: 1.25rem;">{{ formatIDR(selectedProduct.original_price) }}</span>
-                <span v-if="selectedProduct.discount_percent" style="background: #ef4771; color: #fff; font-size: 0.85rem; font-weight: 700; padding: 0.25rem 0.6rem; border-radius: 4px;">-{{ selectedProduct.discount_percent }}% OFF</span>
+                <span v-if="selectedProduct.discount_percent" style="background: #ef4444; color: #fff; font-size: 0.85rem; font-weight: 700; padding: 0.25rem 0.6rem; border-radius: 4px;">-{{ selectedProduct.discount_percent }}% OFF</span>
             </div>
 
-            <div style="border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); padding: 1.5rem 0;">
-                <h4 style="margin-bottom: 0.5rem; color: var(--text-muted); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em;">Description</h4>
-                <p style="color: var(--text-secondary); line-height: 1.7; font-size: 1rem; white-space: pre-line;">{{ selectedProduct.description }}</p>
+            <!-- Variant Picker -->
+            <div v-if="selectedProduct.variants && selectedProduct.variants.trim()">
+                <div style="font-size: 0.85rem; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.6rem;">
+                    Variant
+                    <span v-if="selectedVariant" style="font-weight: 400; color: var(--accent-site); text-transform: none; letter-spacing: 0;">— {{ selectedVariant }}</span>
+                </div>
+                <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                    <button
+                        v-for="v in selectedProduct.variants.split(',').map(x => x.trim()).filter(Boolean)"
+                        :key="v"
+                        @click="selectedVariant = (selectedVariant === v ? null : v)"
+                        :style="{
+                            padding: '0.45rem 1rem',
+                            borderRadius: '6px',
+                            border: selectedVariant === v ? '2px solid var(--accent-site)' : '1px solid var(--border-color)',
+                            background: selectedVariant === v ? 'var(--accent-site)' : 'var(--bg-surface)',
+                            color: selectedVariant === v ? 'var(--text-on-accent)' : 'var(--text-primary)',
+                            fontWeight: 600,
+                            fontSize: '0.85rem',
+                            cursor: 'pointer',
+                            transition: 'all 0.15s ease'
+                        }"
+                    >{{ v }}</button>
+                </div>
             </div>
 
-            
-            <div style="display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap;">
+            <!-- Add to Cart -->
+            <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
                 <div v-if="selectedProduct.stock > 0" style="display: flex; align-items: center; border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; background: var(--bg-surface);">
                     <button class="qty-btn" @click="detailQty = Math.max(1, detailQty - 1)" style="padding: 0.75rem 1.25rem; background: transparent; border: none; color: var(--text-primary); cursor: pointer; transition: background 0.2s;">-</button>
                     <span style="padding: 0 1rem; font-weight: 600; min-width: 2rem; text-align: center; color: var(--text-primary);">{{ detailQty }}</span>
                     <button class="qty-btn" @click="detailQty = Math.min(selectedProduct.stock, detailQty + 1)" style="padding: 0.75rem 1.25rem; background: transparent; border: none; color: var(--text-primary); cursor: pointer; transition: background 0.2s;">+</button>
                 </div>
-                
-                <div style="flex: 1; min-width: 200px; display: flex; gap: 1rem;">
-                    <button class="btn btn-primary" @click="addToCart(selectedProduct, detailQty)" :disabled="selectedProduct.stock <= 0" style="flex: 1; padding: 1rem;">
+
+                <div style="flex: 1; min-width: 200px;">
+                    <button class="btn btn-primary" @click="addToCart(selectedProduct, detailQty)" :disabled="selectedProduct.stock <= 0" style="width: 100%; padding: 0.9rem 1.5rem; font-size: 1rem;">
                         {{ selectedProduct.stock > 0 ? 'Add to Cart' : 'Out of Stock' }}
                     </button>
+                </div>
+            </div>
+
+            <!-- Description -->
+            <div style="border-top: 1px solid var(--border-color); padding-top: 1.25rem;">
+                <h4 style="margin-bottom: 0.5rem; color: var(--text-muted); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em;">Description</h4>
+                <p style="color: var(--text-secondary); line-height: 1.7; font-size: 1rem; white-space: pre-line;">{{ selectedProduct.description }}</p>
+            </div>
+
+            <!-- Extra info -->
+            <div v-if="selectedProduct.brand" style="border-top: 1px solid var(--border-color); padding-top: 1rem; display: flex; gap: 2rem; flex-wrap: wrap;">
+                <div>
+                    <span style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em;">Brand</span>
+                    <div style="font-weight: 600; margin-top: 0.2rem;">{{ selectedProduct.brand }}</div>
                 </div>
             </div>
         </div>

@@ -80,6 +80,7 @@ createApp({
             promoTimer: null,
             theme: localStorage.getItem('theme') || 'dark',
             currentDetailImage: null,
+            selectedVariant: null,
         };
     },
     computed: {
@@ -152,6 +153,7 @@ createApp({
         document.documentElement.setAttribute('data-theme', this.theme);
         if (this.selectedProduct) {
             this.currentDetailImage = this.selectedProduct.image_url;
+            this.selectedVariant = null;
         }
     },
     methods: {
@@ -253,6 +255,7 @@ createApp({
             this.selectedProduct = prod;
             this.currentDetailImage = prod.image_url;
             this.detailQty = 1;
+            this.selectedVariant = null;
             this.isDetailOpen = true;
         },
         openProductDetail(prod) {
@@ -326,7 +329,17 @@ createApp({
                 return;
             }
 
-            const existing = this.cart.find((item) => item.product_id === prod._id);
+            // Check if product has variants and none is selected
+            const variantList = prod.variants
+                ? prod.variants.split(',').map(v => v.trim()).filter(Boolean)
+                : [];
+            if (variantList.length > 0 && !this.selectedVariant) {
+                this.showToast('Please select a variant first', 'error');
+                return;
+            }
+
+            const cartKey = prod._id + (this.selectedVariant ? ':' + this.selectedVariant : '');
+            const existing = this.cart.find((item) => item.cart_key === cartKey);
             const currentQty = existing ? existing.quantity : 0;
 
             if (currentQty + qty > prod.stock) {
@@ -338,17 +351,19 @@ createApp({
                 existing.quantity += qty;
             } else {
                 this.cart.push({
+                    cart_key: cartKey,
                     product_id: prod._id,
-                    name: prod.name,
+                    name: prod.name + (this.selectedVariant ? ` (${this.selectedVariant})` : ''),
                     sku: prod.sku,
                     price: prod.price,
                     image_url: prod.image_url,
                     quantity: qty,
+                    variant: this.selectedVariant || null,
                 });
             }
 
             this.saveCartToStorage();
-            this.showToast(`${prod.name} added to cart!`);
+            this.showToast(`${prod.name}${this.selectedVariant ? ' (' + this.selectedVariant + ')' : ''} added to cart!`);
             this.isDetailOpen = false;
 
             if (this.discountAmount > 0) {
