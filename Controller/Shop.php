@@ -217,6 +217,24 @@ class Shop extends Base
             'about_us' => '',
         ];
 
+        $endTimeStr = $content['flash_sale_end_time'] ?? '';
+        if ($endTimeStr) {
+            $endTime = \strtotime($endTimeStr);
+            if ($endTime && \time() >= $endTime) {
+                $products = $this->app->dataStorage->find('store/products')->toArray();
+                foreach ($products as $product) {
+                    if (isset($product['original_price']) && $product['original_price'] > 0) {
+                        $product['price'] = $product['original_price'];
+                    }
+                    $product['discount_percent'] = 0;
+                    $this->app->dataStorage->save('store/products', $product);
+                }
+                $content['flash_sale_end_time'] = '';
+                $content['flash_product_ids'] = [];
+                $this->app->dataStorage->save('store/content', $content);
+            }
+        }
+
         if (isset($content['banners']) && \is_array($content['banners'])) {
             $resolvedBanners = [];
             foreach ($content['banners'] as $banner) {
@@ -954,5 +972,33 @@ class Shop extends Base
         $_SESSION['store_customer'] = $custDb;
 
         return ['success' => true, 'customer' => $custDb];
+    }
+
+    public function resetDiscounts()
+    {
+        $content = $this->app->dataStorage->findOne('store/content', ['_id' => 'homepage']) ?? [];
+        $endTimeStr = $content['flash_sale_end_time'] ?? '';
+
+        if ($endTimeStr) {
+            $endTime = \strtotime($endTimeStr);
+            if ($endTime && \time() >= $endTime) {
+                $products = $this->app->dataStorage->find('store/products')->toArray();
+                foreach ($products as $product) {
+                    if (isset($product['original_price']) && $product['original_price'] > 0) {
+                        $product['price'] = $product['original_price'];
+                    }
+                    $product['discount_percent'] = 0;
+                    $this->app->dataStorage->save('store/products', $product);
+                }
+
+                $content['flash_sale_end_time'] = '';
+                $content['flash_product_ids'] = [];
+                $this->app->dataStorage->save('store/content', $content);
+
+                return ['success' => true, 'message' => 'Discounts reset successfully'];
+            }
+        }
+
+        return ['success' => false, 'message' => 'No active flash sale or not expired yet'];
     }
 }

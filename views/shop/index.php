@@ -54,7 +54,7 @@
     </div>
 </section>
 
-<section class="section flash-sales-section" id="products-section" v-if="homepageContent.flash_sale_end_time && flashProducts.length > 0">
+<section class="section flash-sales-section" id="products-section" v-if="homepageContent.flash_sale_end_time && flashCountdown && flashProducts.length > 0">
     <div class="container">
         <div class="section-header">
             <div class="section-header-left">

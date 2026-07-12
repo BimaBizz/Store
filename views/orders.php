@@ -14,9 +14,7 @@
     .status-cancelled { background-color: rgba(239, 71, 111, 0.1); color: #ef4771; }
     .status-refunded { background-color: rgba(120, 120, 120, 0.15); color: #777777; }
     
-    kiss-dialog {
-        z-index: 99999 !important;
-    }
+    
     .clickable-row:hover {
         background: rgba(128, 128, 128, 0.08) !important;
     }

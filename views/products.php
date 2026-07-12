@@ -26,9 +26,6 @@
         background-color: rgba(239, 71, 111, 0.1);
         color: #ef4771;
     }
-    kiss-dialog {
-        z-index: 99999 !important;
-    }
 </style>
 
 <vue-view>

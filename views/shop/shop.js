@@ -289,11 +289,17 @@ createApp({
             }
             this.flashCountdownEnd = endTime;
 
+            let expiredTriggered = false;
             const tick = () => {
                 const now = new Date();
-                const diff = Math.max(0, this.flashCountdownEnd - now);
+                const diff = this.flashCountdownEnd - now;
                 if (diff <= 0) {
                     this.flashCountdown = null;
+                    if (!expiredTriggered) {
+                        expiredTriggered = true;
+                        this.homepageContent.flash_sale_end_time = '';
+                        this.resetFlashSaleDiscounts();
+                    }
                     return;
                 }
                 const d = String(Math.floor(diff / 86400000)).padStart(2, '0');
@@ -304,6 +310,15 @@ createApp({
             };
             tick();
             setInterval(tick, 1000);
+        },
+        async resetFlashSaleDiscounts() {
+            try {
+                await fetch('/shop/resetDiscounts', { method: 'POST' });
+                await this.fetchProducts();
+                this.showToast('Flash sale ended. Prices have been updated.', 'info');
+            } catch (e) {
+                console.error('Failed to reset flash sale discounts', e);
+            }
         },
         addToCart(prod, qty = 1) {
             if (prod.stock <= 0) {

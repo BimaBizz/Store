@@ -471,12 +471,13 @@
             },
             computed: {
                 linkedProducts() {
-                    return (this.content.flash_product_ids || []).map(id => this.availableProducts.find(p => p._id === id)).filter(Boolean);
+                    return (this.content.flash_product_ids || []).map(id => this.availableProducts.find(p => p._id === id)).filter(Boolean).filter(p => p.discount_percent > 0);
                 },
                 filteredAvailableProducts() {
                     const q = this.productSearchQuery.trim().toLowerCase();
-                    if (!q) return this.availableProducts;
-                    return this.availableProducts.filter(p => {
+                    const discounted = this.availableProducts.filter(p => p.discount_percent > 0);
+                    if (!q) return discounted;
+                    return discounted.filter(p => {
                         return (p.name || '').toLowerCase().includes(q) ||
                                (p.sku || '').toLowerCase().includes(q) ||
                                (p.category || '').toLowerCase().includes(q);
