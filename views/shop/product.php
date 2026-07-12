@@ -1,14 +1,14 @@
 <?php
-    $storeFront = $this->retrieve('storeFront') ?? [];
-    $enableFrontend = !empty($storeFront['enableFrontend']);
-    $shopUrl = $enableFrontend ? '/' : '/shop';
+$storeFront = $this->retrieve('storeFront') ?? [];
+$enableFrontend = !empty($storeFront['enableFrontend']);
+$shopUrl = $enableFrontend ? '/' : '/shop';
 ?>
-<?=$this->render('store:views/shop/header.php')?>
+<?= $this->render('store:views/shop/header.php') ?>
 
 <div class="container" style="padding-top: 2.5rem; padding-bottom: 3rem;">
 <div v-if="selectedProduct" class="product-detail-container">
     
-    <a href="<?=$shopUrl?>" class="btn btn-outline btn-ghost" style="margin-bottom: 2rem; display: inline-flex; align-items: center; gap: 0.5rem; text-decoration: none;">
+    <a href="<?= $shopUrl ?>" class="btn btn-outline btn-ghost" style="margin-bottom: 2rem; display: inline-flex; align-items: center; gap: 0.5rem; text-decoration: none;">
         &larr; Back to Shop
     </a>
 
@@ -78,4 +78,4 @@
     window.INITIAL_PRODUCT = <?= \json_encode($product) ?>;
 </script>
 
-<?=$this->render('store:views/shop/footer.php')?>
+<?= $this->render('store:views/shop/footer.php') ?>

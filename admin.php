@@ -3,24 +3,22 @@
 $this->bindClass('Store\\Controller\\Store', '/store');
 $this->bindClass('Store\\Controller\\Shop', '/shop');
 
-$this->on('app.layout.init', function() {
-
+$this->on('app.layout.init', function () {
     $this->helper('menus')->addLink('modules', [
-        'label'  => 'Online Store',
-        'icon'   => 'store:icon.svg',
-        'route'  => '/store',
+        'label' => 'Online Store',
+        'icon' => 'store:icon.svg',
+        'route' => '/store',
         'active' => false,
-        'group'  => 'shop', 
+        'group' => 'shop',
     ]);
 });
 
-$this->on('app.settings.collect', function($settings) {
-
+$this->on('app.settings.collect', function ($settings) {
     $settings['Shop'][] = [
         'icon' => 'store:icon.svg',
         'route' => '/store',
         'label' => 'Store',
-        'permission' => 'store/manage'
+        'permission' => 'store/manage',
     ];
 });
 
@@ -31,7 +29,6 @@ $this->on('app.permissions.collect', function (ArrayObject $permissions) {
         'store/api/content' => 'Access storefront CMS content API',
         'store/api/order' => 'Create orders/checkout API',
         'store/api/vouchers' => 'Access promo vouchers list API',
-        'store/api/auth' => 'Access customer registration & authentication APIs'
+        'store/api/auth' => 'Access customer registration & authentication APIs',
     ];
 });
-

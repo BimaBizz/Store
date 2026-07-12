@@ -1,7 +1,3 @@
-<?php
-
-?>
-
 <style>
     .product-img {
         width: 100%;
@@ -41,8 +37,8 @@
             <div class="kiss-flex kiss-flex-middle kiss-margin-large-bottom">
                 <div class="kiss-flex-1">
                     <ul class="kiss-breadcrumbs kiss-margin-xsmall-bottom">
-                        <li><a href="<?=$this->route('/store')?>"><?=t('Store')?></a></li>
-                        <li><span><?=t('Products')?></span></li>
+                        <li><a href="<?= $this->route('/store') ?>"><?= t('Store') ?></a></li>
+                        <li><span><?= t('Products') ?></span></li>
                     </ul>
                     <h3 class="kiss-margin-none">Product Inventory</h3>
                 </div>
@@ -391,4 +387,4 @@
     </script>
 </vue-view>
 
-<?=$this->render('store:views/partials/sidebar.php')?>
+<?= $this->render('store:views/partials/sidebar.php') ?>

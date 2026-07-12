@@ -1,4 +1,4 @@
-<?=$this->render('store:views/shop/header.php')?>
+<?= $this->render('store:views/shop/header.php') ?>
 
 <div class="container" style="padding-top: 4rem; padding-bottom: 5rem; min-height: 60vh;">
     <div style="max-width: 800px; margin: 0 auto; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 12px; padding: 2.5rem; box-shadow: var(--shadow-lg);">
@@ -10,4 +10,4 @@
     </div>
 </div>
 
-<?=$this->render('store:views/shop/footer.php')?>
+<?= $this->render('store:views/shop/footer.php') ?>

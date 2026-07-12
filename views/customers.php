@@ -1,7 +1,3 @@
-<?php
-
-?>
-
 <style>
     .clickable-row:hover {
         background: rgba(128, 128, 128, 0.08) !important;
@@ -34,8 +30,8 @@
             <div class="kiss-flex kiss-flex-middle kiss-margin-large-bottom">
                 <div class="kiss-flex-1">
                     <ul class="kiss-breadcrumbs kiss-margin-xsmall-bottom">
-                        <li><a href="<?=$this->route('/store')?>"><?=t('Store')?></a></li>
-                        <li><span><?=t('Customers')?></span></li>
+                        <li><a href="<?= $this->route('/store') ?>"><?= t('Store') ?></a></li>
+                        <li><span><?= t('Customers') ?></span></li>
                     </ul>
                     <h3 class="kiss-margin-none">Customer Database</h3>
                 </div>
@@ -412,4 +408,4 @@
     </script>
 </vue-view>
 
-<?=$this->render('store:views/partials/sidebar.php')?>
+<?= $this->render('store:views/partials/sidebar.php') ?>

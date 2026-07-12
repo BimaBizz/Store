@@ -1,36 +1,32 @@
 <?php
-    $orderId          = $_GET['order_id']          ?? '';
-    $statusCode       = $_GET['status_code']       ?? '';
-    $transactionStatus = $_GET['transaction_status'] ?? '';
+$orderId = $_GET['order_id'] ?? '';
+$statusCode = $_GET['status_code'] ?? '';
+$transactionStatus = $_GET['transaction_status'] ?? '';
 
-    
-    $order       = null;
-    $transaction = null;
+$order = null;
+$transaction = null;
 
-    if ($orderId) {
-        
-        $transaction = $this->dataStorage->findOne('midtrans/transactions', ['transaction_id' => $orderId]);
-        $order       = $this->dataStorage->findOne('store/orders', ['transaction_id' => $orderId]);
-    }
+if ($orderId) {
+    $transaction = $this->dataStorage->findOne('midtrans/transactions', ['transaction_id' => $orderId]);
+    $order = $this->dataStorage->findOne('store/orders', ['transaction_id' => $orderId]);
+}
 
-    
-    $isSuccess = in_array($transactionStatus, ['settlement', 'capture', 'success']);
-    $isPending = in_array($transactionStatus, ['pending', 'authorize']);
-    $isFailed  = in_array($transactionStatus, ['deny', 'cancel', 'expire', 'failure', 'failed']);
+$isSuccess = in_array($transactionStatus, ['settlement', 'capture', 'success']);
+$isPending = in_array($transactionStatus, ['pending', 'authorize']);
+$isFailed = in_array($transactionStatus, ['deny', 'cancel', 'expire', 'failure', 'failed']);
 
-    
-    $displayAmount  = $order['total_amount']      ?? ($transaction['amount'] ?? 0);
-    $displayEmail   = $order['customer_email']    ?? ($transaction['customer_email'] ?? '');
-    $displayOrderId = $order['order_id']          ?? $orderId;
-    $displayMethod  = $transaction['payment_method'] ?? 'Midtrans Payment';
+$displayAmount = $order['total_amount'] ?? ($transaction['amount'] ?? 0);
+$displayEmail = $order['customer_email'] ?? ($transaction['customer_email'] ?? '');
+$displayOrderId = $order['order_id'] ?? $orderId;
+$displayMethod = $transaction['payment_method'] ?? 'Midtrans Payment';
 
-    $storeFront    = $this->retrieve('storeFront') ?? [];
-    $enableFrontend = !empty($storeFront['enableFrontend']);
-    $shopUrl       = $enableFrontend ? '/' : '/shop';
-    $trackerUrl    = $enableFrontend ? '/tracker' : '/shop/tracker';
-    $shopName      = $storeFront['shop_name'] ?? 'Online Coffee Store';
+$storeFront = $this->retrieve('storeFront') ?? [];
+$enableFrontend = !empty($storeFront['enableFrontend']);
+$shopUrl = $enableFrontend ? '/' : '/shop';
+$trackerUrl = $enableFrontend ? '/tracker' : '/shop/tracker';
+$shopName = $storeFront['shop_name'] ?? 'Online Coffee Store';
 
-    $state = $isSuccess ? 'success' : ($isPending ? 'pending' : 'failed');
+$state = $isSuccess ? 'success' : ($isPending ? 'pending' : 'failed');
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -38,12 +34,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Order Confirmation – <?= htmlspecialchars($shopName) ?></title>
-    <meta name="description" content="Your payment status and order confirmation from <?= htmlspecialchars($shopName) ?>.">
+    <meta name="description" content="Your payment status and order confirmation from <?= htmlspecialchars(
+        $shopName,
+    ) ?>.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        <?php include(__DIR__.'/shop.css'); ?>
+        <?php include __DIR__ . '/shop.css'; ?>
 
         
         .fo-page {
@@ -313,11 +311,13 @@
                 
                 <div class="fo-status-badge <?= $state ?>">
                     <span>●</span>
-                    <?php
-                        if ($isSuccess)     echo 'Payment Successful';
-                        elseif ($isPending) echo 'Payment Pending';
-                        else                echo 'Payment Not Completed';
-                    ?>
+                    <?php if ($isSuccess) {
+                        echo 'Payment Successful';
+                    } elseif ($isPending) {
+                        echo 'Payment Pending';
+                    } else {
+                        echo 'Payment Not Completed';
+                    } ?>
                 </div>
 
                 
@@ -365,7 +365,7 @@
                     <div class="fo-detail-row">
                         <span class="fo-detail-label">Amount <?= $isSuccess ? 'Paid' : 'Total' ?></span>
                         <span class="fo-detail-value <?= $isSuccess ? 'green' : ($isPending ? 'amber' : 'rose') ?>">
-                            Rp <?= number_format((float)$displayAmount, 0, ',', '.') ?>
+                            Rp <?= number_format((float) $displayAmount, 0, ',', '.') ?>
                         </span>
                     </div>
                     <?php endif; ?>
@@ -380,7 +380,9 @@
                     <?php if ($statusCode || $transactionStatus): ?>
                     <div class="fo-detail-row">
                         <span class="fo-detail-label">Status</span>
-                        <span class="fo-detail-value mono"><?= htmlspecialchars($statusCode) ?> — <?= htmlspecialchars($transactionStatus) ?></span>
+                        <span class="fo-detail-value mono"><?= htmlspecialchars($statusCode) ?> — <?= htmlspecialchars(
+     $transactionStatus,
+ ) ?></span>
                     </div>
                     <?php endif; ?>
                 </div>
@@ -389,11 +391,15 @@
                 
                 <div class="fo-actions">
                     <?php if ($isSuccess || $isPending): ?>
-                        <a href="<?= $trackerUrl ?>?prefill_order=<?= urlencode($displayOrderId) ?>" class="fo-btn-primary" id="track-order-btn">
+                        <a href="<?= $trackerUrl ?>?prefill_order=<?= urlencode(
+    $displayOrderId,
+) ?>" class="fo-btn-primary" id="track-order-btn">
                             📦 Track My Order
                         </a>
                     <?php endif; ?>
-                    <a href="<?= $shopUrl ?>" class="<?= ($isSuccess || $isPending) ? 'fo-btn-outline' : 'fo-btn-primary' ?>" id="back-to-shop-btn">
+                    <a href="<?= $shopUrl ?>" class="<?= $isSuccess || $isPending
+    ? 'fo-btn-outline'
+    : 'fo-btn-primary' ?>" id="back-to-shop-btn">
                         Return to Shop Homepage
                     </a>
                 </div>

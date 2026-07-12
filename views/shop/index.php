@@ -1,4 +1,4 @@
-<?=$this->render('store:views/shop/header.php')?>
+<?= $this->render('store:views/shop/header.php') ?>
 
 <section class="hero-banner">
     <div class="hero-banner-bg">
@@ -88,9 +88,7 @@
             <button class="section-see-all" @click="selectedCategory = 'All'">See All</button>
         </div>
 
-        
         <div v-if="loadingProducts" class="loader-spinner-center"><div class="loader-spinner"></div></div>
-
         
         <div v-else-if="flashProducts.length > 0" class="flash-scroll-wrapper">
             <div class="flash-products-row" id="flash-row">
@@ -372,4 +370,4 @@
     </div>
 </section>
 
-<?=$this->render('store:views/shop/footer.php')?>
+<?= $this->render('store:views/shop/footer.php') ?>

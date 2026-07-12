@@ -1,15 +1,11 @@
-<?php
-
-?>
-
 <vue-view>
     <template>
         <div class="kiss-margin-large-top kiss-margin-large-bottom animated fadeIn" style="padding-right: 1.5rem; padding-left: 1.5rem;">
             <div class="kiss-flex kiss-flex-middle kiss-margin-large-bottom">
                 <div class="kiss-flex-1">
                     <ul class="kiss-breadcrumbs kiss-margin-xsmall-bottom">
-                        <li><a href="<?=$this->route('/store')?>"><?=t('Store')?></a></li>
-                        <li><span><?=t('Reports & Analytics')?></span></li>
+                        <li><a href="<?= $this->route('/store') ?>"><?= t('Store') ?></a></li>
+                        <li><span><?= t('Reports & Analytics') ?></span></li>
                     </ul>
                     <h3 class="kiss-margin-none">Laporan Penjualan & Analytics</h3>
                 </div>
@@ -106,4 +102,4 @@
     </script>
 </vue-view>
 
-<?=$this->render('store:views/partials/sidebar.php')?>
+<?= $this->render('store:views/partials/sidebar.php') ?>

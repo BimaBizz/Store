@@ -1,26 +1,26 @@
         </main>
         
         <?php
-            $app = \Cockpit::instance();
-            $storeSettings = $app->dataStorage->findOne('store/settings', ['_id' => 'config']);
-            $shopName   = $storeSettings['shop_name'] ?? 'Online Store';
-            $logoLetter = strtoupper(substr($shopName, 0, 1)) ?: 'S';
+        $app = \Cockpit::instance();
+        $storeSettings = $app->dataStorage->findOne('store/settings', ['_id' => 'config']);
+        $shopName = $storeSettings['shop_name'] ?? 'Online Store';
+        $logoLetter = strtoupper(substr($shopName, 0, 1)) ?: 'S';
 
-            $faviconRaw = $storeSettings['favicon'] ?? '';
-            $faviconUrl = '';
-            if ($faviconRaw) {
-                if (str_starts_with($faviconRaw, 'assets://')) {
-                    $assetId = str_replace('assets://', '', $faviconRaw);
-                    $asset   = $app->dataStorage->findOne('assets', ['_id' => $assetId]);
-                    if ($asset) {
-                        $faviconUrl = $app->fileStorage->getURL('uploads://' . trim($asset['path'], '/'));
-                    } else {
-                        $faviconUrl = $app->routeUrl('/assets/link/' . $assetId);
-                    }
+        $faviconRaw = $storeSettings['favicon'] ?? '';
+        $faviconUrl = '';
+        if ($faviconRaw) {
+            if (str_starts_with($faviconRaw, 'assets://')) {
+                $assetId = str_replace('assets://', '', $faviconRaw);
+                $asset = $app->dataStorage->findOne('assets', ['_id' => $assetId]);
+                if ($asset) {
+                    $faviconUrl = $app->fileStorage->getURL('uploads://' . trim($asset['path'], '/'));
                 } else {
-                    $faviconUrl = $faviconRaw;
+                    $faviconUrl = $app->routeUrl('/assets/link/' . $assetId);
                 }
+            } else {
+                $faviconUrl = $faviconRaw;
             }
+        }
         ?>
         <footer class="shop-footer">
             <div class="container footer-grid">
@@ -29,10 +29,14 @@
                     <div class="logo-container" style="margin-bottom: 1rem;">
                         <?php if ($faviconUrl): ?>
                         <div style="color: #fff; font-size: 1.1rem; border-radius: 8px; width: 2.25rem; height: 2.25rem; display: flex; align-items: center; justify-content: center; font-weight: 800; overflow: hidden; padding: 0;">
-                            <img src="<?= htmlspecialchars($faviconUrl) ?>" alt="Logo" style="width: 100%; height: 100%; object-fit: contain;">
+                            <img src="<?= htmlspecialchars(
+                                $faviconUrl,
+                            ) ?>" alt="Logo" style="width: 100%; height: 100%; object-fit: contain;">
                         </div>
                         <?php else: ?>
-                        <div class="logo-icon" style="background: var(--accent-site); color: var(--text-on-accent); font-size: 1.1rem; border-radius: 8px; width: 2.25rem; height: 2.25rem; display: flex; align-items: center; justify-content: center; font-weight: 800;"><?= htmlspecialchars($logoLetter) ?></div>
+                        <div class="logo-icon" style="background: var(--accent-site); color: var(--text-on-accent); font-size: 1.1rem; border-radius: 8px; width: 2.25rem; height: 2.25rem; display: flex; align-items: center; justify-content: center; font-weight: 800;"><?= htmlspecialchars(
+                            $logoLetter,
+                        ) ?></div>
                         <?php endif; ?>
                         <div class="logo-text">{{ settings.shop_name || 'Online Store' }}</div>
                     </div>
@@ -41,20 +45,19 @@
                     </p>
                 </div>
 
-                
                 <?php
-                    $storeFront = $this->retrieve('storeFront') ?? [];
-                    $enableFrontend = !empty($storeFront['enableFrontend']);
-                    $shopUrl = $enableFrontend ? '/' : '/shop';
-                    $trackerUrl = $enableFrontend ? '/tracker' : '/shop/tracker';
-                    $securityUrl = $enableFrontend ? '/security' : '/shop/security';
+                $storeFront = $this->retrieve('storeFront') ?? [];
+                $enableFrontend = !empty($storeFront['enableFrontend']);
+                $shopUrl = $enableFrontend ? '/' : '/shop';
+                $trackerUrl = $enableFrontend ? '/tracker' : '/shop/tracker';
+                $securityUrl = $enableFrontend ? '/security' : '/shop/security';
                 ?>
                 <div class="footer-col">
                     <h4 class="footer-title">Quick Links</h4>
                     <ul class="footer-links">
-                        <li><a href="<?=$shopUrl?>">Browse Products</a></li>
-                        <li><a href="<?=$trackerUrl?>">Track Order Status</a></li>
-                        <li v-if="homepageContent.shipping_policy"><a href="<?=$securityUrl?>">Security & Policy</a></li>
+                        <li><a href="<?= $shopUrl ?>">Browse Products</a></li>
+                        <li><a href="<?= $trackerUrl ?>">Track Order Status</a></li>
+                        <li v-if="homepageContent.shipping_policy"><a href="<?= $securityUrl ?>">Security & Policy</a></li>
                     </ul>
                 </div>
                 
@@ -213,7 +216,6 @@
                     </div>
                 </div>
 
-                
                 <div class="courier-section">
                     <label class="form-label">Shipping Courier Service</label>
                     <select class="courier-select" v-model="selectedCourier" @change="calculateShipping">
@@ -223,7 +225,6 @@
                         <option value="POS">Pos Indonesia (IDR 12.000)</option>
                     </select>
                 </div>
-
                 
                 <div class="summary-row">
                     <span>Subtotal:</span>
@@ -253,7 +254,6 @@
             </div>
         </div>
 
-        
         <div class="modal-overlay" :class="{ active: isCheckoutOpen }" @click.self="isCheckoutOpen = false">
             <div class="modal">
                 <div class="modal-header">
@@ -307,7 +307,6 @@
             </div>
         </div>
 
-        
         <div class="modal-overlay" :class="{ active: isPaymentOpen }" @click.self="cancelPayment">
             <div class="modal" style="max-width: 440px;">
                 <div class="modal-header">
@@ -345,7 +344,6 @@
             </div>
         </div>
 
-        
         <div class="toast-container">
             <div class="toast" v-for="t in toasts" :key="t.id" :class="t.type">
                 <span>{{ t.message }}</span>
@@ -353,9 +351,8 @@
         </div>
     </div>
 
-    
     <script>
-        <?php include(__DIR__.'/shop.js'); ?>
+        <?php include __DIR__ . '/shop.js'; ?>
     </script>
 </body>
 </html>

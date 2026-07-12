@@ -4,59 +4,72 @@ namespace Store\Controller;
 
 use App\Controller\App;
 
-class Store extends App {
-
-    protected function before() {
+class Store extends App
+{
+    protected function before()
+    {
         if (!$this->isAllowed('store/manage')) {
             return $this->stop(401);
         }
     }
 
-    public function index() {
+    public function index()
+    {
         return $this->render('store:views/index.php');
     }
 
-    public function products() {
+    public function products()
+    {
         return $this->render('store:views/products.php');
     }
 
-    public function orders() {
+    public function orders()
+    {
         return $this->render('store:views/orders.php');
     }
 
-    public function customers() {
+    public function customers()
+    {
         return $this->render('store:views/customers.php');
     }
 
-    public function promotions() {
+    public function promotions()
+    {
         return $this->render('store:views/promotions.php');
     }
 
-    public function suppliers() {
+    public function suppliers()
+    {
         return $this->render('store:views/suppliers.php');
     }
 
-    public function reports() {
+    public function reports()
+    {
         return $this->render('store:views/reports.php');
     }
 
-    public function content() {
+    public function content()
+    {
         return $this->render('store:views/content.php');
     }
 
-    public function settings() {
+    public function settings()
+    {
         return $this->render('store:views/settings.php');
     }
 
-    public function getProducts() {
+    public function getProducts()
+    {
         $this->helper('session')->close();
 
         $limit = intval($this->param('limit', 20));
         $page = intval($this->param('page', 1));
-        if ($limit < 1) $limit = 20;
+        if ($limit < 1) {
+            $limit = 20;
+        }
         $skip = ($page - 1) * $limit;
         $search = trim($this->param('search', ''));
-        
+
         $criteria = [];
         if ($search) {
             $criteria['$or'] = [
@@ -64,19 +77,19 @@ class Store extends App {
                 ['sku' => ['$regex' => $search, '$options' => 'i']],
                 ['description' => ['$regex' => $search, '$options' => 'i']],
                 ['category' => ['$regex' => $search, '$options' => 'i']],
-                ['brand' => ['$regex' => $search, '$options' => 'i']]
+                ['brand' => ['$regex' => $search, '$options' => 'i']],
             ];
         }
 
         $total = $this->app->dataStorage->count('store/products', $criteria);
         $pages = ceil($total / $limit);
-        
+
         $sortKey = $this->param('sort', 'name');
         $sortDir = intval($this->param('sort_dir', 1));
         $options = [
             'limit' => $limit,
             'skip' => $skip,
-            'sort' => [$sortKey => $sortDir]
+            'sort' => [$sortKey => $sortDir],
         ];
         if ($criteria) {
             $options['filter'] = $criteria;
@@ -100,11 +113,12 @@ class Store extends App {
             'count' => $total,
             'pages' => $pages ?: 1,
             'page' => $page,
-            'limit' => $limit
+            'limit' => $limit,
         ];
     }
 
-    public function saveProduct() {
+    public function saveProduct()
+    {
         $this->hasValidCsrfToken(true);
 
         $product = $this->param('product');
@@ -112,12 +126,10 @@ class Store extends App {
             return $this->stop(400, 'Missing product details');
         }
 
-        
         if (empty($product['sku'])) {
             $product['sku'] = 'SKU-' . \strtoupper(\substr(\uniqid(), 7, 6));
         }
 
-        
         if (empty($product['_id'])) {
             $product['_id'] = 'prod-' . \strtolower(\str_replace(' ', '-', $product['sku']));
         }
@@ -132,12 +144,15 @@ class Store extends App {
             $this->app->dataStorage->insert('store/products', $product);
         }
 
-        $this->app->module('system')->log("Store Addon: Product {$product['name']} was saved", 'store', 'info', $product);
+        $this->app
+            ->module('system')
+            ->log("Store Addon: Product {$product['name']} was saved", 'store', 'info', $product);
 
         return ['success' => true, 'product' => $product];
     }
 
-    public function deleteProduct() {
+    public function deleteProduct()
+    {
         $this->hasValidCsrfToken(true);
 
         $id = $this->param('id');
@@ -151,15 +166,18 @@ class Store extends App {
         return ['success' => true];
     }
 
-    public function getOrders() {
+    public function getOrders()
+    {
         $this->helper('session')->close();
 
         $limit = intval($this->param('limit', 20));
         $page = intval($this->param('page', 1));
-        if ($limit < 1) $limit = 20;
+        if ($limit < 1) {
+            $limit = 20;
+        }
         $skip = ($page - 1) * $limit;
         $search = trim($this->param('search', ''));
-        
+
         $criteria = [];
         if ($search) {
             $criteria['$or'] = [
@@ -167,7 +185,7 @@ class Store extends App {
                 ['customer_name' => ['$regex' => $search, '$options' => 'i']],
                 ['customer_email' => ['$regex' => $search, '$options' => 'i']],
                 ['status' => ['$regex' => $search, '$options' => 'i']],
-                ['payment_status' => ['$regex' => $search, '$options' => 'i']]
+                ['payment_status' => ['$regex' => $search, '$options' => 'i']],
             ];
         }
 
@@ -179,7 +197,7 @@ class Store extends App {
         $options = [
             'limit' => $limit,
             'skip' => $skip,
-            'sort' => [$sortKey => $sortDir]
+            'sort' => [$sortKey => $sortDir],
         ];
         if ($criteria) {
             $options['filter'] = $criteria;
@@ -192,16 +210,17 @@ class Store extends App {
             'count' => $total,
             'pages' => $pages ?: 1,
             'page' => $page,
-            'limit' => $limit
+            'limit' => $limit,
         ];
     }
 
-    public function createOrder() {
+    public function createOrder()
+    {
         $this->hasValidCsrfToken(true);
 
         $customerName = $this->param('customer_name');
         $customerEmail = $this->param('customer_email');
-        $items = $this->param('items'); 
+        $items = $this->param('items');
         $voucherCode = $this->param('voucher_code', '');
         $courier = $this->param('courier', 'Manual');
         $shippingCost = floatval($this->param('shipping_cost', 0));
@@ -210,7 +229,6 @@ class Store extends App {
             return $this->stop(400, 'Missing order parameters');
         }
 
-        
         $totalAmount = 0;
         $orderItems = [];
 
@@ -221,13 +239,14 @@ class Store extends App {
             }
 
             $qty = (int) $item['quantity'];
-            if ($qty <= 0) continue;
+            if ($qty <= 0) {
+                continue;
+            }
 
             if ($product['stock'] < $qty) {
                 return $this->stop(400, "Insufficient stock for {$product['name']}. Available: {$product['stock']}");
             }
 
-            
             $product['stock'] -= $qty;
             $this->app->dataStorage->save('store/products', $product);
 
@@ -238,7 +257,7 @@ class Store extends App {
                 'product_id' => $product['_id'],
                 'name' => $product['name'],
                 'price' => $product['price'],
-                'quantity' => $qty
+                'quantity' => $qty,
             ];
         }
 
@@ -246,11 +265,16 @@ class Store extends App {
             return $this->stop(400, 'Order cannot be empty');
         }
 
-        
         $discountAmount = 0;
         if ($voucherCode) {
             $voucher = $this->app->dataStorage->findOne('store/vouchers', ['code' => $voucherCode]);
-            if ($voucher && ($voucher['active'] === 'true' || $voucher['active'] === true || $voucher['active'] === 1 || $voucher['active'] === '1')) {
+            if (
+                $voucher &&
+                ($voucher['active'] === 'true' ||
+                    $voucher['active'] === true ||
+                    $voucher['active'] === 1 ||
+                    $voucher['active'] === '1')
+            ) {
                 if ($voucher['type'] === 'percent') {
                     $discountAmount = $totalAmount * (floatval($voucher['value']) / 100);
                 } else {
@@ -262,18 +286,15 @@ class Store extends App {
             }
         }
 
-        
         $storeSettings = $this->app->dataStorage->findOne('store/settings', ['_id' => 'config']) ?? [];
         $taxPercent = floatval($storeSettings['tax_percent'] ?? 0);
         $taxAmount = ($totalAmount - $discountAmount) * ($taxPercent / 100);
 
-        
-        $grandTotal = ($totalAmount - $discountAmount) + $taxAmount + $shippingCost;
+        $grandTotal = $totalAmount - $discountAmount + $taxAmount + $shippingCost;
 
         $orderUniqueId = 'ORD-' . \strtoupper(\substr(\uniqid(), 7, 6));
         $transactionId = 'TX-' . \strtoupper(\dechex(\time())) . \strtoupper(\dechex(\rand(1000, 9999)));
 
-        
         $settings = $this->app->dataStorage->findOne('midtrans/settings', ['_id' => 'config']) ?? [];
         $mode = $settings['mode'] ?? 'sandbox';
         $serverKey = '';
@@ -287,16 +308,17 @@ class Store extends App {
         $redirectUrl = '';
 
         if ($serverKey) {
-            $apiUrl = $mode === 'sandbox'
-                ? 'https://app.sandbox.midtrans.com/snap/v1/transactions'
-                : 'https://app.midtrans.com/snap/v1/transactions';
+            $apiUrl =
+                $mode === 'sandbox'
+                    ? 'https://app.sandbox.midtrans.com/snap/v1/transactions'
+                    : 'https://app.midtrans.com/snap/v1/transactions';
 
-            $itemDetails = \array_map(function($item) {
+            $itemDetails = \array_map(function ($item) {
                 return [
                     'id' => $item['product_id'],
                     'price' => (int) $item['price'],
                     'quantity' => (int) $item['quantity'],
-                    'name' => \substr($item['name'], 0, 50)
+                    'name' => \substr($item['name'], 0, 50),
                 ];
             }, $orderItems);
 
@@ -305,7 +327,7 @@ class Store extends App {
                     'id' => 'VOUCHER-' . $voucherCode,
                     'price' => -(int) $discountAmount,
                     'quantity' => 1,
-                    'name' => 'Promo Code: ' . $voucherCode
+                    'name' => 'Promo Code: ' . $voucherCode,
                 ];
             }
             if ($taxAmount > 0) {
@@ -313,7 +335,7 @@ class Store extends App {
                     'id' => 'TAX',
                     'price' => (int) $taxAmount,
                     'quantity' => 1,
-                    'name' => 'Tax (' . $taxPercent . '%)'
+                    'name' => 'Tax (' . $taxPercent . '%)',
                 ];
             }
             if ($shippingCost > 0) {
@@ -321,20 +343,20 @@ class Store extends App {
                     'id' => 'SHIPPING',
                     'price' => (int) $shippingCost,
                     'quantity' => 1,
-                    'name' => 'Shipping Cost (' . $courier . ')'
+                    'name' => 'Shipping Cost (' . $courier . ')',
                 ];
             }
 
             $payload = [
                 'transaction_details' => [
                     'order_id' => $transactionId,
-                    'gross_amount' => (int) $grandTotal
+                    'gross_amount' => (int) $grandTotal,
                 ],
                 'customer_details' => [
                     'first_name' => $customerName,
-                    'email' => $customerEmail
+                    'email' => $customerEmail,
                 ],
-                'item_details' => $itemDetails
+                'item_details' => $itemDetails,
             ];
 
             $ch = \curl_init($apiUrl);
@@ -344,12 +366,14 @@ class Store extends App {
             \curl_setopt($ch, CURLOPT_HTTPHEADER, [
                 'Content-Type: application/json',
                 'Accept: application/json',
-                'Authorization: Basic ' . \base64_encode($serverKey . ':')
+                'Authorization: Basic ' . \base64_encode($serverKey . ':'),
             ]);
 
             $response = \curl_exec($ch);
             $httpCode = \curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            if (\PHP_VERSION_ID < 80500) { \curl_close($ch); }
+            if (\PHP_VERSION_ID < 80500) {
+                \curl_close($ch);
+            }
 
             if ($httpCode === 200 || $httpCode === 201) {
                 $resData = \json_decode($response, true);
@@ -358,7 +382,6 @@ class Store extends App {
             }
         }
 
-        
         $order = [
             '_id' => 'ord-' . \strtolower($orderUniqueId),
             'order_id' => $orderUniqueId,
@@ -378,11 +401,10 @@ class Store extends App {
             'transaction_id' => $transactionId,
             'snap_token' => $snapToken,
             'redirect_url' => $redirectUrl,
-            'created' => \time()
+            'created' => \time(),
         ];
         $this->app->dataStorage->insert('store/orders', $order);
 
-        
         $txRecord = [
             '_id' => $transactionId,
             'transaction_id' => $transactionId,
@@ -393,26 +415,22 @@ class Store extends App {
             'status' => 'pending',
             'snap_token' => $snapToken,
             'redirect_url' => $redirectUrl,
-            'created' => \time()
+            'created' => \time(),
         ];
         $this->app->dataStorage->insert('midtrans/transactions', $txRecord);
 
-        
         try {
             $emailBody = $this->app->render('midtrans:views/emails/payment_charge.php', ['transaction' => $txRecord]);
             $this->app->mailer->mail($customerEmail, "Complete your payment for Order {$orderUniqueId}", $emailBody);
-            
-            
+
             $previewDir = APP_DIR . '/storage/tmp/midtrans-emails';
             if (!\file_exists($previewDir)) {
                 \mkdir($previewDir, 0777, true);
             }
             \file_put_contents("{$previewDir}/{$transactionId}-pending.html", $emailBody);
         } catch (\Exception $e) {
-            
         }
 
-        
         if (isset($this->app->helpers['eventStream'])) {
             $this->app->helper('eventStream')->trigger('midtrans.transactions.updated', []);
         }
@@ -422,7 +440,8 @@ class Store extends App {
         return ['success' => true, 'order' => $order];
     }
 
-    public function updateOrderStatus() {
+    public function updateOrderStatus()
+    {
         $this->hasValidCsrfToken(true);
 
         $id = $this->param('id');
@@ -446,7 +465,7 @@ class Store extends App {
         if ($resi) {
             $order['resi'] = $resi;
         }
-        
+
         if ($status === 'completed') {
             $order['payment_status'] = 'settled';
         } elseif ($status === 'refunded') {
@@ -455,7 +474,6 @@ class Store extends App {
 
         $this->app->dataStorage->save('store/orders', $order);
 
-        
         if (!empty($order['transaction_id'])) {
             $tx = $this->app->dataStorage->findOne('midtrans/transactions', ['_id' => $order['transaction_id']]);
             if ($tx) {
@@ -468,12 +486,15 @@ class Store extends App {
             }
         }
 
-        $this->app->module('system')->log("Store Addon: Order {$order['order_id']} status updated to {$status}", 'store', 'info');
+        $this->app
+            ->module('system')
+            ->log("Store Addon: Order {$order['order_id']} status updated to {$status}", 'store', 'info');
 
         return ['success' => true];
     }
 
-    public function getDashboardStats() {
+    public function getDashboardStats()
+    {
         $this->helper('session')->close();
 
         $productsRes = $this->getProducts();
@@ -509,148 +530,161 @@ class Store extends App {
             'orderCount' => $orderCount,
             'avgOrderValue' => $avgOrderValue,
             'lowStockCount' => $lowStockCount,
-            'pendingCount' => $pendingCount
+            'pendingCount' => $pendingCount,
         ];
     }
 
-    public function getCustomers() {
+    public function getCustomers()
+    {
         $this->helper('session')->close();
-        
+
         $limit = intval($this->param('limit', 20));
         $page = intval($this->param('page', 1));
         $skip = ($page - 1) * $limit;
         $search = trim($this->param('search', ''));
-        
+
         $criteria = [];
         if ($search) {
             $criteria['$or'] = [
                 ['name' => ['$regex' => $search, '$options' => 'i']],
-                ['email' => ['$regex' => $search, '$options' => 'i']]
+                ['email' => ['$regex' => $search, '$options' => 'i']],
             ];
         }
-        
+
         $total = $this->app->dataStorage->count('store/customers', $criteria);
         $pages = ceil($total / $limit);
-        
+
         $sortKey = $this->param('sort', 'created');
         $sortDir = intval($this->param('sort_dir', -1));
         $options = [
             'limit' => $limit,
             'skip' => $skip,
-            'sort' => [$sortKey => $sortDir]
+            'sort' => [$sortKey => $sortDir],
         ];
         if ($criteria) {
             $options['filter'] = $criteria;
         }
-        
+
         $customers = $this->app->dataStorage->find('store/customers', $options)->toArray();
         $emails = array_map(fn($c) => $c['email'] ?? '', $customers);
-        
+
         $orders = [];
         if (!empty($emails)) {
-            $orders = $this->app->dataStorage->find('store/orders', [
-                'filter' => ['customer_email' => ['$in' => $emails]]
-            ])->toArray();
+            $orders = $this->app->dataStorage
+                ->find('store/orders', [
+                    'filter' => ['customer_email' => ['$in' => $emails]],
+                ])
+                ->toArray();
         }
-        
+
         $statsMap = [];
         foreach ($orders as $order) {
             $email = $order['customer_email'] ?? '';
-            if (!$email) continue;
-            
+            if (!$email) {
+                continue;
+            }
+
             if (!isset($statsMap[$email])) {
                 $statsMap[$email] = [
                     'orders_count' => 0,
-                    'total_spend' => 0
+                    'total_spend' => 0,
                 ];
             }
-            
+
             $statsMap[$email]['orders_count']++;
             if (($order['payment_status'] ?? '') === 'settled') {
-                $statsMap[$email]['total_spend'] += (float)($order['total_amount'] ?? 0);
+                $statsMap[$email]['total_spend'] += (float) ($order['total_amount'] ?? 0);
             }
         }
-        
+
         foreach ($customers as &$c) {
             $email = $c['email'] ?? '';
             $stats = $statsMap[$email] ?? ['orders_count' => 0, 'total_spend' => 0];
             $c['orders_count'] = $stats['orders_count'];
             $c['total_spend'] = $stats['total_spend'];
-            
+
             unset($c['password']);
             unset($c['reset_token']);
             unset($c['reset_token_expires']);
         }
-        
+
         return [
             'customers' => $customers,
             'count' => $total,
             'pages' => $pages ?: 1,
             'page' => $page,
-            'limit' => $limit
+            'limit' => $limit,
         ];
     }
 
-    public function getCustomerOrders() {
+    public function getCustomerOrders()
+    {
         $this->helper('session')->close();
         $email = $this->param('email');
-        if (!$email) return $this->stop(400, 'Missing email');
-        
-        $orders = $this->app->dataStorage->find('store/orders', [
-            'filter' => ['customer_email' => $email],
-            'sort' => ['created' => -1]
-        ])->toArray();
-        
+        if (!$email) {
+            return $this->stop(400, 'Missing email');
+        }
+
+        $orders = $this->app->dataStorage
+            ->find('store/orders', [
+                'filter' => ['customer_email' => $email],
+                'sort' => ['created' => -1],
+            ])
+            ->toArray();
+
         return $orders;
     }
 
-    public function getVouchers() {
+    public function getVouchers()
+    {
         $this->helper('session')->close();
-        
+
         $limit = intval($this->param('limit', 20));
         $page = intval($this->param('page', 1));
-        if ($limit < 1) $limit = 20;
+        if ($limit < 1) {
+            $limit = 20;
+        }
         $skip = ($page - 1) * $limit;
         $search = trim($this->param('search', ''));
-        
+
         $criteria = [];
         if ($search) {
             $criteria['$or'] = [
                 ['name' => ['$regex' => $search, '$options' => 'i']],
-                ['code' => ['$regex' => $search, '$options' => 'i']]
+                ['code' => ['$regex' => $search, '$options' => 'i']],
             ];
         }
-        
+
         $total = $this->app->dataStorage->count('store/vouchers', $criteria);
         $pages = ceil($total / $limit);
-        
+
         $sortKey = $this->param('sort', 'code');
         $sortDir = intval($this->param('sort_dir', 1));
         $options = [
             'limit' => $limit,
             'skip' => $skip,
-            'sort' => [$sortKey => $sortDir]
+            'sort' => [$sortKey => $sortDir],
         ];
         if ($criteria) {
             $options['filter'] = $criteria;
         }
-        
+
         $vouchers = $this->app->dataStorage->find('store/vouchers', $options)->toArray();
-        
+
         return [
             'vouchers' => $vouchers,
             'count' => $total,
             'pages' => $pages ?: 1,
             'page' => $page,
-            'limit' => $limit
+            'limit' => $limit,
         ];
     }
 
-    public function saveVoucher() {
+    public function saveVoucher()
+    {
         $this->hasValidCsrfToken(true);
         $voucher = $this->param('voucher', []);
-        
-        
+
         if (!empty($voucher['show_in_topbar'])) {
             $criteria = ['show_in_topbar' => true];
             if (!empty($voucher['_id'])) {
@@ -658,7 +692,12 @@ class Store extends App {
             }
             $existing = $this->app->dataStorage->findOne('store/vouchers', $criteria);
             if ($existing) {
-                return $this->stop(['error' => "Voucher '{$existing['code']}' sudah aktif di promo topbar. Silakan matikan terlebih dahulu."], 400);
+                return $this->stop(
+                    [
+                        'error' => "Voucher '{$existing['code']}' sudah aktif di promo topbar. Silakan matikan terlebih dahulu.",
+                    ],
+                    400,
+                );
             }
         }
 
@@ -670,7 +709,8 @@ class Store extends App {
         return ['success' => true, 'voucher' => $voucher];
     }
 
-    public function deleteVoucher() {
+    public function deleteVoucher()
+    {
         $this->hasValidCsrfToken(true);
         $id = $this->param('id');
         if ($id) {
@@ -679,54 +719,58 @@ class Store extends App {
         return ['success' => true];
     }
 
-    public function getSuppliers() {
+    public function getSuppliers()
+    {
         $this->helper('session')->close();
-        
+
         $limit = intval($this->param('limit', 20));
         $page = intval($this->param('page', 1));
-        if ($limit < 1) $limit = 20;
+        if ($limit < 1) {
+            $limit = 20;
+        }
         $skip = ($page - 1) * $limit;
         $search = trim($this->param('search', ''));
-        
+
         $criteria = [];
         if ($search) {
             $criteria['$or'] = [
                 ['name' => ['$regex' => $search, '$options' => 'i']],
                 ['email' => ['$regex' => $search, '$options' => 'i']],
                 ['phone' => ['$regex' => $search, '$options' => 'i']],
-                ['contact_person' => ['$regex' => $search, '$options' => 'i']]
+                ['contact_person' => ['$regex' => $search, '$options' => 'i']],
             ];
         }
-        
+
         $total = $this->app->dataStorage->count('store/suppliers', $criteria);
         $pages = ceil($total / $limit);
-        
+
         $sortKey = $this->param('sort', 'name');
         $sortDir = intval($this->param('sort_dir', 1));
         $options = [
             'limit' => $limit,
             'skip' => $skip,
-            'sort' => [$sortKey => $sortDir]
+            'sort' => [$sortKey => $sortDir],
         ];
         if ($criteria) {
             $options['filter'] = $criteria;
         }
-        
+
         $suppliers = $this->app->dataStorage->find('store/suppliers', $options)->toArray();
-        
+
         return [
             'suppliers' => $suppliers,
             'count' => $total,
             'pages' => $pages ?: 1,
             'page' => $page,
-            'limit' => $limit
+            'limit' => $limit,
         ];
     }
 
-    public function saveSupplier() {
+    public function saveSupplier()
+    {
         $this->hasValidCsrfToken(true);
         $supplier = $this->param('supplier', []);
-        
+
         if (empty($supplier['_id'])) {
             $this->app->dataStorage->insert('store/suppliers', $supplier);
         } else {
@@ -735,7 +779,8 @@ class Store extends App {
         return ['success' => true, 'supplier' => $supplier];
     }
 
-    public function deleteSupplier() {
+    public function deleteSupplier()
+    {
         $this->hasValidCsrfToken(true);
         $id = $this->param('id');
         if ($id) {
@@ -744,36 +789,41 @@ class Store extends App {
         return ['success' => true];
     }
 
-    public function getPurchasing() {
+    public function getPurchasing()
+    {
         $this->helper('session')->close();
         return $this->app->dataStorage->find('store/purchasing', ['sort' => ['created' => -1]])->toArray();
     }
 
-    public function savePurchasing() {
+    public function savePurchasing()
+    {
         $this->hasValidCsrfToken(true);
         $purchase = $this->param('purchase', []);
         $purchase['created'] = time();
         $purchase['status'] = 'pending';
-        
+
         $this->app->dataStorage->insert('store/purchasing', $purchase);
         return ['success' => true, 'purchase' => $purchase];
     }
 
-    public function receivePurchasing() {
+    public function receivePurchasing()
+    {
         $this->hasValidCsrfToken(true);
         $id = $this->param('id');
-        if (!$id) return $this->stop(400, 'Missing ID');
-        
+        if (!$id) {
+            return $this->stop(400, 'Missing ID');
+        }
+
         $purchase = $this->app->dataStorage->findOne('store/purchasing', ['_id' => $id]);
         if (!$purchase || $purchase['status'] === 'received') {
             return ['success' => false, 'error' => 'Invalid purchasing order'];
         }
-        
+
         $purchase['status'] = 'received';
         $purchase['received_at'] = time();
-        
+
         $this->app->dataStorage->save('store/purchasing', $purchase);
-        
+
         foreach ($purchase['items'] as $item) {
             $prodId = $item['product_id'] ?? null;
             $qty = intval($item['quantity'] ?? 0);
@@ -785,74 +835,78 @@ class Store extends App {
                 }
             }
         }
-        
+
         return ['success' => true];
     }
 
-    public function getReportsData() {
+    public function getReportsData()
+    {
         $this->helper('session')->close();
         $orders = $this->app->dataStorage->find('store/orders')->toArray();
-        
+
         $dailySales = [];
         $productSales = [];
-        
+
         foreach ($orders as $order) {
             if ($order['payment_status'] !== 'settled' && $order['status'] !== 'completed') {
                 continue;
             }
-            
+
             $date = date('Y-m-d', $order['created']);
             $amount = floatval($order['total_amount']);
-            
+
             $dailySales[$date] = ($dailySales[$date] ?? 0) + $amount;
-            
+
             foreach ($order['items'] as $item) {
                 $pName = $item['name'] ?? 'Unknown';
                 $qty = intval($item['quantity'] ?? 1);
                 $subtotal = floatval($item['price'] ?? 0) * $qty;
-                
+
                 $productSales[$pName] = ($productSales[$pName] ?? 0) + $subtotal;
             }
         }
-        
+
         ksort($dailySales);
         arsort($productSales);
         $topProducts = array_slice($productSales, 0, 5, true);
-        
+
         return [
             'daily' => $dailySales,
-            'products' => $topProducts
+            'products' => $topProducts,
         ];
     }
 
-    public function getContent() {
+    public function getContent()
+    {
         $this->helper('session')->close();
         $content = $this->app->dataStorage->findOne('store/content', ['_id' => 'homepage']) ?? [
             '_id' => 'homepage',
             'banners' => [],
             'faq' => '',
             'shipping_policy' => '',
-            'about_us' => ''
+            'about_us' => '',
         ];
         return $content;
     }
 
-    public function saveContent() {
+    public function saveContent()
+    {
         $this->hasValidCsrfToken(true);
         $content = $this->param('content', []);
         $content['_id'] = 'homepage';
-        
+
         $exists = $this->app->dataStorage->findOne('store/content', ['_id' => 'homepage']);
         if ($exists) {
             $this->app->dataStorage->save('store/content', $content);
         } else {
             $this->app->dataStorage->insert('store/content', $content);
         }
-        
+
         return ['success' => true];
     }
 
-    public function getSettings() {
+    public function getSettings()
+    {
         $this->helper('session')->close();
         $settings = $this->app->dataStorage->findOne('store/settings', ['_id' => 'config']) ?? [
             '_id' => 'config',
@@ -861,39 +915,43 @@ class Store extends App {
             'shop_phone' => '+62812345678',
             'shop_address' => 'Jakarta, Indonesia',
             'tax_percent' => 11,
-            'currency' => 'IDR'
+            'currency' => 'IDR',
         ];
         return $settings;
     }
 
-    public function saveSettings() {
+    public function saveSettings()
+    {
         $this->hasValidCsrfToken(true);
         $settings = $this->param('settings', []);
         $settings['_id'] = 'config';
-        
+
         $exists = $this->app->dataStorage->findOne('store/settings', ['_id' => 'config']);
         if ($exists) {
             $this->app->dataStorage->save('store/settings', $settings);
         } else {
             $this->app->dataStorage->insert('store/settings', $settings);
         }
-        
+
         return ['success' => true];
     }
 
-    public function toggleCustomerActive() {
+    public function toggleCustomerActive()
+    {
         $this->hasValidCsrfToken(true);
         $id = $this->param('id');
-        if (!$id) return $this->stop(400, 'Missing ID');
-        
+        if (!$id) {
+            return $this->stop(400, 'Missing ID');
+        }
+
         $customer = $this->app->dataStorage->findOne('store/customers', ['_id' => $id]);
         if (!$customer) {
             return ['success' => false, 'error' => 'Customer not found'];
         }
-        
+
         $customer['active'] = !($customer['active'] ?? true);
         $this->app->dataStorage->save('store/customers', $customer);
-        
+
         return ['success' => true, 'active' => $customer['active']];
     }
 }

@@ -1,7 +1,3 @@
-<?php
-
-?>
-
 <style>
     .store-hero {
         background: linear-gradient(135deg, #1d3557 0%, #457b9d 100%);
@@ -214,4 +210,4 @@
     </script>
 </vue-view>
 
-<?=$this->render('store:views/partials/sidebar.php')?>
+<?= $this->render('store:views/partials/sidebar.php') ?>

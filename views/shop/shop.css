@@ -4,7 +4,7 @@
     --bg-surface: #242729;
     --bg-surface-hover: #2d3133;
     --border-color: rgba(255, 255, 255, 0.07);
-    --text-primary: #FAFAFA;
+    --text-primary: #fafafa;
     --text-secondary: #9ca3af;
     --text-muted: #6b7280;
     --card-bg: #1c1f20;
@@ -26,12 +26,10 @@
     --font-main: 'Inter', sans-serif;
     --font-title: 'Outfit', sans-serif;
 
-    
     --accent-site: #d8f604;
     --accent-site-hover: #adc503;
     --accent-site-glow: #829402;
 
-    
     --text-on-accent: #141718;
     --header-bg: rgba(20, 23, 24, 0.97);
     --logo-text-gradient: linear-gradient(to right, #ffffff, #e2e8f0);
@@ -43,7 +41,7 @@
     --drawer-footer-bg: rgba(10, 15, 29, 0.4);
 }
 
-:root[data-theme="light"] {
+:root[data-theme='light'] {
     --bg-primary: #f8fafc;
     --bg-secondary: #ffffff;
     --bg-surface: #ffffff;
@@ -752,7 +750,7 @@ header {
 .product-img-wrapper {
     position: relative;
     padding-top: 80%;
-    
+
     background-color: rgba(255, 255, 255, 0.02);
     overflow: hidden;
     border-bottom: 1px solid var(--border-color);
@@ -814,7 +812,7 @@ header {
 .product-sku {
     font-size: 0.725rem;
     color: var(--text-muted);
-    
+
     font-weight: 500;
     letter-spacing: 0.025em;
 }
@@ -1593,7 +1591,8 @@ header {
 .hero-noise {
     position: absolute;
     inset: 0;
-    background-image: radial-gradient(ellipse 80% 60% at 70% 50%, var(--accent-site-glow) 0%, transparent 60%),
+    background-image:
+        radial-gradient(ellipse 80% 60% at 70% 50%, var(--accent-site-glow) 0%, transparent 60%),
         radial-gradient(ellipse 50% 80% at 20% 80%, var(--accent-site-glow) 0%, transparent 60%);
     opacity: 0.25;
 }
@@ -1768,7 +1767,6 @@ header {
 }
 
 @keyframes pulse-glow {
-
     0%,
     100% {
         opacity: 0.6;
@@ -1821,7 +1819,6 @@ header {
 }
 
 @keyframes float-y {
-
     0%,
     100% {
         transform: translateY(0);
@@ -2615,7 +2612,7 @@ header {
     max-width: 300px;
 }
 
-.explore-search>svg {
+.explore-search > svg {
     position: absolute;
     left: 0.85rem;
     top: 50%;
@@ -3216,11 +3213,11 @@ main {
 }
 
 .auth-divider:not(:empty)::before {
-    margin-right: .75em;
+    margin-right: 0.75em;
 }
 
 .auth-divider:not(:empty)::after {
-    margin-left: .75em;
+    margin-left: 0.75em;
 }
 
 .btn-oauth-github {

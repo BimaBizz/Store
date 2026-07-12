@@ -1,7 +1,3 @@
-<?php
-
-?>
-
 <style>
     .status-badge {
         font-size: 10px;
@@ -32,8 +28,8 @@
             <div class="kiss-flex kiss-flex-middle kiss-margin-large-bottom">
                 <div class="kiss-flex-1">
                     <ul class="kiss-breadcrumbs kiss-margin-xsmall-bottom">
-                        <li><a href="<?=$this->route('/store')?>"><?=t('Store')?></a></li>
-                        <li><span><?=t('Orders')?></span></li>
+                        <li><a href="<?= $this->route('/store') ?>"><?= t('Store') ?></a></li>
+                        <li><span><?= t('Orders') ?></span></li>
                     </ul>
                     <h3 class="kiss-margin-none">Sales Orders & Fulfillment</h3>
                 </div>
@@ -656,4 +652,4 @@
     </script>
 </vue-view>
 
-<?=$this->render('store:views/partials/sidebar.php')?>
+<?= $this->render('store:views/partials/sidebar.php') ?>

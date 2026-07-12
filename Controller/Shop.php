@@ -4,107 +4,111 @@ namespace Store\Controller;
 
 use App\Controller\Base;
 
-class Shop extends Base {
-
-    public function index() {
+class Shop extends Base
+{
+    public function index()
+    {
         return $this->render('store:views/shop/index.php');
     }
 
-    public function tracker() {
+    public function tracker()
+    {
         return $this->render('store:views/shop/tracker.php');
     }
 
-    public function dashboard() {
+    public function dashboard()
+    {
         return $this->render('store:views/shop/dashboard.php');
     }
 
-    public function about() {
+    public function about()
+    {
         return $this->render('store:views/shop/about.php');
     }
 
-    public function faq() {
+    public function faq()
+    {
         return $this->render('store:views/shop/faq.php');
     }
 
-    public function security() {
+    public function security()
+    {
         return $this->render('store:views/shop/security.php');
     }
 
-    public function finishedOrder() {
-
-        $orderId           = \trim($this->app->param('order_id', ''));
+    public function finishedOrder()
+    {
+        $orderId = \trim($this->app->param('order_id', ''));
         $transactionStatus = \trim($this->app->param('transaction_status', ''));
-        $statusCode        = \trim($this->app->param('status_code', ''));
+        $statusCode = \trim($this->app->param('status_code', ''));
 
-        
         if ($orderId && $transactionStatus) {
-
-            
             if (\in_array($transactionStatus, ['settlement', 'capture'])) {
-                $internalStatus  = 'success';
-                $orderStatus     = 'processing';
-                $paymentStatus   = 'settled';
+                $internalStatus = 'success';
+                $orderStatus = 'processing';
+                $paymentStatus = 'settled';
             } elseif (\in_array($transactionStatus, ['pending', 'authorize'])) {
-                $internalStatus  = 'pending';
-                $orderStatus     = 'pending';
-                $paymentStatus   = 'pending';
+                $internalStatus = 'pending';
+                $orderStatus = 'pending';
+                $paymentStatus = 'pending';
             } else {
-                
-                $internalStatus  = 'failed';
-                $orderStatus     = 'cancelled';
-                $paymentStatus   = 'failed';
+                $internalStatus = 'failed';
+                $orderStatus = 'cancelled';
+                $paymentStatus = 'failed';
             }
 
-            
             $transaction = $this->app->dataStorage->findOne('midtrans/transactions', ['transaction_id' => $orderId]);
             if ($transaction && $transaction['status'] !== $internalStatus) {
                 $oldStatus = $transaction['status'];
                 $transaction['status'] = $internalStatus;
                 $this->app->dataStorage->save('midtrans/transactions', $transaction);
 
-                
                 if (isset($this->app->helpers['eventStream'])) {
                     $this->helper('eventStream')->add('midtrans.transactions.updated', $transaction);
                 }
 
-                
                 if ($internalStatus === 'success' && $oldStatus !== 'success') {
                     try {
                         $emailBody = $this->app->render('midtrans:views/emails/payment_success.php', [
-                            'transaction' => $transaction
+                            'transaction' => $transaction,
                         ]);
                         $mailDir = $this->app->path('#tmp:') . '/midtrans-emails';
-                        if (!\file_exists($mailDir)) { @\mkdir($mailDir, 0755, true); }
+                        if (!\file_exists($mailDir)) {
+                            @\mkdir($mailDir, 0755, true);
+                        }
                         @\file_put_contents($mailDir . '/' . $orderId . '-success.html', $emailBody);
                         $this->app->mailer->mail(
                             $transaction['customer_email'],
                             'Payment Receipt - Order ' . $orderId,
-                            $emailBody
+                            $emailBody,
                         );
-                    } catch (\Throwable $e) {}
+                    } catch (\Throwable $e) {
+                    }
                 }
             }
 
-            
             $order = $this->app->dataStorage->findOne('store/orders', ['transaction_id' => $orderId]);
             if ($order) {
-                $order['status']         = $orderStatus;
+                $order['status'] = $orderStatus;
                 $order['payment_status'] = $paymentStatus;
-                $order['updated']        = \time();
+                $order['updated'] = \time();
                 $this->app->dataStorage->save('store/orders', $order);
             }
 
-            
-            $this->app->module('system')->log(
-                "Finished Order: Transaction {$orderId} → status={$transactionStatus} (internal={$internalStatus})",
-                'store', 'info'
-            );
+            $this->app
+                ->module('system')
+                ->log(
+                    "Finished Order: Transaction {$orderId} → status={$transactionStatus} (internal={$internalStatus})",
+                    'store',
+                    'info',
+                );
         }
 
         return $this->render('store:views/shop/finished-order.php');
     }
 
-    public function product($id = null) {
+    public function product($id = null)
+    {
         if (!$id) {
             $this->app->response->status = 404;
             return 'Product not found';
@@ -116,7 +120,6 @@ class Shop extends Base {
             return 'Product not found';
         }
 
-        
         $imageUrls = [];
         $images = isset($product['image']) ? array_filter(array_map('trim', explode(',', $product['image']))) : [];
         foreach ($images as $img) {
@@ -138,26 +141,26 @@ class Shop extends Base {
         return $this->render('store:views/shop/product.php', \compact('product'));
     }
 
-    public function getProducts() {
+    public function getProducts()
+    {
         $search = \trim($this->param('search', ''));
         $category = \trim($this->param('category', ''));
-        
+
         $criteria = [];
         if ($search) {
             $criteria['$or'] = [
                 ['name' => ['$regex' => $search, '$options' => 'i']],
                 ['sku' => ['$regex' => $search, '$options' => 'i']],
-                ['description' => ['$regex' => $search, '$options' => 'i']]
+                ['description' => ['$regex' => $search, '$options' => 'i']],
             ];
         }
-        
+
         if ($category && $category !== 'All') {
             $criteria['category'] = $category;
         }
 
         $products = $this->app->dataStorage->find('store/products', ['filter' => $criteria])->toArray();
-        
-        
+
         foreach ($products as &$prod) {
             $imageUrls = [];
             $images = isset($prod['image']) ? array_filter(array_map('trim', explode(',', $prod['image']))) : [];
@@ -178,11 +181,12 @@ class Shop extends Base {
             $prod['image_url'] = !empty($imageUrls) ? $imageUrls[0] : null;
             $prod['image_urls'] = $imageUrls;
         }
-        
+
         return $products;
     }
 
-    public function getSettings() {
+    public function getSettings()
+    {
         $settings = $this->app->dataStorage->findOne('store/settings', ['_id' => 'config']) ?? [
             '_id' => 'config',
             'shop_name' => 'Online Coffee Store',
@@ -190,29 +194,29 @@ class Shop extends Base {
             'shop_phone' => '+62812345678',
             'shop_address' => 'Jakarta, Indonesia',
             'tax_percent' => 11,
-            'currency' => 'IDR'
+            'currency' => 'IDR',
         ];
 
-        
         $midtransSettings = $this->app->dataStorage->findOne('midtrans/settings', ['_id' => 'config']) ?? [];
-        $settings['midtrans_client_key'] = ($midtransSettings['mode'] ?? 'sandbox') === 'production'
-            ? ($midtransSettings['production_client_key'] ?? '')
-            : ($midtransSettings['sandbox_client_key'] ?? '');
+        $settings['midtrans_client_key'] =
+            ($midtransSettings['mode'] ?? 'sandbox') === 'production'
+                ? $midtransSettings['production_client_key'] ?? ''
+                : $midtransSettings['sandbox_client_key'] ?? '';
         $settings['midtrans_mode'] = $midtransSettings['mode'] ?? 'sandbox';
 
         return $settings;
     }
 
-    public function getHomepageContent() {
+    public function getHomepageContent()
+    {
         $content = $this->app->dataStorage->findOne('store/content', ['_id' => 'homepage']) ?? [
             '_id' => 'homepage',
             'banners' => [],
             'faq' => '',
             'shipping_policy' => '',
-            'about_us' => ''
+            'about_us' => '',
         ];
 
-        
         if (isset($content['banners']) && \is_array($content['banners'])) {
             $resolvedBanners = [];
             foreach ($content['banners'] as $banner) {
@@ -231,7 +235,6 @@ class Shop extends Base {
             $content['banners'] = $resolvedBanners;
         }
 
-        
         if (isset($content['hero_image']) && \str_starts_with($content['hero_image'], 'assets://')) {
             $id = \str_replace('assets://', '', $content['hero_image']);
             $asset = $this->app->dataStorage->findOne('assets', ['_id' => $id]);
@@ -241,35 +244,40 @@ class Shop extends Base {
                 $content['hero_image_url'] = $this->app->routeUrl('/assets/link/' . $id);
             }
         } else {
-            $content['hero_image_url'] = $content['hero_image'] ?? 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&q=80';
+            $content['hero_image_url'] =
+                $content['hero_image'] ?? 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&q=80';
         }
 
-        
         if (isset($content['promo_image']) && \str_starts_with($content['promo_image'], 'assets://')) {
             $id = \str_replace('assets://', '', $content['promo_image']);
             $asset = $this->app->dataStorage->findOne('assets', ['_id' => $id]);
             if ($asset) {
-                $content['promo_image_url'] = $this->app->fileStorage->getURL('uploads://' . \trim($asset['path'], '/'));
+                $content['promo_image_url'] = $this->app->fileStorage->getURL(
+                    'uploads://' . \trim($asset['path'], '/'),
+                );
             } else {
                 $content['promo_image_url'] = $this->app->routeUrl('/assets/link/' . $id);
             }
         } else {
-            $content['promo_image_url'] = $content['promo_image'] ?? 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&q=80';
+            $content['promo_image_url'] =
+                $content['promo_image'] ?? 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&q=80';
         }
 
-        
         if (isset($content['promo_banners']) && \is_array($content['promo_banners'])) {
             foreach ($content['promo_banners'] as &$slide) {
                 if (!empty($slide['image']) && \str_starts_with($slide['image'], 'assets://')) {
                     $id = \str_replace('assets://', '', $slide['image']);
                     $asset = $this->app->dataStorage->findOne('assets', ['_id' => $id]);
                     if ($asset) {
-                        $slide['image_url'] = $this->app->fileStorage->getURL('uploads://' . \trim($asset['path'], '/'));
+                        $slide['image_url'] = $this->app->fileStorage->getURL(
+                            'uploads://' . \trim($asset['path'], '/'),
+                        );
                     } else {
                         $slide['image_url'] = $this->app->routeUrl('/assets/link/' . $id);
                     }
                 } else {
-                    $slide['image_url'] = $slide['image'] ?? 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&q=80';
+                    $slide['image_url'] =
+                        $slide['image'] ?? 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&q=80';
                 }
             }
         }
@@ -277,33 +285,41 @@ class Shop extends Base {
         return $content;
     }
 
-    public function validateVoucher() {
+    public function validateVoucher()
+    {
         $code = \trim($this->param('code', ''));
         if (!$code) {
             return ['valid' => false, 'message' => 'Voucher code is required'];
         }
 
         $voucher = $this->app->dataStorage->findOne('store/vouchers', ['code' => $code]);
-        if ($voucher && ($voucher['active'] === 'true' || $voucher['active'] === true || $voucher['active'] === 1 || $voucher['active'] === '1')) {
+        if (
+            $voucher &&
+            ($voucher['active'] === 'true' ||
+                $voucher['active'] === true ||
+                $voucher['active'] === 1 ||
+                $voucher['active'] === '1')
+        ) {
             return [
                 'valid' => true,
                 'code' => $voucher['code'],
                 'type' => $voucher['type'],
-                'value' => \floatval($voucher['value'])
+                'value' => \floatval($voucher['value']),
             ];
         }
 
         return ['valid' => false, 'message' => 'Invalid or expired voucher code'];
     }
 
-    public function checkout() {
+    public function checkout()
+    {
         $customerName = \trim($this->param('customer_name', ''));
         $customerEmail = \trim($this->param('customer_email', ''));
         $customerPhone = \trim($this->param('customer_phone', ''));
         $customerAddress = \trim($this->param('customer_address', ''));
         $customerCity = \trim($this->param('customer_city', ''));
         $customerZip = \trim($this->param('customer_zip', ''));
-        
+
         $itemsInput = $this->param('items');
         $voucherCode = \trim($this->param('voucher_code', ''));
         $courier = $this->param('courier', 'Manual');
@@ -316,7 +332,6 @@ class Shop extends Base {
         $items = [];
         $totalAmount = 0;
 
-        
         foreach ($itemsInput as $item) {
             $prodId = $item['product_id'] ?? null;
             $qty = \intval($item['quantity'] ?? 0);
@@ -331,14 +346,17 @@ class Shop extends Base {
             }
 
             if ($product['stock'] < $qty) {
-                return $this->stop(['error' => "Product {$product['name']} is out of stock (Available: {$product['stock']})"], 400);
+                return $this->stop(
+                    ['error' => "Product {$product['name']} is out of stock (Available: {$product['stock']})"],
+                    400,
+                );
             }
 
             $items[] = [
                 'product_id' => $prodId,
                 'name' => $product['name'],
                 'price' => \floatval($product['price']),
-                'quantity' => $qty
+                'quantity' => $qty,
             ];
 
             $totalAmount += \floatval($product['price']) * $qty;
@@ -348,11 +366,16 @@ class Shop extends Base {
             return $this->stop(['error' => 'No valid items in the cart'], 400);
         }
 
-        
         $discountAmount = 0;
         if ($voucherCode) {
             $voucher = $this->app->dataStorage->findOne('store/vouchers', ['code' => $voucherCode]);
-            if ($voucher && ($voucher['active'] === 'true' || $voucher['active'] === true || $voucher['active'] === 1 || $voucher['active'] === '1')) {
+            if (
+                $voucher &&
+                ($voucher['active'] === 'true' ||
+                    $voucher['active'] === true ||
+                    $voucher['active'] === 1 ||
+                    $voucher['active'] === '1')
+            ) {
                 if ($voucher['type'] === 'percent') {
                     $discountAmount = $totalAmount * (\floatval($voucher['value']) / 100);
                 } else {
@@ -364,22 +387,18 @@ class Shop extends Base {
             }
         }
 
-        
         $storeSettings = $this->app->dataStorage->findOne('store/settings', ['_id' => 'config']) ?? [];
         $taxPercent = \floatval($storeSettings['tax_percent'] ?? 11);
         $taxAmount = ($totalAmount - $discountAmount) * ($taxPercent / 100);
 
-        
-        $grandTotal = ($totalAmount - $discountAmount) + $taxAmount + $shippingCost;
+        $grandTotal = $totalAmount - $discountAmount + $taxAmount + $shippingCost;
 
-        
         foreach ($items as $item) {
             $product = $this->app->dataStorage->findOne('store/products', ['_id' => $item['product_id']]);
             $product['stock'] -= $item['quantity'];
             $this->app->dataStorage->save('store/products', $product);
         }
 
-        
         $customer = $this->app->dataStorage->findOne('store/customers', ['email' => $customerEmail]);
         if (!$customer) {
             $customer = [
@@ -390,15 +409,14 @@ class Shop extends Base {
                 'city' => $customerCity,
                 'zip' => $customerZip,
                 'active' => true,
-                'created' => \time()
+                'created' => \time(),
             ];
             $this->app->dataStorage->insert('store/customers', $customer);
         }
 
-        
         $orderId = 'ORD-' . \strtoupper(\bin2hex(\random_bytes(4)));
         $transactionId = 'TX-' . \strtoupper(\dechex(\time())) . \strtoupper(\dechex(\rand(1000, 9999)));
-        
+
         $order = [
             'order_id' => $orderId,
             'customer_name' => $customerName,
@@ -421,28 +439,28 @@ class Shop extends Base {
             'transaction_id' => $transactionId,
             'redirect_url' => '',
             'created' => \time(),
-            'updated' => \time()
+            'updated' => \time(),
         ];
 
-        
         $midtransSettings = $this->app->dataStorage->findOne('midtrans/settings', ['_id' => 'config']) ?? [];
-        $mode      = $midtransSettings['mode'] ?? 'sandbox';
-        $serverKey = $mode === 'production'
-            ? ($midtransSettings['production_server_key'] ?? '')
-            : ($midtransSettings['sandbox_server_key'] ?? '');
+        $mode = $midtransSettings['mode'] ?? 'sandbox';
+        $serverKey =
+            $mode === 'production'
+                ? $midtransSettings['production_server_key'] ?? ''
+                : $midtransSettings['sandbox_server_key'] ?? '';
 
         if ($serverKey) {
-            $snapUrl = $mode === 'production'
-                ? 'https://app.midtrans.com/snap/v1/transactions'
-                : 'https://app.sandbox.midtrans.com/snap/v1/transactions';
+            $snapUrl =
+                $mode === 'production'
+                    ? 'https://app.midtrans.com/snap/v1/transactions'
+                    : 'https://app.sandbox.midtrans.com/snap/v1/transactions';
 
-            
-            $itemDetails = \array_map(function($item) {
+            $itemDetails = \array_map(function ($item) {
                 return [
-                    'id'       => $item['product_id'],
-                    'price'    => (int) $item['price'],
+                    'id' => $item['product_id'],
+                    'price' => (int) $item['price'],
                     'quantity' => (int) $item['quantity'],
-                    'name'     => \substr($item['name'], 0, 50)
+                    'name' => \substr($item['name'], 0, 50),
                 ];
             }, $items);
 
@@ -451,7 +469,7 @@ class Shop extends Base {
                     'id' => 'VOUCHER-' . $voucherCode,
                     'price' => -(int) $discountAmount,
                     'quantity' => 1,
-                    'name' => 'Promo Code: ' . $voucherCode
+                    'name' => 'Promo Code: ' . $voucherCode,
                 ];
             }
             if ($taxAmount > 0) {
@@ -459,7 +477,7 @@ class Shop extends Base {
                     'id' => 'TAX',
                     'price' => (int) $taxAmount,
                     'quantity' => 1,
-                    'name' => 'Tax (' . $taxPercent . '%)'
+                    'name' => 'Tax (' . $taxPercent . '%)',
                 ];
             }
             if ($shippingCost > 0) {
@@ -467,27 +485,28 @@ class Shop extends Base {
                     'id' => 'SHIPPING',
                     'price' => (int) $shippingCost,
                     'quantity' => 1,
-                    'name' => 'Shipping Cost (' . $courier . ')'
+                    'name' => 'Shipping Cost (' . $courier . ')',
                 ];
             }
 
-            
-            $baseUrl           = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' ? 'https' : 'http')
-                . '://' . ($_SERVER['HTTP_HOST'] ?? 'localhost');
+            $baseUrl =
+                (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' ? 'https' : 'http') .
+                '://' .
+                ($_SERVER['HTTP_HOST'] ?? 'localhost');
             $finishRedirectUrl = $baseUrl . '/shop/finished-order';
 
             $snapPayload = [
                 'transaction_details' => [
-                    'order_id'     => $transactionId,
+                    'order_id' => $transactionId,
                     'gross_amount' => (int) $grandTotal,
                 ],
                 'customer_details' => [
                     'first_name' => $customerName,
-                    'email'      => $customerEmail,
-                    'phone'      => $customerPhone,
+                    'email' => $customerEmail,
+                    'phone' => $customerPhone,
                 ],
                 'item_details' => $itemDetails,
-                'callbacks'    => [
+                'callbacks' => [
                     'finish' => $finishRedirectUrl,
                 ],
             ];
@@ -500,7 +519,7 @@ class Shop extends Base {
             \curl_setopt($ch, CURLOPT_HTTPHEADER, [
                 'Content-Type: application/json',
                 'Accept: application/json',
-                'Authorization: Basic ' . \base64_encode($serverKey . ':')
+                'Authorization: Basic ' . \base64_encode($serverKey . ':'),
             ]);
             \curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
             \curl_setopt($ch, CURLOPT_TIMEOUT, 10);
@@ -508,7 +527,9 @@ class Shop extends Base {
             \curl_setopt($ch, CURLOPT_ENCODING, '');
             $snapResponse = \curl_exec($ch);
             $snapHttpCode = \curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            if (\PHP_VERSION_ID < 80500) { \curl_close($ch); }
+            if (\PHP_VERSION_ID < 80500) {
+                \curl_close($ch);
+            }
 
             if ($snapHttpCode === 200 || $snapHttpCode === 201) {
                 $snapData = \json_decode($snapResponse, true);
@@ -521,79 +542,71 @@ class Shop extends Base {
             }
         }
 
-        
         $this->app->dataStorage->save('store/orders', $order);
 
-        
         $midtransTransaction = [
             'transaction_id' => $transactionId,
-            'order_id'       => $orderId,
-            'customer_name'  => $customerName,
+            'order_id' => $orderId,
+            'customer_name' => $customerName,
             'customer_email' => $customerEmail,
-            'amount'         => (int) $grandTotal,
+            'amount' => (int) $grandTotal,
             'payment_method' => 'Midtrans Snap',
-            'status'         => 'pending',
-            'snap_token'     => $order['snap_token'] ?? '',
-            'redirect_url'   => $order['redirect_url'] ?? '',
-            'created'        => \time(),
+            'status' => 'pending',
+            'snap_token' => $order['snap_token'] ?? '',
+            'redirect_url' => $order['redirect_url'] ?? '',
+            'created' => \time(),
         ];
         $this->app->dataStorage->save('midtrans/transactions', $midtransTransaction);
 
-        
         if (isset($this->app->helpers['eventStream'])) {
             $this->helper('eventStream')->add('midtrans.transactions.updated', $midtransTransaction);
         }
 
-        
-        $this->app->module('system')->log(
-            "Store Checkout: Order {$orderId} / Transaction {$transactionId} created for {$customerName} (Total: IDR {$grandTotal})",
-            'store', 'info', $order
-        );
+        $this->app
+            ->module('system')
+            ->log(
+                "Store Checkout: Order {$orderId} / Transaction {$transactionId} created for {$customerName} (Total: IDR {$grandTotal})",
+                'store',
+                'info',
+                $order,
+            );
 
-        
-        
         try {
             $emailBody = $this->app->render('midtrans:views/emails/payment_charge.php', [
-                'transaction' => $midtransTransaction
+                'transaction' => $midtransTransaction,
             ]);
 
             $mailDir = $this->app->path('#tmp:') . '/midtrans-emails';
             if (!\file_exists($mailDir)) {
                 @\mkdir($mailDir, 0755, true);
             }
-            
+
             @\file_put_contents($mailDir . '/' . $transactionId . '-pending.html', $emailBody);
 
-            
-            $host  = $_SERVER['HTTP_HOST'] ?? 'localhost:8080';
+            $host = $_SERVER['HTTP_HOST'] ?? 'localhost:8080';
             $parts = \explode(':', $host);
-            $ip    = $parts[0];
-            $port  = isset($parts[1]) ? (int) $parts[1] : 80;
+            $ip = $parts[0];
+            $port = isset($parts[1]) ? (int) $parts[1] : 80;
 
             $secToken = \md5($transactionId . $this->app->retrieve('sec-key'));
             $fp = @\fsockopen($ip, $port, $errno, $errstr, 0.5);
             if ($fp) {
                 $path = $this->app->routeUrl('/shop/sendTransactionEmail');
-                $qs   = 'tx_id=' . \urlencode($transactionId) . '&token=' . \urlencode($secToken);
-                $req  = "GET {$path}?{$qs} HTTP/1.1\r\nHost: {$host}\r\nConnection: Close\r\n\r\n";
+                $qs = 'tx_id=' . \urlencode($transactionId) . '&token=' . \urlencode($secToken);
+                $req = "GET {$path}?{$qs} HTTP/1.1\r\nHost: {$host}\r\nConnection: Close\r\n\r\n";
                 \fwrite($fp, $req);
                 \fclose($fp);
             } else {
-                
-                $this->app->mailer->mail(
-                    $customerEmail,
-                    'Payment Details - Order ' . $transactionId,
-                    $emailBody
-                );
+                $this->app->mailer->mail($customerEmail, 'Payment Details - Order ' . $transactionId, $emailBody);
             }
         } catch (\Throwable $e) {
-            
         }
 
         return ['success' => true, 'order' => $order];
     }
 
-    public function checkOrderStatus() {
+    public function checkOrderStatus()
+    {
         $email = \trim($this->param('email', ''));
         $orderId = \trim($this->param('order_id', ''));
 
@@ -603,7 +616,7 @@ class Shop extends Base {
 
         $order = $this->app->dataStorage->findOne('store/orders', [
             'customer_email' => $email,
-            'order_id' => $orderId
+            'order_id' => $orderId,
         ]);
 
         if (!$order) {
@@ -613,10 +626,11 @@ class Shop extends Base {
         return $order;
     }
 
-    public function sendEmailBackground() {
+    public function sendEmailBackground()
+    {
         $orderId = \trim($this->param('order_id', ''));
-        $email   = \trim($this->param('email', ''));
-        $token   = \trim($this->param('token', ''));
+        $email = \trim($this->param('email', ''));
+        $token = \trim($this->param('token', ''));
 
         if (!$orderId || !$email || !$token) {
             return $this->stop(['error' => 'Missing parameters'], 400);
@@ -632,17 +646,21 @@ class Shop extends Base {
         }
 
         try {
-            $this->app->mailer->mail($email, "Your Order Checkout Receipt ({$orderId})", \file_get_contents($emailFile));
+            $this->app->mailer->mail(
+                $email,
+                "Your Order Checkout Receipt ({$orderId})",
+                \file_get_contents($emailFile),
+            );
             @\unlink($emailFile);
-        } catch (\Throwable $e) {}
+        } catch (\Throwable $e) {
+        }
 
         return ['success' => true];
     }
 
-    
-
-    public function sendTransactionEmail() {
-        $txId  = \trim($this->param('tx_id', ''));
+    public function sendTransactionEmail()
+    {
+        $txId = \trim($this->param('tx_id', ''));
         $token = \trim($this->param('token', ''));
 
         if (!$txId || !$token) {
@@ -667,15 +685,19 @@ class Shop extends Base {
             $this->app->mailer->mail(
                 $transaction['customer_email'],
                 'Payment Details - Order ' . $txId,
-                \file_get_contents($emailFile)
+                \file_get_contents($emailFile),
             );
-        } catch (\Throwable $e) {}
+        } catch (\Throwable $e) {
+        }
 
         return ['success' => true];
     }
 
-    public function customerLogin() {
-        if (\session_status() === PHP_SESSION_NONE) { \session_start(); }
+    public function customerLogin()
+    {
+        if (\session_status() === PHP_SESSION_NONE) {
+            \session_start();
+        }
         $email = \trim($this->param('email', ''));
         $password = \trim($this->param('password', ''));
 
@@ -696,15 +718,17 @@ class Shop extends Base {
             return $this->stop(['error' => 'Invalid email or password'], 400);
         }
 
-        
         unset($customer['password']);
         $_SESSION['store_customer'] = $customer;
 
         return ['success' => true, 'customer' => $customer];
     }
 
-    public function customerRegister() {
-        if (\session_status() === PHP_SESSION_NONE) { \session_start(); }
+    public function customerRegister()
+    {
+        if (\session_status() === PHP_SESSION_NONE) {
+            \session_start();
+        }
         $name = \trim($this->param('name', ''));
         $email = \trim($this->param('email', ''));
         $password = \trim($this->param('password', ''));
@@ -717,7 +741,6 @@ class Shop extends Base {
             return $this->stop(['error' => 'Name, Email and Password are required'], 400);
         }
 
-        
         $existing = $this->app->dataStorage->findOne('store/customers', ['email' => $email]);
         if ($existing) {
             return $this->stop(['error' => 'Email address is already registered'], 400);
@@ -732,25 +755,28 @@ class Shop extends Base {
             'city' => $city,
             'zip' => $zip,
             'active' => true,
-            'created' => \time()
+            'created' => \time(),
         ];
 
         $this->app->dataStorage->insert('store/customers', $customer);
 
-        
         unset($customer['password']);
         $_SESSION['store_customer'] = $customer;
 
         return ['success' => true, 'customer' => $customer];
     }
 
-    public function customerLogout() {
-        if (\session_status() === PHP_SESSION_NONE) { \session_start(); }
+    public function customerLogout()
+    {
+        if (\session_status() === PHP_SESSION_NONE) {
+            \session_start();
+        }
         unset($_SESSION['store_customer']);
         return ['success' => true];
     }
 
-    public function customerForgotPassword() {
+    public function customerForgotPassword()
+    {
         $email = \trim($this->param('email', ''));
         if (!$email) {
             return $this->stop(['error' => 'Email address is required'], 400);
@@ -758,25 +784,28 @@ class Shop extends Base {
 
         $customer = $this->app->dataStorage->findOne('store/customers', ['email' => $email]);
         if (!$customer) {
-            return ['success' => true, 'message' => 'If your email is registered, a password reset link has been sent.'];
+            return [
+                'success' => true,
+                'message' => 'If your email is registered, a password reset link has been sent.',
+            ];
         }
 
-        
         $resetToken = \bin2hex(\random_bytes(16));
         $customer['reset_token'] = $resetToken;
-        $customer['reset_token_expire'] = \time() + 3600; 
+        $customer['reset_token_expire'] = \time() + 3600;
         $this->app->dataStorage->save('store/customers', $customer);
 
-        
         try {
             $midtransSettings = $this->app->dataStorage->findOne('midtrans/settings', ['_id' => 'config']) ?? [];
             $mode = $midtransSettings['mode'] ?? 'sandbox';
-            $serverKey = $mode === 'production'
-                ? ($midtransSettings['production_server_key'] ?? '')
-                : ($midtransSettings['sandbox_server_key'] ?? '');
+            $serverKey =
+                $mode === 'production'
+                    ? $midtransSettings['production_server_key'] ?? ''
+                    : $midtransSettings['sandbox_server_key'] ?? '';
 
-            $resetLink = $this->app->routeUrl('/shop/dashboard') . "?reset_token={$resetToken}&email=" . \urlencode($email);
-            
+            $resetLink =
+                $this->app->routeUrl('/shop/dashboard') . "?reset_token={$resetToken}&email=" . \urlencode($email);
+
             $emailBody = "<h1>Reset Your Password</h1>
                           <p>Hi {$customer['name']},</p>
                           <p>We received a request to reset your password. Click the link below to set a new password:</p>
@@ -799,24 +828,27 @@ class Shop extends Base {
 
                 $fp = @\fsockopen($ip, $port, $errno, $errstr, 0.5);
                 if ($fp) {
-                    $path = $this->app->routeUrl("/shop/sendEmailBackground");
-                    $out = "GET {$path}?order_id={$tempId}&email=" . \urlencode($email) . "&token={$secToken} HTTP/1.1\r\n";
+                    $path = $this->app->routeUrl('/shop/sendEmailBackground');
+                    $out =
+                        "GET {$path}?order_id={$tempId}&email=" .
+                        \urlencode($email) .
+                        "&token={$secToken} HTTP/1.1\r\n";
                     $out .= "Host: {$host}\r\n";
                     $out .= "Connection: Close\r\n\r\n";
                     \fwrite($fp, $out);
                     \fclose($fp);
                 } else {
-                    $this->app->mailer->mail($email, "Reset Your Account Password", $emailBody);
+                    $this->app->mailer->mail($email, 'Reset Your Account Password', $emailBody);
                 }
             }
         } catch (\Throwable $e) {
-            
         }
 
         return ['success' => true, 'message' => 'If your email is registered, a password reset link has been sent.'];
     }
 
-    public function customerResetPassword() {
+    public function customerResetPassword()
+    {
         $email = \trim($this->param('email', ''));
         $token = \trim($this->param('token', ''));
         $password = \trim($this->param('password', ''));
@@ -827,7 +859,7 @@ class Shop extends Base {
 
         $customer = $this->app->dataStorage->findOne('store/customers', [
             'email' => $email,
-            'reset_token' => $token
+            'reset_token' => $token,
         ]);
 
         if (!$customer) {
@@ -838,7 +870,6 @@ class Shop extends Base {
             return $this->stop(['error' => 'Reset token has expired'], 400);
         }
 
-        
         $customer['password'] = \password_hash($password, PASSWORD_DEFAULT);
         unset($customer['reset_token']);
         unset($customer['reset_token_expire']);
@@ -847,9 +878,12 @@ class Shop extends Base {
         return ['success' => true, 'message' => 'Password reset successfully. You can now login.'];
     }
 
-    public function getCustomerDashboard() {
-        if (\session_status() === PHP_SESSION_NONE) { \session_start(); }
-        
+    public function getCustomerDashboard()
+    {
+        if (\session_status() === PHP_SESSION_NONE) {
+            \session_start();
+        }
+
         $customer = $_SESSION['store_customer'] ?? null;
         if (!$customer) {
             return ['logged_in' => false];
@@ -863,22 +897,26 @@ class Shop extends Base {
 
         unset($custDb['password']);
 
-        
-        $orders = $this->app->dataStorage->find('store/orders', [
-            'filter' => ['customer_email' => $customer['email']],
-            'sort' => ['created' => -1]
-        ])->toArray();
+        $orders = $this->app->dataStorage
+            ->find('store/orders', [
+                'filter' => ['customer_email' => $customer['email']],
+                'sort' => ['created' => -1],
+            ])
+            ->toArray();
 
         return [
             'logged_in' => true,
             'customer' => $custDb,
-            'orders' => $orders
+            'orders' => $orders,
         ];
     }
 
-    public function updateCustomerProfile() {
-        if (\session_status() === PHP_SESSION_NONE) { \session_start(); }
-        
+    public function updateCustomerProfile()
+    {
+        if (\session_status() === PHP_SESSION_NONE) {
+            \session_start();
+        }
+
         $customerSession = $_SESSION['store_customer'] ?? null;
         if (!$customerSession) {
             return $this->stop(['error' => 'Unauthorized action'], 401);
@@ -912,7 +950,6 @@ class Shop extends Base {
 
         $this->app->dataStorage->save('store/customers', $custDb);
 
-        
         unset($custDb['password']);
         $_SESSION['store_customer'] = $custDb;
 

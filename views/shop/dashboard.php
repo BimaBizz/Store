@@ -1,4 +1,4 @@
-<?=$this->render('store:views/shop/header.php')?>
+<?= $this->render('store:views/shop/header.php') ?>
 
 <div class="container" style="padding-top: 2.5rem; padding-bottom: 2.5rem;">
 
@@ -234,4 +234,4 @@
                 </div>
 
 </div>
-<?=$this->render('store:views/shop/footer.php')?>
+<?= $this->render('store:views/shop/footer.php') ?>
