@@ -106,7 +106,7 @@
                         <div class="flash-card-name">{{ prod.name }}</div>
                         <div class="flash-price-row">
                             <span class="flash-price">{{ formatIDR(prod.price) }}</span>
-                            <span class="flash-old-price" v-if="prod.original_price">{{ formatIDR(prod.original_price) }}</span>
+                            <span class="flash-old-price" v-if="prod.original_price && prod.original_price > prod.price">{{ formatIDR(prod.original_price) }}</span>
                         </div>
                     </div>
                 </div>
@@ -187,7 +187,7 @@
                     <div class="product-card-name">{{ prod.name }}</div>
                     <div class="product-card-price-row">
                         <span class="product-card-price">{{ formatIDR(prod.price) }}</span>
-                        <span class="product-card-old-price" v-if="prod.original_price">{{ formatIDR(prod.original_price) }}</span>
+                        <span class="product-card-old-price" v-if="prod.original_price && prod.original_price > prod.price">{{ formatIDR(prod.original_price) }}</span>
                     </div>
                 </div>
             </div>
@@ -270,7 +270,7 @@
                     <div class="product-card-name">{{ prod.name }}</div>
                     <div class="product-card-price-row">
                         <span class="product-card-price">{{ formatIDR(prod.price) }}</span>
-                        <span class="product-card-old-price" v-if="prod.original_price">{{ formatIDR(prod.original_price) }}</span>
+                        <span class="product-card-old-price" v-if="prod.original_price && prod.original_price > prod.price">{{ formatIDR(prod.original_price) }}</span>
                     </div>
                 </div>
             </div>

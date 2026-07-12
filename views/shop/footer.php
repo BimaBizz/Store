@@ -127,7 +127,7 @@
                             <p class="detail-sku">{{ selectedProduct.sku }}</p>
                             <div style="display: flex; align-items: baseline; gap: 0.75rem; margin-bottom: 1rem; flex-wrap: wrap;">
                                 <span class="detail-price" style="font-size: 1.5rem; font-weight: 700; color: var(--accent-site);">{{ formatIDR(selectedProduct.price) }}</span>
-                                <span class="detail-old-price" v-if="selectedProduct.original_price" style="text-decoration: line-through; color: var(--text-muted); font-size: 1.1rem;">{{ formatIDR(selectedProduct.original_price) }}</span>
+                                <span class="detail-old-price" v-if="selectedProduct.original_price && selectedProduct.original_price > selectedProduct.price" style="text-decoration: line-through; color: var(--text-muted); font-size: 1.1rem;">{{ formatIDR(selectedProduct.original_price) }}</span>
                                 <span class="detail-disc-badge" v-if="selectedProduct.discount_percent" style="background: var(--accent-rose, #ef4771); color: #fff; font-size: 0.75rem; font-weight: 700; padding: 0.2rem 0.5rem; border-radius: 4px;">-{{ selectedProduct.discount_percent }}% OFF</span>
                             </div>
                             <p class="detail-description">{{ selectedProduct.description }}</p>
@@ -211,7 +211,7 @@
                 <div class="voucher-section">
                     <label class="form-label" style="margin-bottom: 0.25rem;">Have a Promo Code?</label>
                     <div class="voucher-input-group">
-                        <input type="text" class="voucher-input" v-model="voucherCode" placeholder="COFFEE20, COFFEELOVER" :disabled="discountAmount > 0">
+                        <input type="text" class="voucher-input" v-model="voucherCode" placeholder="..." :disabled="discountAmount > 0">
                         <button class="btn btn-outline" style="padding: 0.5rem 1rem;" @click="applyVoucher" v-if="discountAmount === 0" :disabled="!voucherCode">Apply</button>
                         <button class="btn btn-ghost" style="color: var(--accent-rose);" @click="removeVoucher" v-else>Remove</button>
                     </div>

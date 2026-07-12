@@ -237,6 +237,7 @@ createApp({
                     const cats = new Set(this.products.map((p) => p.category).filter(Boolean));
                     this.categories = Array.from(cats);
                 }
+                this.syncCartWithProducts();
             } catch (e) {
                 this.showToast('Failed to retrieve products list', 'error');
             } finally {
@@ -379,6 +380,39 @@ createApp({
                     this.cart = JSON.parse(raw);
                 } catch (e) {
                     this.cart = [];
+                }
+            }
+        },
+        syncCartWithProducts() {
+            if (!this.cart || this.cart.length === 0) return;
+            let cartUpdated = false;
+            this.cart = this.cart.map(item => {
+                const prod = this.products.find(p => p._id === item.product_id);
+                if (prod) {
+                    if (item.price !== prod.price || item.name !== prod.name || item.image_url !== prod.image_url) {
+                        item.price = prod.price;
+                        item.name = prod.name;
+                        item.image_url = prod.image_url;
+                        cartUpdated = true;
+                    }
+                    if (item.quantity > prod.stock) {
+                        item.quantity = prod.stock;
+                        cartUpdated = true;
+                    }
+                }
+                return item;
+            }).filter(item => {
+                const prodExists = this.products.find(p => p._id === item.product_id);
+                if (!prodExists) {
+                    cartUpdated = true;
+                    return false;
+                }
+                return item.quantity > 0;
+            });
+            if (cartUpdated) {
+                this.saveCartToStorage();
+                if (this.discountAmount > 0) {
+                    this.reapplyDiscount();
                 }
             }
         },

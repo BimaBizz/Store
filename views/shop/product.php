@@ -44,7 +44,7 @@ $shopUrl = $enableFrontend ? '/' : '/shop';
 
             <div style="display: flex; align-items: baseline; gap: 1rem; margin-top: 0.5rem; flex-wrap: wrap;">
                 <span style="font-size: 2rem; font-weight: 700; color: var(--accent-site);">{{ formatIDR(selectedProduct.price) }}</span>
-                <span v-if="selectedProduct.original_price" style="text-decoration: line-through; color: var(--text-muted); font-size: 1.25rem;">{{ formatIDR(selectedProduct.original_price) }}</span>
+                <span v-if="selectedProduct.original_price && selectedProduct.original_price > selectedProduct.price" style="text-decoration: line-through; color: var(--text-muted); font-size: 1.25rem;">{{ formatIDR(selectedProduct.original_price) }}</span>
                 <span v-if="selectedProduct.discount_percent" style="background: #ef4771; color: #fff; font-size: 0.85rem; font-weight: 700; padding: 0.25rem 0.6rem; border-radius: 4px;">-{{ selectedProduct.discount_percent }}% OFF</span>
             </div>
 
