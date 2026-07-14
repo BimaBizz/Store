@@ -13,7 +13,7 @@ $app->on('app.admin.request', function () use ($app) {
         return $app->invoke('Store\\Controller\\Shop', 'finishedOrder');
     });
 
-    $storeFront = $app->retrieve('storeFront') ?? [];
+    $storeFront = $app->retrieve('onlineshop') ?? [];
     if (!empty($storeFront['enableFrontend'])) {
         $shopSettings = $app->dataStorage->findOne('store/settings', ['_id' => 'config']) ?? [];
         $shopName = $shopSettings['shop_name'] ?? 'Online Coffee Store';

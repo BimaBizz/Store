@@ -1,5 +1,5 @@
 <?php
-$storeFront = $this->retrieve('storeFront') ?? [];
+$storeFront = $this->retrieve('onlineshop') ?? [];
 $enableFrontend = !empty($storeFront['enableFrontend']);
 $shopUrl = $enableFrontend ? '/' : '/shop';
 $trackerUrl = $enableFrontend ? '/tracker' : '/shop/tracker';

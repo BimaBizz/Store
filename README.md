@@ -72,7 +72,7 @@ You can configure the storefront behaviour globally within Cockpit's main config
 return [
     // ... other config options
 
-    'storeFront' => [
+    'onlineshop' => [
         'enableFrontend' => true, // Set to true to bind the storefront directly to domain root '/' and activate clean SEO URLs
     ],
 ];
@@ -97,7 +97,7 @@ The addon operates on Cockpit's unified storage schema:
 
 ## 🧭 Routing Reference
 
-When `storeFront.enableFrontend` is turned on, the following root bindings take effect:
+When `onlineshop.enableFrontend` is turned on, the following root bindings take effect:
 
 - `/` -> Homepage
 - `/product/:id` -> Single Product details

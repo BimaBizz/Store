@@ -20,7 +20,7 @@ $displayEmail = $order['customer_email'] ?? ($transaction['customer_email'] ?? '
 $displayOrderId = $order['order_id'] ?? $orderId;
 $displayMethod = $transaction['payment_method'] ?? 'Midtrans Payment';
 
-$storeFront = $this->retrieve('storeFront') ?? [];
+$storeFront = $this->retrieve('onlineshop') ?? [];
 $enableFrontend = !empty($storeFront['enableFrontend']);
 $shopUrl = $enableFrontend ? '/' : '/shop';
 $trackerUrl = $enableFrontend ? '/tracker' : '/shop/tracker';
