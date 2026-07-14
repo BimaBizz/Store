@@ -1,6 +1,6 @@
 <?php
 $storeFront = $this->retrieve('onlineshop') ?? [];
-$enableFrontend = !empty($storeFront['enableFrontend']);
+$enableFrontend = !empty($storeFront['mainPageEnable']);
 $shopUrl = $enableFrontend ? '/' : '/shop';
 ?>
 <?= $this->render('store:views/shop/header.php') ?>

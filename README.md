@@ -73,13 +73,13 @@ return [
     // ... other config options
 
     'onlineshop' => [
-        'enableFrontend' => true, // Set to true to bind the storefront directly to domain root '/' and activate clean SEO URLs
+        'mainPageEnable' => true, // Set to true to bind the storefront directly to domain root '/' and activate clean SEO URLs
     ],
 ];
 ```
 
-- **`enableFrontend = true` (Default Recommended)**: Activates clean, user-friendly paths directly at root domain (e.g. `/`, `/tracker`, `/dashboard`, `/about`, `/faq`, `/security`).
-- **`enableFrontend = false` (or missing)**: Storefront functions fallback into subpaths starting with `/shop/*` (e.g. `/shop`, `/shop/tracker`, `/shop/dashboard`, `/shop/about`). This is ideal if you host standard admin panels on the root `/`.
+- **`mainPageEnable = true` (Default Recommended)**: Activates clean, user-friendly paths directly at root domain (e.g. `/`, `/tracker`, `/dashboard`, `/about`, `/faq`, `/security`).
+- **`mainPageEnable = false` (or missing)**: Storefront functions fallback into subpaths starting with `/shop/*` (e.g. `/shop`, `/shop/tracker`, `/shop/dashboard`, `/shop/about`). This is ideal if you host standard admin panels on the root `/`.
 
 ---
 
@@ -97,7 +97,7 @@ The addon operates on Cockpit's unified storage schema:
 
 ## 🧭 Routing Reference
 
-When `onlineshop.enableFrontend` is turned on, the following root bindings take effect:
+When `onlineshop.mainPageEnable` is turned on, the following root bindings take effect:
 
 - `/` -> Homepage
 - `/product/:id` -> Single Product details
@@ -107,4 +107,4 @@ When `onlineshop.enableFrontend` is turned on, the following root bindings take 
 - `/faq` -> Frequently Asked Questions
 - `/security` -> Security and Policies
 
-When `enableFrontend` is turned off, views fallback to standard subpaths prefixing with `/shop/*`.
+When `mainPageEnable` is turned off, views fallback to standard subpaths prefixing with `/shop/*`.

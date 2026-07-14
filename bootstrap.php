@@ -14,7 +14,7 @@ $app->on('app.admin.request', function () use ($app) {
     });
 
     $storeFront = $app->retrieve('onlineshop') ?? [];
-    if (!empty($storeFront['enableFrontend'])) {
+    if (!empty($storeFront['mainPageEnable'])) {
         $shopSettings = $app->dataStorage->findOne('store/settings', ['_id' => 'config']) ?? [];
         $shopName = $shopSettings['shop_name'] ?? 'Online Coffee Store';
         $shopSlug = \strtolower(\preg_replace('/[^a-zA-Z0-9-]/', '', \str_replace(' ', '-', $shopName)));

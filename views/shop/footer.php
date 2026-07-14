@@ -47,7 +47,7 @@
 
                 <?php
                 $storeFront = $this->retrieve('onlineshop') ?? [];
-                $enableFrontend = !empty($storeFront['enableFrontend']);
+                $enableFrontend = !empty($storeFront['mainPageEnable']);
                 $shopUrl = $enableFrontend ? '/' : '/shop';
                 $trackerUrl = $enableFrontend ? '/tracker' : '/shop/tracker';
                 $securityUrl = $enableFrontend ? '/security' : '/shop/security';

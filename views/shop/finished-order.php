@@ -21,7 +21,7 @@ $displayOrderId = $order['order_id'] ?? $orderId;
 $displayMethod = $transaction['payment_method'] ?? 'Midtrans Payment';
 
 $storeFront = $this->retrieve('onlineshop') ?? [];
-$enableFrontend = !empty($storeFront['enableFrontend']);
+$enableFrontend = !empty($storeFront['mainPageEnable']);
 $shopUrl = $enableFrontend ? '/' : '/shop';
 $trackerUrl = $enableFrontend ? '/tracker' : '/shop/tracker';
 $shopName = $storeFront['shop_name'] ?? 'Online Coffee Store';
